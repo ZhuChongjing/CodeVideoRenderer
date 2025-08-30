@@ -54,7 +54,8 @@ pip install CodeVideoRenderer
 ) -> code_video
 ```
 
-<details><summary>参数说明</summary>
+<details><summary>点击查看参数说明</summary>
+    
 - `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
 - `code_string`：直接传入的代码字符串
 - `code_file`：代码文件路径
@@ -129,7 +130,8 @@ The library provides `CodeVideo`, which you can use to create a video object. Th
 ) -> code_video
 ```
 
-<details><summary>Parameter Description</summary>
+<details><summary>Click to view parameter description</summary>
+    
 - `video_name`: The filename of the generated video, with a default value of `"CodeVideo"`
 - `code_string`: The code string passed in directly
 - `code_file`: The path to the code file
