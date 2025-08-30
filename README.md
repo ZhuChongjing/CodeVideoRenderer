@@ -38,7 +38,7 @@ pip install CodeVideoRenderer
 本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：
 
 ```python
-(function) def CodeVideo(
+CodeVideo(
     video_name: str = "CodeVideo",
     code_string: str = None,
     code_file: str = None,
@@ -50,10 +50,8 @@ pip install CodeVideoRenderer
     camera_move_interval: float = 0.1,
     camera_move_duration: float = 0.5,
     screen_scale: float = 0.5
-) -> code_video
+)
 ```
-
-#### 参数说明
 
 > [!NOTE]
 > 本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
