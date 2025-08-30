@@ -1,7 +1,11 @@
-**CodeVideoRenderer 1.0.3**
+# CodeVideoRenderer 1.0.3
 
 - [项目介绍](#项目介绍)
 - [Project Description](#project-description)
+**安装 Install**
+```bash
+pip install CodeVideoRenderer
+```
 
 # 项目介绍
 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
