@@ -3,13 +3,16 @@
 软件支持：[$`\text{Manim Community}`$
 ](https://www.manim.community)
 
-> [!NOTE]
-> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
+> [!IMPORTANT]
+> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
 
 命令行安装：
 ```bash
 pip install CodeVideoRenderer
 ```
+
+> [!NOTE]
+> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
 <details>
     <summary>本次更新内容</summary>
@@ -33,12 +36,10 @@ pip install CodeVideoRenderer
 
 ## 如何使用
 
-> [!IMPORTANT]
-> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
-
 本库用于生成输入代码的视频，相机会跟随光标移动。
 
-视频生成时间可能略长，请耐心等待。
+> [!Tip]
+> 视频生成时间可能略长，请耐心等待。
 
 ### 创建视频对象
 
