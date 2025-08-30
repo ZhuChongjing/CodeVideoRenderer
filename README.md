@@ -9,7 +9,8 @@ pip install CodeVideoRenderer
 ```
 
 # 项目介绍
-发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
+> [!NOTE]
+> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
 **修复**
 - 代码偏移（`manim`自带bug）
@@ -34,7 +35,8 @@ pip install CodeVideoRenderer
 
 本库用于生成输入代码的视频，视频视角会跟随光标移动。（视频生成时间可能略长，请耐心等待）
 
-**提示：使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。**
+> [!TIP]
+> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
 
 本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：
 
@@ -80,7 +82,8 @@ pip install CodeVideoRenderer
 > `screen_scale`：屏幕缩放比例，默认值为`0.5`
 </details>
 
-**注：所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。**
+> [!CAUTION]
+> 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。
 
 --- 
 
