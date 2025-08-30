@@ -84,9 +84,10 @@ CodeVideo(
 ### 生成视频
 你可以使用`CodeVideo`对象的`render`方法来生成视频，你可以在终端中查看视频的保存位置。
 
-#### 示例
-```python
-from CodeVideoRenderer import *
-video = CodeVideo(code_string="print('Hello World!')", language='python')
-video.render()
-```
+> [!TIP]
+> 示例
+> ```python
+> from CodeVideoRenderer import *
+> video = CodeVideo(code_string="print('Hello World!')", language='python')
+> video.render()
+> ```
