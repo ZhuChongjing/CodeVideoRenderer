@@ -55,7 +55,7 @@ pip install CodeVideoRenderer
 ```
 
 <details>
-    <summary>点击查看参数说明</summary>
+    <summary>参数说明</summary>
     
 > `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
 > 
@@ -141,19 +141,30 @@ The library provides `CodeVideo`, which you can use to create a video object. Th
 ) -> code_video
 ```
 
-<details><summary>Click to view parameter description</summary>
+<details>
+    <summary>Parameter description</summary>
     
-- `video_name`: The filename of the generated video, with a default value of `"CodeVideo"`
-- `code_string`: The code string passed in directly
-- `code_file`: The path to the code file
-- `font`: The font used for displaying code, with a default value of `'Consolas'`
-- `language`: The code language (used for syntax highlighting)
-- `line_spacing`: The line spacing of the code, with a default value of `0.7`
-- `interval_range`: The time interval range (in seconds) for character display, in tuple format, default is `(0.2, 0.2)`, with a minimum value of 0.2
-- `camera_floating_maximum_value`: The maximum range of camera floating, default is `0.1`, value ≥ 0
-- `camera_move_interval`: The time interval (in seconds) for automatic camera movement, default is `0.1`, value ≥ 0
-- `camera_move_duration`: The duration (in seconds) of camera movement, default is `0.5`, value ≥ 0
-- `screen_scale`: The screen scaling ratio, with a default value of `0.5`
+> `video_name`: The filename of the generated video, with a default value of `"CodeVideo"`
+>
+> `code_string`: The code string passed in directly
+>
+> `code_file`: The path to the code file
+>
+> `font`: The font used for displaying code, with a default value of `'Consolas'`
+>
+> `language`: The code language (used for syntax highlighting)
+>
+> `line_spacing`: The line spacing of the code, with a default value of `0.7`
+>
+> `interval_range`: The time interval range (in seconds) for character display, in tuple format, default is `(0.2, 0.2)`, with a minimum value of 0.2
+>
+> `camera_floating_maximum_value`: The maximum range of camera floating, default is `0.1`, value ≥ 0
+>
+> `camera_move_interval`: The time interval (in seconds) for automatic camera movement, default is `0.1`, value ≥ 0
+>
+> `camera_move_duration`: The duration (in seconds) of camera movement, default is `0.5`, value ≥ 0
+>
+> `screen_scale`: The screen scaling ratio, with a default value of `0.5`
 </details>
 
 **Note: All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.**
