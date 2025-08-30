@@ -11,8 +11,7 @@
 pip install CodeVideoRenderer
 ```
 
-> [!NOTE]
-> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
+发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
 <details>
     <summary>本次更新内容</summary>
@@ -61,8 +60,7 @@ CodeVideo(
 )
 ```
 
-> [!NOTE]
-> 本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
+本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
     
 | 参数名 | 说明 | 默认值 |
 | ---- | ---- | ---- |
