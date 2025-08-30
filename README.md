@@ -54,7 +54,10 @@ pip install CodeVideoRenderer
 ) -> code_video
 ```
 
-<details><summary>点击查看参数说明</summary>
+<details>
+    <summary style="padding: 8px; border: 1px solid #E0E0E0; border-radius: 4px; background-color: #F9F9F9;">
+        点击查看参数说明
+    </summary>
     
 - `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
 - `code_string`：直接传入的代码字符串
