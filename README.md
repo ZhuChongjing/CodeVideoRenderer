@@ -56,7 +56,7 @@ pip install CodeVideoRenderer
 
 <details>
     <summary>
-        <strong>点击查看参数说明</strong>
+        <u>点击查看参数说明</u>
     </summary>
     
 - `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
