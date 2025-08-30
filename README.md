@@ -5,6 +5,7 @@
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
+> 
 > Animation rendering is done with `manim`; please ensure `manim` runs properly before use.
 
 命令行安装 Command Line Installation：
@@ -13,6 +14,7 @@ pip install CodeVideoRenderer
 ```
 
 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
+
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
 <details>
