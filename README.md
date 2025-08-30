@@ -3,7 +3,7 @@
 > [!NOTE]
 > 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
-## 安装
+命令行安装：
 ```bash
 pip install CodeVideoRenderer
 ```
@@ -24,22 +24,14 @@ pip install CodeVideoRenderer
 - 终端渲染信息
 - 相机移动
 
-## 旧版本支持功能
-- 光标打字
-- 相机持续移动
-- 参数及代码检测
-
 ## 如何使用
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
 
-### 作用
-
 本库用于生成输入代码的视频，视频视角会跟随光标移动。
 
-> [!TIP]
-> 视频生成时间可能略长，请耐心等待
+视频生成时间可能略长，请耐心等待
 
 ### 创建视频对象
 
@@ -62,6 +54,9 @@ pip install CodeVideoRenderer
 ```
 
 #### 参数说明
+
+> [!NOTE]
+> 本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
     
 - `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
 - `code_string`：直接传入的代码字符串
@@ -77,9 +72,6 @@ pip install CodeVideoRenderer
 
 > [!CAUTION]
 > 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。 
-
-> [!NOTE]
-> 本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
 
 ### 生成视频
 你可以使用`CodeVideo`对象的`render`方法来生成视频，你可以在终端中查看视频的保存位置。
