@@ -9,10 +9,8 @@ pip install CodeVideoRenderer
 ```
 
 <details>
-    <summary>本次更新内容</summary>
-
-> <br/>
-> 
+    <summary>本次更新内容<br/></summary>
+                     
 > **修复**
 > - 代码偏移（`manim`自带bug）
 > - 换行时相机不及时移动
