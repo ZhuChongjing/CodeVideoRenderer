@@ -63,17 +63,19 @@ CodeVideo(
 > [!NOTE]
 > 本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
     
-- `video_name`：生成视频的文件名，默认值为`"CodeVideo"`。
-- `code_string`：直接传入的代码字符串。
-- `code_file`：代码文件路径。
-- `font`：代码显示字体，默认值为`'Consolas'`。
-- `language`：代码语言（用于语法高亮）。
-- `line_spacing`：代码行间距，默认值为`0.7`。
-- `interval_range`：字符显示的时间间隔范围（秒），元组形式，默认`(0.2, 0.2)`，最小值为$`0.2`$。
-- `camera_floating_maximum_value`：相机浮动的最大范围，默认`0.1`，值$`\geqslant 0`$。
-- `camera_move_interval`：相机自动移动的时间间隔（秒），默认`0.1`，值$`\geqslant 0`$。
-- `camera_move_duration`：相机移动的持续时间（秒），默认`0.5`，值$`\geqslant 0`$。
-- `screen_scale`：屏幕缩放比例，默认值为`0.5`。
+| 参数名 | 说明 | 默认值 |
+| ---- | ---- | ---- |
+| `video_name` | 生成视频的文件名 | `"CodeVideo"` |
+| `code_string` | 直接传入的代码字符串 | - |
+| `code_file` | 代码文件路径 | - |
+| `font` | 代码显示字体 | `'Consolas'` |
+| `language` | 代码语言（用于语法高亮） | - |
+| `line_spacing` | 代码行间距 | `0.7` |
+| `interval_range` | 字符显示的时间间隔范围（秒），元组形式，最小值为`0.2` | `(0.2, 0.2)` |
+| `camera_floating_maximum_value` | 相机浮动的最大范围，值≥0 | `0.1` |
+| `camera_move_interval` | 相机自动移动的时间间隔（秒），值≥0 | `0.1` |
+| `camera_move_duration` | 相机移动的持续时间（秒），值≥0 | `0.5` |
+| `screen_scale` | 屏幕缩放比例 | `0.5` |
 
 > [!CAUTION]
 > 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。 
