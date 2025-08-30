@@ -54,7 +54,7 @@ pip install CodeVideoRenderer
 ) -> code_video
 ```
 
-**参数说明**
+<details><summary>参数说明</summary>
 - `video_name`：生成视频的文件名，默认值为`"CodeVideo"`
 - `code_string`：直接传入的代码字符串
 - `code_file`：代码文件路径
@@ -66,6 +66,7 @@ pip install CodeVideoRenderer
 - `camera_move_interval`：相机自动移动的时间间隔（秒），默认`0.1`，值≥0
 - `camera_move_duration`：相机移动的持续时间（秒），默认`0.5`，值≥0
 - `screen_scale`：屏幕缩放比例，默认值为`0.5`
+</details>
 
 **注：所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。**
 
@@ -128,7 +129,7 @@ The library provides `CodeVideo`, which you can use to create a video object. Th
 ) -> code_video
 ```
 
-**Parameter Description**
+<details><summary>Parameter Description</summary>
 - `video_name`: The filename of the generated video, with a default value of `"CodeVideo"`
 - `code_string`: The code string passed in directly
 - `code_file`: The path to the code file
@@ -140,6 +141,7 @@ The library provides `CodeVideo`, which you can use to create a video object. Th
 - `camera_move_interval`: The time interval (in seconds) for automatic camera movement, default is `0.1`, value ≥ 0
 - `camera_move_duration`: The duration (in seconds) of camera movement, default is `0.5`, value ≥ 0
 - `screen_scale`: The screen scaling ratio, with a default value of `0.5`
+</details>
 
 **Note: All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.**
 
