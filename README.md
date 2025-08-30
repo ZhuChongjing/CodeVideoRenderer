@@ -1,6 +1,7 @@
 # CodeVideoRenderer 1.0.3
 
-软件支持：[Manim Community](https://www.manim.community)
+软件支持：[$`\text{Manim Community}`$
+](https://www.manim.community)
 
 > [!NOTE]
 > 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
