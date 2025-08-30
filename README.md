@@ -8,7 +8,8 @@
 pip install CodeVideoRenderer
 ```
 
-## 本次更新内容
+<details>
+    <summary>本次更新内容</summary>
 
 ### 修复
 - 代码偏移（`manim`自带bug）
@@ -23,6 +24,7 @@ pip install CodeVideoRenderer
 ### 优化
 - 终端渲染信息
 - 相机移动
+</details>
 
 ## 如何使用
 
