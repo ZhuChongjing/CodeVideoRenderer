@@ -1,11 +1,9 @@
 # CodeVideoRenderer 1.0.3
 
-- [项目介绍](#项目介绍)
-- [Project Description](#project-description)
+- [项目介绍](##项目介绍)
+- [Project Description](##project-description)
 
----
-
-# 项目介绍
+## 项目介绍
 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
 **修复**
@@ -79,7 +77,7 @@ video = CodeVideo(code_string="print('Hello World!')", language='python')
 video.render()
 ```
 
-# Project Description
+## Project Description
 If you find any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome you to point out problems, and we will fix them as soon as possible.
 
 **Fixes**
