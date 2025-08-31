@@ -2,9 +2,9 @@
 
 软件支持 Software Support：Manim[^1]
 
-[^1]: 用于解释性数学视频的动画引擎。<br/>
-Animation engine for explanatory math videos.<br/>
-[Manim on GitHub](https://github.com/manimCommunity/manim)<br/>
+[^1]: [Manim on GitHub](https://github.com/manimCommunity/manim)<br/>
+用于解释性数学视频的动画引擎。<br/>
+Animation engine for explanatory math videos.
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
