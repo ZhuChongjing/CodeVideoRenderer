@@ -1,5 +1,6 @@
 # CodeVideoRenderer 1.0.3
-![Manim](/manim.jpg)
+<img src="manim.jpg" width="300" />
+
 软件支持 Software Support：[Manim](https://github.com/manimCommunity/manim)
 
 > [!IMPORTANT]
@@ -14,34 +15,6 @@ pip install CodeVideoRenderer
 
 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。<br/>
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
-
-<details>
-    <summary>本次更新内容<br/>Update Content for This Version</summary>
-
-<br/>
-
-> **修复 Fixes**
-> - 代码偏移（`manim`自带bug）<br/>
->   Code offset (built-in `manim` bug)
-> - 换行时相机不及时移动<br/>
->   Camera not moving promptly during line breaks
-> - 光标在换行时不在开头停顿<br/>
->   Cursor not pausing at the start when wrapping to a new line
-> 
-> **更新 Updates**
-> - 每行代码首尾空白字符不参与动画，以免增加动画时长<br/>
->   Leading and trailing whitespace in each code line do not participate in the animation to avoid increasing the animation duration
-> - 当前行背景宽度更改<br/>
->   Adjustment of the background width for the current line
-> - 新增`line_spacing`参数用于更改行距<br/>
->   Added the new `line_spacing` parameter to adjust line spacing
-> 
-> **优化 Optimizations**
-> - 终端渲染信息<br/>
->   Terminal rendering information
-> - 相机移动<br/>
->   Camera movement
-</details>
 
 ## 如何使用<br/>How to Use
 
