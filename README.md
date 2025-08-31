@@ -45,8 +45,7 @@ If you encounter any issues, please send an email to [my email address](mailto:z
 >   Camera movement
 </details>
 
-## 如何使用<br/>
-How to Use
+## 如何使用<br/>How to Use
 
 本库用于生成输入代码的视频，相机会跟随光标移动。
 
@@ -57,8 +56,7 @@ This library is used to generate videos of input code, with the camera following
 > 
 > Video generation may take a little time, please be patient.
 
-### 创建视频对象<br/>
-Creating a Video Object
+### 创建视频对象<br/>Creating a Video Object
 
 本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：
 
@@ -103,8 +101,7 @@ This library uses `validate_call` from `pydantic`, which automatically checks pa
 > 
 > All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.
 
-### 生成视频<br/>
-Generating a Video
+### 生成视频<br/>Generating a Video
 
 你可以使用`CodeVideo`对象的`render`方法来生成视频，并在终端中查看视频的保存位置。
 
