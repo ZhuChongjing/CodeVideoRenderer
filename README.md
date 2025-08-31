@@ -73,7 +73,7 @@ CodeVideo(
 )
 ```
 
-本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。<br/>
+本库使用`pydantic`中的`validate_call`，在您传入参数时会自动检查参数类型，以确保其正确性。<br/>
 This library uses `validate_call` from `pydantic`, which automatically checks parameter types when you pass them in to ensure correctness.
     
 | 参数名<br/>Parameter Name | 说明<br/>Description | 默认值<br/>Default Value |
