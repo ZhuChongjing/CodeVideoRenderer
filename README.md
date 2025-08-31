@@ -6,7 +6,7 @@
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
 > 
-> Animation rendering is done with `manim`; please ensure `manim` runs properly before use.
+> Animation rendering is done with `manim`, please ensure `manim` runs properly before use.
 
 命令行安装 Command Line Installation：
 ```bash
@@ -84,17 +84,17 @@ This library uses `validate_call` from `pydantic`, which automatically checks pa
     
 | 参数名<br/>Parameter Name | 说明<br/>Description | 默认值<br/>Default Value |
 | ---- | ---- | ---- |
-| `video_name` | 生成视频的文件 <br/>Name of the generated video file | `"CodeVideo"` |
-| `code_string` | 直接传入的代码字符串<br/>Directly passed code string | - |
-| `code_file` | 代码文件路径<br/>Path to the code file | - |
-| `font` | 代码显示字体<br/>Font for code display | `'Consolas'` |
-| `language` | 代码语言（用于语法高亮）<br/>Code language (for syntax highlighting) | - |
-| `line_spacing` | 代码行间距<br/>Line spacing of the code | `0.7` |
-| `interval_range` | 字符显示的时间间隔范围（秒），元组形式，最小值为$`0.2`$<br/>Time interval range (in seconds) for character display, in tuple form; minimum value is $`0.2`$ | `(0.2, 0.2)` |
-| `camera_floating_maximum_value` | 相机浮动的最大范围，值$`\geqslant 0`$<br/>Maximum range of camera floating; value $`\geqslant 0`$ | `0.1` |
-| `camera_move_interval` | 相机自动移动的时间间隔（秒），值$`\geqslant 0`$<br/>Time interval (in seconds) for automatic camera movement; value $`\geqslant 0`$ | `0.1` |
-| `camera_move_duration` | 相机移动的持续时间（秒），值$`\geqslant 0`$<br/>Duration (in seconds) of camera movement; value $`\geqslant 0`$ | `0.5` |
-| `screen_scale` | 屏幕缩放比例<br/>Screen scaling ratio | `0.5` |
+| `video_name` | 生成视频的文件。<br/>Name of the generated video file. | `"CodeVideo"` |
+| `code_string` | 直接传入的代码字符串。<br/>Directly passed code string. | - |
+| `code_file` | 代码文件路径。<br/>Path to the code file. | - |
+| `font` | 代码显示字体。<br/>Font for code display. | `'Consolas'` |
+| `language` | 代码语言（用于语法高亮）。<br/>Code language (for syntax highlighting). | - |
+| `line_spacing` | 代码行间距。<br/>Line spacing of the code. | `0.7` |
+| `interval_range` | 字符显示的时间间隔范围（秒），元组形式，最小值为$`0.2`$。<br/>Time interval range (in seconds) for character display, in tuple form; minimum value is $`0.2`$. | `(0.2, 0.2)` |
+| `camera_floating_maximum_value` | 相机浮动的最大范围，值$`\geqslant 0`$。<br/>Maximum range of camera floating; value $`\geqslant 0`$. | `0.1` |
+| `camera_move_interval` | 相机自动移动的时间间隔（秒），值$`\geqslant 0`$。<br/>Time interval (in seconds) for automatic camera movement, value $`\geqslant 0`$. | `0.1` |
+| `camera_move_duration` | 相机移动的持续时间（秒），值$`\geqslant 0`$。<br/>Duration (in seconds) of camera movement, value $`\geqslant 0`$. | `0.5` |
+| `screen_scale` | 屏幕缩放比例。<br/>Screen scaling ratio. | `0.5` |
 
 > [!CAUTION]
 > 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。
