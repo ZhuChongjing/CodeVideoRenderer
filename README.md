@@ -1,7 +1,6 @@
 # CodeVideoRenderer 1.0.3
-<img src="manim.jpg" width="300" />
 
-软件支持 Software Support：[Manim](https://github.com/manimCommunity/manim)
+软件支持 Software Support：[<img src="manim.jpg" width="100" align="center" />](https://github.com/manimCommunity/manim)
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
