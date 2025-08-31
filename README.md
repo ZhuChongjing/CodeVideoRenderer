@@ -1,6 +1,6 @@
 # CodeVideoRenderer 1.0.3
 
-软件支持 Software Support：[$`\text{Manim Community}`$
+软件支持 Software Support：[$`\text{Manim}`$
 ](https://www.manim.community)
 
 > [!IMPORTANT]
