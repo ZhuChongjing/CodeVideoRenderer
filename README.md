@@ -18,7 +18,7 @@ pip install CodeVideoRenderer
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
 <details>
-    <summary>本次更新内容 Update Content for This Version</summary>
+    <summary>本次更新内容<br/>Update Content for This Version</summary>
 
 <br/>
 
@@ -54,7 +54,7 @@ This library is used to generate videos of input code, with the camera following
 > [!Tip]
 > 视频生成时间可能略长，请耐心等待。
 > 
-> Video generation may take a little time; please be patient.
+> Video generation may take a little time, please be patient.
 
 ### 创建视频对象 Creating a Video Object
 
