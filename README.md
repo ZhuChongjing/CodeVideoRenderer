@@ -4,17 +4,16 @@
 ](https://www.manim.community)
 
 > [!IMPORTANT]
-> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
-> 
-> Animation rendering is done with `manim`, please ensure `manim` runs properly before use.
+> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
+Animation rendering is done with `manim`, please ensure `manim` runs properly before use.
 
-命令行安装 Command Line Installation：
+命令行安装：<br/>
+Command Line Installation：
 ```bash
 pip install CodeVideoRenderer
 ```
 
-发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
-
+发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。<br/>
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
 <details>
@@ -47,19 +46,15 @@ If you encounter any issues, please send an email to [my email address](mailto:z
 
 ## 如何使用<br/>How to Use
 
-本库用于生成输入代码的视频，相机会跟随光标移动。
-
+本库用于生成输入代码的视频，相机会跟随光标移动。<br/>
 This library is used to generate videos of input code, with the camera following the cursor movement.
 
 > [!Tip]
-> 视频生成时间可能略长，请耐心等待。
-> 
-> Video generation may take a little time, please be patient.
+> 视频生成时间可能略长，请耐心等待。<br/>Video generation may take a little time, please be patient.
 
 ### 创建视频对象<br/>Creating a Video Object
 
-本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：
-
+本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：<br/>
 This library provides `CodeVideo`, which you can use to create a video object. The parameters are as follows:
 
 ```python
@@ -78,8 +73,7 @@ CodeVideo(
 )
 ```
 
-本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。
-
+本库使用`pydantic`中的`validate_call`，在你传入参数时会自动检查参数类型，以确保其正确性。<br/>
 This library uses `validate_call` from `pydantic`, which automatically checks parameter types when you pass them in to ensure correctness.
     
 | 参数名<br/>Parameter Name | 说明<br/>Description | 默认值<br/>Default Value |
@@ -97,14 +91,12 @@ This library uses `validate_call` from `pydantic`, which automatically checks pa
 | `screen_scale` | 屏幕缩放比例。<br/>Screen scaling ratio. | `0.5` |
 
 > [!CAUTION]
-> 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。
-> 
-> All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.
+> 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。<br/>
+All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.
 
 ### 生成视频<br/>Generating a Video
 
-你可以使用`CodeVideo`对象的`render`方法来生成视频，并在终端中查看视频的保存位置。
-
+你可以使用`CodeVideo`对象的`render`方法来生成视频，并在终端中查看视频的保存位置。<br/>
 You can use the `render` method of the `CodeVideo` object to generate a video, and check the video's save location in the terminal.
 
 > [!TIP]
