@@ -2,8 +2,8 @@
 
 软件支持 Software Support：Manim[^1]
 
-[^1]: Animation engine for explanatory math videos.
-官网：[Manim Community](https://www.manim.community)
+[^1]: Animation engine for explanatory math videos.<br/>
+官网：[Manim Community](https://www.manim.community)<br/>
 PyPI: [Manim on PyPI](https://pypi.org/project/manim)
 
 > [!IMPORTANT]
