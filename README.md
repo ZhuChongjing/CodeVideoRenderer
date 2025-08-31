@@ -82,7 +82,7 @@ CodeVideo(
 
 This library uses `validate_call` from `pydantic`, which automatically checks parameter types when you pass them in to ensure correctness.
     
-| 参数名 Parameter Name | 说明 Description | 默认值 Default Value|
+| 参数名<br/>Parameter Name | 说明<br/>Description | 默认值<br/>Default Value |
 | ---- | ---- | ---- |
 | `video_name` | 生成视频的文件 <br/>Name of the generated video file | `"CodeVideo"` |
 | `code_string` | 直接传入的代码字符串<br/>Directly passed code string | - |
