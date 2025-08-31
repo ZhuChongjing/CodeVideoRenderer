@@ -2,9 +2,10 @@
 
 软件支持 Software Support：Manim[^1]
 
-[^1]: Animation engine for explanatory math videos.<br/>
-官网：[Manim Community](https://www.manim.community)<br/>
-PyPI: [Manim on PyPI](https://pypi.org/project/manim)
+[^1]: 用于解释性数学视频的动画引擎。<br/>
+Animation engine for explanatory math videos.<br/>
+官网 Website：[Manim Community](https://www.manim.community)<br/>
+PyPI：[Manim on PyPI](https://pypi.org/project/manim)
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
