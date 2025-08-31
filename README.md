@@ -1,7 +1,10 @@
 # CodeVideoRenderer 1.0.3
 
 软件支持 Software Support：[$`\text{Manim}`$
-](https://www.manim.community)
+](https://www.manim.community)软件支持 Software Support：[$`\text{Manim}`$
+](https://www.manim.community)(^1)
+
+(^1): Animation engine for explanatory math videos.
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
