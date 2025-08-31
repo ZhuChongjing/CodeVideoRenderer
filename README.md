@@ -1,5 +1,5 @@
 # CodeVideoRenderer 1.0.3
-
+![Manim](/manim.jpg)
 软件支持 Software Support：[Manim](https://github.com/manimCommunity/manim)
 
 > [!IMPORTANT]
