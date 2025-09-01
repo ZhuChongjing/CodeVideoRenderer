@@ -1,5 +1,8 @@
 # CodeVideoRenderer 1.0.3
 
+本库用于生成输入代码的视频，相机会跟随光标移动。<br/>
+This library is used to generate videos of input code, with the camera following the cursor movement.
+
 软件支持 Software Support：[<img src="manim.jpg" width="70" align="center" />](https://github.com/manimCommunity/manim)
 
 > [!IMPORTANT]
@@ -16,9 +19,6 @@ pip install CodeVideoRenderer
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
 ## 如何使用<br/>How to Use
-
-本库用于生成输入代码的视频，相机会跟随光标移动。<br/>
-This library is used to generate videos of input code, with the camera following the cursor movement.
 
 > [!Tip]
 > 视频生成时间可能略长，请耐心等待。<br/>Video generation may take a little time, please be patient.
