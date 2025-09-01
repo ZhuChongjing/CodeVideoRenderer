@@ -77,3 +77,5 @@ You can use the `render` method of the `CodeVideo` object to generate a video, a
 > video = CodeVideo(code_string="print('Hello World!')", language='python')
 > video.render()
 > ```
+>
+> [CodeVideo.mp4](https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/video.mp4)
