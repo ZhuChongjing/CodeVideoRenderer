@@ -55,10 +55,10 @@ This library uses `validate_call` from `pydantic`, which automatically checks pa
 | `font` | 代码显示字体。<br/>Font for code display. | `'Consolas'` |
 | `language` | 代码语言（用于语法高亮）。<br/>Code language (for syntax highlighting). | - |
 | `line_spacing` | 代码行间距。<br/>Line spacing of the code. | `0.7` |
-| `interval_range` | 字符显示的时间间隔范围（秒），元组形式，最小值为$`0.2`$。<br/>Time interval range (in seconds) for character display, in tuple form; minimum value is $`0.2`$. | `(0.2, 0.2)` |
-| `camera_floating_maximum_value` | 相机浮动的最大范围，值$`\geqslant 0`$。<br/>Maximum range of camera floating; value $`\geqslant 0`$. | `0.1` |
-| `camera_move_interval` | 相机自动移动的时间间隔（秒），值$`\geqslant 0`$。<br/>Time interval (in seconds) for automatic camera movement, value $`\geqslant 0`$. | `0.1` |
-| `camera_move_duration` | 相机移动的持续时间（秒），值$`\geqslant 0`$。<br/>Duration (in seconds) of camera movement, value $`\geqslant 0`$. | `0.5` |
+| `interval_range` | 字符显示的时间间隔范围（秒），元组形式，最小值为0.2。<br/>Time interval range (in seconds) for character display, in tuple form; minimum value is $`0.2`$. | `(0.2, 0.2)` |
+| `camera_floating_maximum_value` | 相机浮动的最大范围，值小于等于0。<br/>Maximum range of camera floating; value less than or equal to 0. | `0.1` |
+| `camera_move_interval` | 相机自动移动的时间间隔（秒），值小于等于0。<br/>Time interval (in seconds) for automatic camera movement, valu less than or equal to 0. | `0.1` |
+| `camera_move_duration` | 相机移动的持续时间（秒），值小于等于0。<br/>Duration (in seconds) of camera movement, value less than or equal to 0. | `0.5` |
 | `screen_scale` | 屏幕缩放比例。<br/>Screen scaling ratio. | `0.5` |
 
 > [!CAUTION]
