@@ -81,7 +81,4 @@ You can use the `render` method of the `CodeVideo` object to generate a video, a
 > 视频加载时间稍长，请耐心等待<br/>
 > The video loading time is a little longer, please wait patiently.
 > 
-> <details><summary>渲染结果 Rendering Results</summary>
-> 
 > ![CodeVideo.mp4](https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/CodeVideo.gif)
-> </details>
