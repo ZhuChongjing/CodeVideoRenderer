@@ -77,8 +77,25 @@ You can use the `render` method of the `CodeVideo` object to generate a video, a
 > video = CodeVideo(code_string="print('Hello World!')", language='python')
 > video.render()
 > ```
->
-> 视频加载时间稍长，请耐心等待<br/>
+> <details><summary>渲染结果</summary>
+> 
+> ```
+> Total:
+>  - line: 1
+>  - character: 21
+> Settings:
+>  - language: python
+>  - font: Consolas
+> ╭──────────────────────────╮
+> │ 1  print('Hello World!') │ √
+> ╰──────────────────────────╯
+> Combining to Movie file.
+> File ready at 'C:\Users\ZhuChongjing\Desktop\media\videos\1080p60\CodeVideo.mp4'
+> Rendered CodeVideo.mp4
+> [Finished in 6.25s]
+> ```
+> 
+> 视频加载时间稍长，请耐心等待。<br/>
 > The video loading time is a little longer, please wait patiently.
 > 
 > ![CodeVideo.mp4](https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/CodeVideo.gif)
