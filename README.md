@@ -18,12 +18,12 @@ pip install CodeVideoRenderer
 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。<br/>
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
-## 如何使用<br/>How to Use
+## 如何使用 <br/>How to Use
 
 > [!Tip]
 > 视频生成时间可能略长，请耐心等待。<br/>Video generation may take a little time, please be patient.
 
-### 创建视频对象<br/>Creating a Video Object
+### 创建视频对象 <br/>Creating a Video Object
 
 本库提供`CodeVideo`，您可以用它来创建一个视频对象。参数如下：<br/>
 This library provides `CodeVideo`, which you can use to create a video object. The parameters are as follows:
@@ -65,7 +65,7 @@ This library uses `validate_call` from `pydantic`, which automatically checks pa
 > 所有带范围限制的参数均不能小于指定最小值，`code_string`与`code_file`不能同时传入。<br/>
 All parameters with range restrictions cannot be less than the specified minimum value, and `code_string` and `code_file` cannot be passed in at the same time.
 
-### 生成视频<br/>Generating a Video
+### 生成视频<br/> Generating a Video
 
 你可以使用`CodeVideo`对象的`render`方法来生成视频，并在终端中查看视频的保存位置。<br/>
 You can use the `render` method of the `CodeVideo` object to generate a video, and check the video's save location in the terminal.
@@ -77,7 +77,7 @@ You can use the `render` method of the `CodeVideo` object to generate a video, a
 > video = CodeVideo(code_string="print('Hello World!')", language='python')
 > video.render()
 > ```
-> <details><summary>渲染结果</summary>
+> <details><summary>渲染结果 Rendering Results</summary>
 > 
 > ```
 > Total:
