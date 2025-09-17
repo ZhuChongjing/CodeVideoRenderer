@@ -1,6 +1,7 @@
 <p align=center>
   <img  src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" />
-  <br/>
+</p>
+<p align=center>
   <strong>
     一个用于渲染代码视频的Python库
   </strong>
