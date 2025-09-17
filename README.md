@@ -1,4 +1,14 @@
-# CodeVideoRenderer
-A Python library for rendering code videos
 
-[`CodeVideoRenderer Wiki`](https://github.com/ZhuChongjing/CodeVideoRenderer/wiki)
+<p align=center>
+  <strong>
+    一个用于渲染代码视频的Python库
+  </strong>
+  <br/>
+  <strong>
+    <i>A Python library for rendering code videos</i>
+  </strong>
+</p>
+
+--- 
+
+点击查看使用说明：[`CodeVideoRenderer Wiki`](https://github.com/ZhuChongjing/CodeVideoRenderer/wiki)
