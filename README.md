@@ -1,5 +1,5 @@
 <p align=center>
-  <img  src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" />
+  <img  src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" alt="Image Loading..."/>
 </p>
 <p align=center>
   <strong>
