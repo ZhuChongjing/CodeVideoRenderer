@@ -291,7 +291,7 @@ class CodeVideo:
                     "Combining to Movie file.")
                 self.wait()
 
-            def render(self, output=True):
+            def render(self):
                 start_time = time.time()
                 with self._no_manim_output():
                     super().render()
@@ -305,3 +305,4 @@ class CodeVideo:
     def render(self, output=True):
         self.output = output
         self.scene.render()
+
