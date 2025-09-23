@@ -1,11 +1,11 @@
 # from PyPI
 from manim import *
 from pydantic import validate_call, Field
-import logging
+
 # from Python standard library
 from contextlib import contextmanager
 from typing import Annotated
-import random, sys, os, time, string
+import logging, random, sys, os, time, string
 
 class CodeVideo:
 
@@ -305,4 +305,5 @@ class CodeVideo:
     def render(self, output=True):
         self.output = output
         self.scene.render()
+
 
