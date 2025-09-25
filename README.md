@@ -11,7 +11,9 @@
   </strong>
 </p>
 
-Latest version: `v1.0.5.post1`
+Latest version: `v1.0.5.post2`
+
+Install Requires: `manim>=0.17.0`, `pydantic>=2.0`
 
 --- 
 
