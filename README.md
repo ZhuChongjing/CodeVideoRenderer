@@ -1,6 +1,7 @@
 <p align=center>
   <img  src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" alt="Image Loading..."/>
 </p>
+
 <p align=center>
   <strong>
     一个用于渲染代码视频的Python库
@@ -11,9 +12,9 @@
   </strong>
 </p>
 
-Latest version: `v1.0.5.post2`
+最新版 Latest version: `v1.0.5.post2`
 
-Install Requires: `manim>=0.17.0`, `pydantic>=2.0`
+安装依赖 Install Requires: `manim>=0.17.0`, `pydantic>=2.0`
 
 --- 
 
