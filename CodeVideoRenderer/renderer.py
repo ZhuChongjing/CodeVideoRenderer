@@ -136,6 +136,12 @@ class CodeVideo:
 
     def _create_scene(self):
         data = self
+        
+        # ANSI color code
+        ANSI_YELLOW = '\033[38;2;229;229;16m'
+        ANSI_GREEN = '\033[38;2;13;188;121m'
+        ANSI_GREY = '\033[38;2;135;135;135m'
+        ANSI_RESET = '\033[0m'
 
         class code_video(MovingCameraScene):
             
@@ -165,13 +171,15 @@ class CodeVideo:
                                         fill_opacity=1, fill_color=WHITE, color=WHITE).set_z_index(2)
                 
                 # initialize code block
-                code_block = Code(code_string=data.code_str, 
-                                language=data.language, 
-                                formatter_style='material', 
-                                paragraph_config={
-                                    'font': 'Consolas',
-                                    'line_spacing': data.line_spacing
-                                    })
+                code_block = Code(
+                    code_string=data.code_str, 
+                    language=data.language, 
+                    formatter_style='material', 
+                    paragraph_config={
+                        'font': 'Consolas',
+                        'line_spacing': data.line_spacing
+                    }
+                )
                 line_number_mobject = code_block.submobjects[1].set_color(GREY).set_z_index(2) # line numbers
                 code_mobject = code_block.submobjects[2].set_z_index(2) # code
 
@@ -184,7 +192,10 @@ class CodeVideo:
                 occupy = Code(
                     code_string=line_number*(max_char_num_per_line*'#' + '\n'),
                     language=data.language,
-                    paragraph_config={'font': 'Consolas', 'line_spacing': data.line_spacing}
+                    paragraph_config={
+                        'font': 'Consolas', 
+                        'line_spacing': data.line_spacing
+                    }
                 ).submobjects[2]
 
                 # align line numbers and codes
@@ -199,9 +210,12 @@ class CodeVideo:
                     code_mobject[1:].shift(DOWN*(initial_y-current_y))
                     occupy[1:].shift(DOWN*(initial_y-current_y))
 
-                code_line_rectangle = SurroundingRectangle(VGroup(occupy[-1], line_number_mobject[-1]), 
-                                                        color="#333333", fill_opacity=1, stroke_width=0
-                                                        ).set_z_index(1).set_y(occupy[0].get_y())
+                code_line_rectangle = SurroundingRectangle(
+                    VGroup(occupy[-1], line_number_mobject[-1]), 
+                    color="#333333", 
+                    fill_opacity=1, 
+                    stroke_width=0
+                ).set_z_index(1).set_y(occupy[0].get_y())
                 
                 self.camera.frame.scale(data.screen_scale).move_to(occupy[0][0].get_center())
                 cursor.next_to(occupy[0][0], LEFT, buff=-cursor_width) # cursor move to the left of occupy block
@@ -219,12 +233,14 @@ class CodeVideo:
                 self.add(moving_cam)
 
                 hyphens = (output_char_num_per_line+len(str(line_number))+4)*'─'
-                self.render_output(f"\033[32mTotal:\033[0m\n"
-                    f" - line: \033[33m{line_number}\033[0m\n"
-                    f" - character: \033[33m{len(data.code_str)}\033[0m\n"
-                    f"\033[32mSettings:\033[0m\n"
-                    f" - language: \033[33m{data.language if data.language else '-'}\033[0m\n"
-                    f"╭{hyphens}╮")
+                self.render_output(
+                    f"{ANSI_GREEN}Total:{ANSI_RESET}\n"
+                    f" - line: {ANSI_YELLOW}{line_number}{ANSI_RESET}\n"
+                    f" - character: {ANSI_YELLOW}{len(data.code_str)}{ANSI_RESET}\n"
+                    f"{ANSI_GREEN}Settings:{ANSI_RESET}\n"
+                    f" - language: {ANSI_YELLOW}{data.language if data.language else '-'}{ANSI_RESET}\n"
+                    f"╭{hyphens}╮"
+                )
 
                 # traverse code lines
                 for line in range(line_number):
@@ -251,13 +267,13 @@ class CodeVideo:
 
                     # progress bar
                     line_number_spaces = (len(str(line_number))-len(str(line+1)))*' '
-                    this_line_number = f"\033[30m{line_number_spaces}{line+1}\033[0m"
+                    this_line_number = f"{ANSI_GREY}{line_number_spaces}{line+1}{ANSI_RESET}"
                     spaces = output_char_num_per_line*' '
-                    self.render_output(f"│ {this_line_number}  {spaces} │ Rendering...  \033[33m0%\033[0m", end='')
+                    self.render_output(f"│ {this_line_number}  {spaces} │ Rendering...  {ANSI_YELLOW}0%{ANSI_RESET}", end='')
 
                     # if it is a empty line, skip
                     if data.code_str_lines[line] == '' or char_num == 0:
-                        self.render_output(f"\r│ {this_line_number}  {spaces} │ \033[32m√\033[0m               ")
+                        self.render_output(f"\r│ {this_line_number}  {spaces} │ {ANSI_GREEN}√{ANSI_RESET}               ")
                         continue
                     
                     first_non_space_index = len(data.code_str_lines[line]) - len(data.code_str_lines[line].lstrip())
@@ -269,7 +285,7 @@ class CodeVideo:
                         char_mobject = code_mobject[line][column] # code line character
                         charR, charG, charB = [int(rgb*255) for rgb in char_mobject.get_color().to_rgb()]
                         # use RGB to set output text color
-                        output_highlighted_code += f"\033[38;2;{charR};{charG};{charB}m{data.code_str_lines[line][column]}\033[0m"
+                        output_highlighted_code += f"\033[38;2;{charR};{charG};{charB}m{data.code_str_lines[line][column]}{ANSI_RESET}"
 
                         occupy_char = occupy[line][column] # occupy block character
                         self.add(char_mobject) # add code line character
@@ -281,11 +297,11 @@ class CodeVideo:
                         percent = int((column-first_non_space_index+1)/char_num*100)
                         percent_spaces = (3-len(str(percent)))*' '
                         self.render_output(f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ "
-                            f"Rendering...\033[33m{percent_spaces}{percent}%\033[0m", end='')
+                            f"Rendering...{ANSI_YELLOW}{percent_spaces}{percent}%{ANSI_RESET}", end='')
                     
                     # overwrite the previous progress bar
                     code_spaces = (output_char_num_per_line-len(data.code_str_lines[line]))*' '
-                    self.render_output(f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ \033[32m√\033[0m               ")
+                    self.render_output(f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ {ANSI_GREEN}√{ANSI_RESET}               ")
 
                 self.render_output(f"╰{hyphens}╯\n"
                     "Combining to Movie file.")
@@ -297,13 +313,11 @@ class CodeVideo:
                     super().render()
                 end_time = time.time()
                 total_render_time = end_time - start_time
-                self.render_output(f"File ready at \033[32m'{self.renderer.file_writer.movie_file_path}'\033[0m\n"
-                    f"\033[30m[Finished rendering in {total_render_time:.2f}s]\033[0m")
+                self.render_output(f"File ready at {ANSI_GREEN}'{self.renderer.file_writer.movie_file_path}'{ANSI_RESET}\n"
+                    f"{ANSI_GREY}[Finished rendering in {total_render_time:.2f}s]{ANSI_RESET}")
 
         return code_video()
 
     def render(self, output=True):
         self.output = output
         self.scene.render()
-
-
