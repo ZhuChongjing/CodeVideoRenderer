@@ -12,7 +12,7 @@
   </strong>
 </p>
 
-最新版 Latest version: `v1.0.5.post2`
+最新版 Latest version: `v1.0.6`
 
 安装依赖 Install Requires: `manim>=0.17.0`, `pydantic>=2.0`
 

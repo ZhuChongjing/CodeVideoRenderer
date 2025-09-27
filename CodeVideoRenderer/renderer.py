@@ -5,8 +5,7 @@ from pydantic import validate_call, Field
 # from Python standard library
 from contextlib import contextmanager
 from typing import Annotated
-import logging, random, sys, os, time, string
-
+import logging, random, sys, os, time, string, re
 
 class CodeVideo:
 
@@ -27,8 +26,6 @@ class CodeVideo:
 
         if interval_range[0] > interval_range[1]:
             raise ValueError("interval_range[0] must be less than or equal to interval_range[1]")
-
-        config.output_file = video_name
 
         self.video_name = video_name
         self.code_string = code_string
@@ -51,35 +48,41 @@ class CodeVideo:
         if self.code_string and self.code_file:
             raise ValueError("Only one of code_string and code_file can be provided")
 
+        # Get code string and check if it contains chinese characters or punctuation
         if self.code_string is not None:
-            code_str = self.code_string.replace("\t", " " * 4)
+            code_str = self.code_string.replace("\t", ' '*4)
             if not code_str.isascii():
                 raise ValueError("Non-ASCII characters found in the code, please remove them")
         elif self.code_file is not None:
             with open(os.path.abspath(self.code_file), "r") as f:
                 try:
-                    code_str = f.read().replace("\t", " " * 4)
+                    code_str = f.read().replace("\t", ' '*4)
                 except UnicodeDecodeError:
-                    raise ValueError("Non-ASCII characters found in the file, please remove them") from None
+                    raise ValueError("Non-ASCII characters found in the code, please remove them") from None
         else:
             raise ValueError("Either code_string or code_file must be provided")
-
-        if code_str.translate(str.maketrans("", "", string.whitespace)) == "":
+        
+        if code_str.translate(str.maketrans('', '', string.whitespace)) == '':
             raise ValueError("Code is empty")
-
+        
         return code_str
 
     class LoopMovingCamera(VGroup):
         """Custom camera updater for floating and smooth cursor following."""
-
-        def __init__(self, mob, scene, move_interval, move_duration, camera_floating_maximum_value):
+        def __init__(
+            self,
+            mob,
+            scene,
+            move_interval,
+            move_duration,
+            camera_floating_maximum_value
+        ):
             super().__init__()
             self.mob = mob
             self.scene = scene
             self.move_interval = move_interval
             self.move_duration = move_duration
             self.camera_floating_maximum_value = camera_floating_maximum_value
-
             self.elapsed_time = 0
             self.is_moving = False
             self.move_progress = 0
@@ -109,7 +112,7 @@ class CodeVideo:
                 current_pos = interpolate(
                     self.start_pos,
                     self.target_pos,
-                    smooth(self.move_progress),
+                    smooth(self.move_progress)
                 )
                 self.scene.camera.frame.move_to(current_pos)
                 if self.move_progress >= 1:
@@ -117,28 +120,34 @@ class CodeVideo:
                     self.move_progress = 0
                 return
 
-            # Floating camera effect
             self.elapsed_time += dt
             if self.elapsed_time >= self.move_interval:
                 self.start_pos = self.scene.camera.frame.get_center()
                 self.target_pos = self.mob.get_center() + (
-                        UP * random.uniform(-self.camera_floating_maximum_value, self.camera_floating_maximum_value)
-                        + LEFT * random.uniform(-self.camera_floating_maximum_value, self.camera_floating_maximum_value)
+                    UP * random.uniform(-self.camera_floating_maximum_value, self.camera_floating_maximum_value)
+                    + LEFT * random.uniform(-self.camera_floating_maximum_value, self.camera_floating_maximum_value)
                 )
                 self.is_moving = True
                 self.elapsed_time -= self.move_interval
 
-    def _create_scene(self):
+    def _create_scene(self) -> MovingCameraScene:
         """Create manim scene to animate code rendering."""
         data = self
-
+        
         # ANSI color codes for terminal output
-        ANSI_YELLOW = "\033[38;2;229;229;16m"
-        ANSI_GREEN = "\033[38;2;13;188;121m"
-        ANSI_GREY = "\033[38;2;135;135;135m"
-        ANSI_RESET = "\033[0m"
+        ANSI_YELLOW = '\033[38;2;229;229;16m'
+        ANSI_GREEN = '\033[38;2;13;188;121m'
+        ANSI_GREY = '\033[38;2;135;135;135m'
+        ANSI_RESET = '\033[0m'
+
+        if self.video_name is None:
+            raise ValueError("video_name cannot be empty")
+        config.output_file = self.video_name
+
+        output_max_width = os.get_terminal_size().columns - 19
 
         class code_video(MovingCameraScene):
+            
             @contextmanager
             def _no_manim_output(self):
                 """Context manager to suppress manim log and stderr output."""
@@ -147,12 +156,12 @@ class CodeVideo:
                 original_stderr = sys.stderr
                 try:
                     manim_logger.setLevel(logging.WARNING)
-                    sys.stderr = open(os.devnull, "w")
+                    sys.stderr = open(os.devnull, 'w')
                     yield
                 finally:
                     manim_logger.setLevel(original_manim_level)
                     sys.stderr = original_stderr
-
+            
             def render_output(self, text, **kwargs):
                 """Print output only if enabled."""
                 if data.output:
@@ -174,49 +183,52 @@ class CodeVideo:
 
                 # Create code block
                 code_block = Code(
-                    code_string=data.code_str,
-                    language=data.language,
-                    formatter_style="material",
-                    paragraph_config={"font": "Consolas", "line_spacing": data.line_spacing},
+                    code_string=data.code_str, 
+                    language=data.language, 
+                    formatter_style='material', 
+                    paragraph_config={
+                        'font': 'Consolas',
+                        'line_spacing': data.line_spacing
+                    }
                 )
                 line_number_mobject = code_block.submobjects[1].set_color(GREY).set_z_index(2)
                 code_mobject = code_block.submobjects[2].set_z_index(2)
 
-                line_number = len(line_number_mobject)
-                max_char_num_per_line = max(len(line.rstrip()) for line in data.code_str_lines)
-                output_char_num_per_line = max(20, max_char_num_per_line)
+                number_of_lines = len(line_number_mobject)
+                max_char_num_per_line = max([len(line.rstrip()) for line in data.code_str_lines])
+                output_char_num_per_line = min(output_max_width-number_of_lines-4, max(20, max_char_num_per_line))
 
                 # Occupy block (placeholder for alignment)
                 occupy = Code(
-                    code_string=line_number * (max_char_num_per_line * "#" + "\n"),
+                    code_string=number_of_lines*(max_char_num_per_line*'#' + '\n'),
                     language=data.language,
-                    paragraph_config={"font": "Consolas", "line_spacing": data.line_spacing},
+                    paragraph_config={
+                        'font': 'Consolas', 
+                        'line_spacing': data.line_spacing
+                    }
                 ).submobjects[2]
 
                 # Adjust baseline alignment
-                if all(ch in "acegmnopqrsuvwxyz" + string.whitespace for ch in data.code_str_lines[0]):
+                if all(check in "acegmnopqrsuvwxyz" + string.whitespace for check in data.code_str_lines[0]):
                     initial_y = code_mobject[0].get_y()
                     code_mobject[0].align_to(line_number_mobject[0], DOWN)
                     occupy[0].align_to(line_number_mobject[0], DOWN)
-                    offset_y = initial_y - code_mobject[0].get_y()
-                    code_mobject[1:].shift(DOWN * offset_y)
-                    occupy[1:].shift(DOWN * offset_y)
-
-                # Adjust positions to remove extra white space
-                code_mobject.next_to(line_number_mobject, RIGHT, buff=0.1)
-                occupy.next_to(line_number_mobject, RIGHT, buff=0.1)
+                    current_y = code_mobject[0].get_y()
+                    offset_y = initial_y - current_y
+                    code_mobject[1:].shift(DOWN*offset_y)
+                    occupy[1:].shift(DOWN*offset_y)
 
                 # Highlight rectangle
                 code_line_rectangle = SurroundingRectangle(
                     VGroup(occupy[-1], line_number_mobject[-1]),
                     color="#333333",
                     fill_opacity=1,
-                    stroke_width=0,
+                    stroke_width=0
                 ).set_z_index(1).set_y(occupy[0].get_y())
-
+                
                 # Setup camera
-                self.camera.frame.scale(data.screen_scale).move_to(code_mobject[0][0].get_center())
-                cursor.next_to(code_mobject[0][0], LEFT, buff=-cursor_width)
+                self.camera.frame.scale(data.screen_scale).move_to(occupy[0][0].get_center())
+                cursor.next_to(occupy[0][0], LEFT, buff=-cursor_width)
                 self.add(cursor, line_number_mobject[0].set_color(WHITE), code_line_rectangle)
                 self.wait()
 
@@ -226,15 +238,15 @@ class CodeVideo:
                     scene=self,
                     move_interval=data.camera_move_interval,
                     move_duration=data.camera_move_duration,
-                    camera_floating_maximum_value=data.camera_floating_maximum_value,
+                    camera_floating_maximum_value=data.camera_floating_maximum_value
                 )
                 self.add(moving_cam)
 
                 # Output settings summary
-                hyphens = (output_char_num_per_line + len(str(line_number)) + 4) * "─"
+                hyphens = min(output_max_width, (output_char_num_per_line + len(str(number_of_lines)) + 4)) * '─'
                 self.render_output(
                     f"{ANSI_GREEN}Total:{ANSI_RESET}\n"
-                    f" - line: {ANSI_YELLOW}{line_number}{ANSI_RESET}\n"
+                    f" - line: {ANSI_YELLOW}{number_of_lines}{ANSI_RESET}\n"
                     f" - character: {ANSI_YELLOW}{len(data.code_str)}{ANSI_RESET}\n"
                     f"{ANSI_GREEN}Settings:{ANSI_RESET}\n"
                     f" - language: {ANSI_YELLOW}{data.language if data.language else '-'}{ANSI_RESET}\n"
@@ -242,78 +254,82 @@ class CodeVideo:
                 )
 
                 # Iterate through code lines
-                for line in range(line_number):
+                for line in range(number_of_lines):
+
                     line_number_mobject.set_color(GREY)
                     line_number_mobject[line].set_color(WHITE)
+
                     char_num = len(data.code_str_lines[line].strip())
 
                     code_line_rectangle.set_y(occupy[line].get_y())
                     self.add(line_number_mobject[line])
 
                     def move_cursor_to_line_head():
-                        """Move cursor to the first non-space character in the line."""
-                        line_text = data.code_str_lines[line]
-                        if line_text.strip():
-                            first_non_space_index = len(line_text) - len(line_text.lstrip())
-                            if first_non_space_index < len(code_mobject[line]):
-                                cursor.next_to(code_mobject[line][first_non_space_index], LEFT, buff=-cursor_width)
-                            else:
-                                cursor.move_to(
-                                    [code_mobject[line].get_left()[0] - cursor_width, code_line_rectangle.get_y(), 0])
-                        else:
-                            cursor.move_to(
-                                [code_mobject[line].get_left()[0] - cursor_width, code_line_rectangle.get_y(), 0])
+                        """Move cursor to the first character in the line."""
+                        cursor.next_to(occupy[line], LEFT, buff=-cursor_width)
                         self.wait(random.uniform(*data.interval_range))
 
                     try:
-                        if data.code_str_lines[line] and data.code_str_lines[line][0] not in string.whitespace:
+                        if data.code_str_lines[line][0] not in string.whitespace:
                             move_cursor_to_line_head()
                     except IndexError:
                         move_cursor_to_line_head()
 
-                    # Progress bar init
-                    line_number_spaces = (len(str(line_number)) - len(str(line + 1))) * " "
-                    this_line_number = f"{ANSI_GREY}{line_number_spaces}{line + 1}{ANSI_RESET}"
-                    spaces = output_char_num_per_line * " "
-                    self.render_output(
-                        f"│ {this_line_number}  {spaces} │ Rendering...  {ANSI_YELLOW}0%{ANSI_RESET}", end=""
-                    )
+                    # progress bar
+                    line_number_spaces = (len(str(number_of_lines)) - len(str(line+1))) * ' '
+                    this_line_number = f"{ANSI_GREY}{line_number_spaces}{line+1}{ANSI_RESET}"
+                    spaces = output_char_num_per_line*' '
+                    self.render_output(f"│ {this_line_number}  {spaces} │ Rendering...  {ANSI_YELLOW}0%{ANSI_RESET}", end='')
 
-                    # Skip empty line
-                    if not data.code_str_lines[line] or char_num == 0:
-                        self.render_output(
-                            f"\r│ {this_line_number}  {spaces} │ {ANSI_GREEN}√{ANSI_RESET}               "
-                        )
+                    # if it is a empty line, skip
+                    if data.code_str_lines[line] == '' or char_num == 0:
+                        self.render_output(f"\r│ {this_line_number}  {spaces} │ {ANSI_GREEN}√{ANSI_RESET}               ")
                         continue
-
+                    
                     first_non_space_index = len(data.code_str_lines[line]) - len(data.code_str_lines[line].lstrip())
+
                     output_highlighted_code = first_non_space_index * " "
 
                     # Animate characters
-                    for column in range(first_non_space_index, char_num + first_non_space_index):
-                        char_mobject = code_mobject[line][column]
-                        r, g, b = [int(rgb * 255) for rgb in char_mobject.get_color().to_rgb()]
-                        output_highlighted_code += f"\033[38;2;{r};{g};{b}m{data.code_str_lines[line][column]}{ANSI_RESET}"
+                    for column in range(first_non_space_index, char_num+first_non_space_index):
 
+                        char_mobject = code_mobject[line][column]
+                        charR, charG, charB = [int(rgb*255) for rgb in char_mobject.get_color().to_rgb()]
+
+                        if char_num > output_char_num_per_line:
+                            remain_char_num = output_char_num_per_line - column
+                            if remain_char_num > 3:
+                                output_highlighted_code += f"\033[38;2;{charR};{charG};{charB}m{data.code_str_lines[line][column]}{ANSI_RESET}"
+                                code_spaces = (output_char_num_per_line - column - 1)*' '
+                            elif remain_char_num == 3:
+                                output_highlighted_code += "..."
+                                code_spaces = (output_char_num_per_line - column - 3)*' '
+                        else:
+                            output_highlighted_code += f"\033[38;2;{charR};{charG};{charB}m{data.code_str_lines[line][column]}{ANSI_RESET}"
+                            code_spaces = (output_char_num_per_line - column - 1)*' '
+
+                        occupy_char = occupy[line][column]
                         self.add(char_mobject)
-                        cursor.next_to(char_mobject, RIGHT, buff=0.05).set_y(code_line_rectangle.get_y())
+                        cursor.next_to(occupy_char, RIGHT, buff=0.05).set_y(code_line_rectangle.get_y()) # cursor y coordinate in the same line
                         self.wait(random.uniform(*data.interval_range))
 
-                        percent = int((column - first_non_space_index + 1) / char_num * 100)
-                        percent_spaces = (3 - len(str(percent))) * " "
-                        code_spaces = (output_char_num_per_line - column - 1) * " "
+                        # output progress
+                        percent = int((column-first_non_space_index+1)/char_num*100)
+                        percent_spaces = (3-len(str(percent)))*' '
                         self.render_output(
                             f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ "
                             f"Rendering...{ANSI_YELLOW}{percent_spaces}{percent}%{ANSI_RESET}",
-                            end="",
+                            end=''
                         )
+                    
+                    # Overwrite the previous progress bar
+                    code_spaces = (output_char_num_per_line-len(data.code_str_lines[line]))*' '
+                    self.render_output(f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ {ANSI_GREEN}√{ANSI_RESET}               ")
 
-                    code_spaces = (output_char_num_per_line - len(data.code_str_lines[line])) * " "
-                    self.render_output(
-                        f"\r│ {this_line_number}  {output_highlighted_code}{code_spaces} │ {ANSI_GREEN}√{ANSI_RESET}               "
-                    )
-
-                self.render_output(f"╰{hyphens}╯\nCombining to Movie file.")
+                self.render_output(
+                    f"╰{hyphens}╯\n"
+                    "Combining to Movie file."
+                )
                 self.wait()
 
             def render(self):
@@ -321,7 +337,8 @@ class CodeVideo:
                 start_time = time.time()
                 with self._no_manim_output():
                     super().render()
-                total_render_time = time.time() - start_time
+                end_time = time.time()
+                total_render_time = end_time - start_time
                 self.render_output(
                     f"File ready at {ANSI_GREEN}'{self.renderer.file_writer.movie_file_path}'{ANSI_RESET}\n"
                     f"{ANSI_GREY}[Finished rendering in {total_render_time:.2f}s]{ANSI_RESET}"
