@@ -14,7 +14,11 @@
 
 最新版 Latest version: `v1.0.6`
 
-安装依赖 Install Requires: `manim>=0.17.0`, `pydantic>=2.0`
+Python版本要求 Python version requirements: `>=3.9`
+
+Python依赖库 Python dependency library: `manim>=0.17.0`, `pydantic>=2.0`
+
+第三方软件依赖 Third-party software dependency: `ffmpeg`, `MixTex`
 
 --- 
 
