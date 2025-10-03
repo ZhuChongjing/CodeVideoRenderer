@@ -14,7 +14,7 @@
 
 ---
 
-Latest version: `v1.0.7`
+Latest version: `v1.0.7.post1`
 
 Python version requirements: `>=3.9`
 
