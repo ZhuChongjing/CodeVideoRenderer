@@ -33,7 +33,7 @@ If you encounter any issues, please send an email to [my email address](mailto:z
 本库用于生成输入代码的视频，相机会跟随光标移动。<br/>
 This library is used to generate videos of input code, with the camera following the cursor movement.
 
-软件支持 Software Support：[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/manim.jpg" width="70" align="center" />](https://github.com/manimCommunity/manim)
+软件支持 Software Support：[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/manim.jpg" width="70" align="center" alt="Manim"/>](https://github.com/manimCommunity/manim)
 
 > [!IMPORTANT]
 > 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
