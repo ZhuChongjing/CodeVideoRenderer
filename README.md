@@ -1,5 +1,5 @@
 <p align=center>
-  <img  src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" alt="Image Load Failed"/>
+  <img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/logo.jpg" width="200" alt="Image Load Failed"/>
 </p>
 
 <p align=center>
@@ -20,7 +20,7 @@ Python版本要求 Python version requirements: `>=3.9`
 
 Python依赖库 Python dependency library: `manim>=0.17.0`, `pydantic>=2.0`
 
-第三方软件依赖 Third-party software dependency: [`ffmpeg`](https://ffmpeg.org//), [`MikTex`](https://miktex.org/download)
+第三方软件依赖 Third-party software dependency: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//), [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
 --- 
 
