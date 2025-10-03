@@ -59,7 +59,7 @@ class CodeVideo:
         self.camera_move_duration = camera_move_duration
         self.camera_scale = camera_scale
 
-        self.code_str = self.code_string
+        self.code_str = code_str
         self.code_str_lines = self.code_str.split("\n")
         self.scene = self._create_scene()
         self.output = True
@@ -353,3 +353,4 @@ class CodeVideo:
         """Render the scene, optionally with console output."""
         self.output = output
         self.scene.render()
+
