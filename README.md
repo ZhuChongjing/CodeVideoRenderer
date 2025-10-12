@@ -12,6 +12,17 @@
   </strong>
 </p>
 
+<p align="center">
+	<a href="https://github.com/ZhuChongjing/CodeVideoRenderer/stargazers">
+    <img src="https://img.shields.io/github/stars/ZhuChongjing/CodeVideoRenderer?style=flat-square&logo=GitHub"></a>
+	<a href="https://github.com/ZhuChongjing/CodeVideoRenderer/network/members">
+    <img src="https://img.shields.io/github/forks/ZhuChongjing/CodeVideoRenderer?style=flat-square&logo=GitHub"></a>
+	<a href="https://github.com/ZhuChongjing/CodeVideoRenderer/watchers">
+    <img src="https://img.shields.io/github/watchers/ZhuChongjing/CodeVideoRenderer?style=flat-square&logo=GitHub"></a>
+	<a href="https://github.com/ZhuChongjing/CodeVideoRenderer/issues">
+    <img src="https://img.shields.io/github/issues/ZhuChongjing/CodeVideoRenderer.svg?style=flat-square&logo=GitHub"></a>
+</p>
+
 ---
 
 Latest version: `v1.0.7.post1`
