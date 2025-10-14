@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CodeVideoRender - 用代码生成编程视频</title>
+    <title>CodeVideoRenderer - 用代码生成编程视频</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
@@ -114,8 +114,8 @@
     <div class="container mx-auto px-4 py-4 flex justify-between items-center content-above-watermark">
         <div class="flex items-center gap-2">
             <i class="fa fa-code text-primary text-2xl"></i>
-            <span class="text-xl font-bold text-glow">CodeVideoRender</span>
-            <span class="text-xs text-gray-400">by ZhuChongJing</span>
+            <span class="text-xl font-bold text-glow">CodeVideoRenderer</span>
+            <span class="text-xs text-gray-400">by ZhuChongjing</span>
         </div>
         <div class="flex items-center gap-4">
             <a href="#docs" class="text-gray-300 hover:text-white transition-colors hidden sm:inline-block">
@@ -170,7 +170,7 @@ video.render()</code></pre>
             一行代码，<br>生成<span class="text-primary text-glow">专业编程视频</span>
         </h1>
         <p class="text-gray-300 text-[clamp(1rem,2vw,1.2rem)] max-w-2xl mx-auto mb-10">
-            无需复杂剪辑，自动晃动，用 Python 脚本控制打字动画、终端效果、主题样式，快速产出教程/演示视频
+            无需复杂剪辑，自动运镜，用 Python 脚本控制打字动画、终端效果、主题样式，快速产出教程/演示视频
         </p>
         <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto mb-16">
             <a href="#features" class="px-6 py-3 bg-primary hover:bg-primary/90 rounded-lg font-semibold transition-colors shadow-lg shadow-primary/20">
@@ -213,7 +213,7 @@ video.render()</code></pre>
                     <i class="fa fa-keyboard-o text-primary text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">智能打字动画</h3>
-                <p class="text-gray-400 mb-4">自定义打字速度、错误回删效果，模拟真实编程过程，无需手动调整帧</p>
+                <p class="text-gray-400 mb-4">自定义打字速度，模拟真实编程过程，无需手动调整</p>
                 <div class="text-xs text-primary/80 flex items-center gap-1">
                     <i class="fa fa-check-circle"></i>
                     <span>支持多语言语法高亮</span>
@@ -236,7 +236,7 @@ video.render()</code></pre>
                 <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
                     <i class="fa fa-magic text-accent text-xl"></i>
                 </div>
-                <h3 class="text-xl font-semibold mb-3">自动晃动</h3>
+                <h3 class="text-xl font-semibold mb-3">自动运镜</h3>
                 <p class="text-gray-400 mb-4">代码变化时，自动生成晃动效果，引起注意，提高教程观看体验</p>
                 <div class="text-xs text-accent/80 flex items-center gap-1">
                     <i class="fa fa-check-circle"></i>
@@ -251,7 +251,7 @@ video.render()</code></pre>
                     <i class="fa fa-image text-primary text-sm"></i>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-1">多场景合成</h4>
+                    <h4 class="font-semibold mb-1">＊多场景合成</h4>
                     <p class="text-gray-400 text-sm">支持代码场景、终端场景、图片场景切换，满足复杂视频需求</p>
                 </div>
             </div>
@@ -260,7 +260,7 @@ video.render()</code></pre>
                     <i class="fa fa-sliders text-primary text-sm"></i>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-1">高度自定义</h4>
+                    <h4 class="font-semibold mb-1">＊高度自定义</h4>
                     <p class="text-gray-400 text-sm">可配置视频分辨率、帧率、背景色、字体大小等参数</p>
                 </div>
             </div>
@@ -278,7 +278,7 @@ video.render()</code></pre>
                     <i class="fa fa-plug text-primary text-sm"></i>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-1">插件扩展</h4>
+                    <h4 class="font-semibold mb-1">＊插件扩展</h4>
                     <p class="text-gray-400 text-sm">支持自定义插件，扩展动画效果和输出格式</p>
                 </div>
             </div>
@@ -316,7 +316,7 @@ video.render()</code></pre>
                 <div class="bg-dark rounded-lg p-4 font-mono text-sm overflow-x-auto code-block relative">
                     <pre><code id="step2-code">from CodeVideoRenderer import CodeVideo
 
-c = CodeVideo(
+video = CodeVideo(
     video_name="output",
     code_string="print('hello world')",
     language="python"
@@ -348,7 +348,7 @@ c.render()
     <div class="container mx-auto px-4 max-w-3xl text-center content-above-watermark">
         <h2 class="text-2xl font-bold mb-6">完整文档即将上线</h2>
         <p class="text-gray-400 mb-8">目前可通过 GitHub 仓库查看详细使用说明和示例代码</p>
-        <a href="https://github.com/ZhuChongJing/CodeVideoRender" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+        <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
             <i class="fa fa-github"></i>
             <span>访问 GitHub 仓库</span>
         </a>
@@ -360,7 +360,7 @@ c.render()
         <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
             <div class="flex items-center gap-2">
                 <i class="fa fa-code text-primary text-2xl"></i>
-                <span class="text-xl font-bold text-glow">CodeVideoRender</span>
+                <span class="text-xl font-bold text-glow">CodeVideoRenderer</span>
             </div>
             <div class="flex gap-6">
                 <a href="https://github.com/ZhuChongJing/CodeVideoRender" target="_blank" class="text-gray-400 hover:text-white transition-colors">
@@ -378,7 +378,7 @@ c.render()
             </div>
         </div>
         <div class="text-center text-gray-500 text-sm">
-            <p>© 2024 CodeVideoRender by ZhuChongJing. 开源项目，基于 MIT 协议授权。</p>
+            <p>© 2024 CodeVideoRenderer by ZhuChongjing. 开源项目，基于 MIT 协议授权。</p>
             <p class="mt-2">本工具仅用于合法合规的内容创作，请勿用于侵权或违法用途。</p>
         </div>
     </div>
@@ -462,3 +462,4 @@ c.render()
 </script>
 </body>
 </html>
+
