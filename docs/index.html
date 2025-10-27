@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CodeVideoRenderer | A Python library for rendering code videos</title>
+        <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#6366F1',
+                            secondary: '#EC4899',
+                            dark: '#111827',
+                            accent: '#10B981'
+                        },
+                        fontFamily: {
+                            sans: ['Inter', 'system-ui', 'sans-serif'],
+                            mono: ['Fira Code', 'Consolas', 'monospace']
+                        },
+                        animation: {
+                            'code-flow': 'codeFlow 15s linear infinite',
+                            'watermark-flow': 'watermarkFlow 25s linear infinite',
+                            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                        },
+                        keyframes: {
+                            codeFlow: {
+                                '0%': { transform: 'translateX(120%) translateY(-50px) opacity(0)' },
+                                '10%': { transform: 'translateX(80%) translateY(-30px) opacity(0.8)' },
+                                '30%': { transform: 'translateX(40%) translateY(-10px) opacity(1)' },
+                                '50%': { transform: 'translateX(0) translateY(10px) opacity(1)' },
+                                '70%': { transform: 'translateX(-40%) translateY(30px) opacity(0.8)' },
+                                '90%': { transform: 'translateX(-80%) translateY(50px) opacity(0.2)' },
+                                '100%': { transform: 'translateX(-120%) translateY(70px) opacity(0)' }
+                            },
+                            watermarkFlow: {
+                                '0%': { transform: 'translate(150%, -50%) rotate(-15deg) scale(1)' },
+                                '100%': { transform: 'translate(-100%, 200%) rotate(-15deg) scale(1.2)' }
+                            }
+                        }
+                    },
+                }
+            }
+        </script>
+
+        <style type="text/tailwindcss">
+            @layer utilities {
+                .text-glow {
+                    text-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+                }
+                .text-glow-secondary {
+                    text-shadow: 0 0 12px rgba(236, 72, 153, 0.5);
+                }
+                .bg-gradient-main {
+                    background: linear-gradient(135deg, #111827 0%, #1F2937 100%);
+                }
+                .code-block {
+                    position: relative;
+                    overflow: hidden;
+                }
+                .floating-code {
+                    position: absolute;
+                    top: 20%;
+                    right: 0;
+                    z-index: 10;
+                    width: 35%;
+                    opacity: 0;
+                    pointer-events: none;
+                    background: rgba(17, 24, 39, 0.8);
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    border-left: 2px solid var(--code-color);
+                }
+                .content-above-watermark {
+                    position: relative;
+                    z-index: 20;
+                }
+                .video-wrapper {
+                    position: relative;
+                    z-index: 50 !important;
+                }
+                .video-wrapper video {
+                    position: relative;
+                    z-index: 51 !important;
+                }
+                .video-wrapper video::-webkit-media-controls {
+                    z-index: 60 !important;
+                }
+                .video-wrapper video::-webkit-media-controls-panel {
+                    z-index: 60 !important;
+                }
+            }
+        </style>
+    </head>
+
+    <body class="bg-dark text-white font-sans">
+        <header class="fixed w-full top-0 z-50 bg-dark/90 backdrop-blur-sm border-b border-primary/20 transition-all duration-300" id="navbar">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center content-above-watermark">
+                <div class="flex items-center gap-2">
+                    <i class="fa fa-code text-primary text-2xl"></i>
+                    <!-- span class="text-xl font-bold text-glow">CodeVideoRenderer</span> -->
+                    <img src="./images/name.svg">
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="https://zhuchongjing.github.io/CodeVideoRenderer-docs" class="text-gray-300 hover:text-white transition-colors hidden sm:inline-block">
+                        <i class="fa fa-book mr-1"></i> 文档
+                    </a>
+                    <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+                        <i class="fa fa-github"></i> GitHub
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <section class="pt-36 pb-24 bg-gradient-main relative overflow-hidden">
+
+            <div class="container mx-auto px-4 text-center content-above-watermark">
+                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 leading-tight">
+                    三行代码，<br>生成<span class="text-primary text-glow">专业编程视频</span>
+                </h1>
+                <p class="text-gray-300 text-[clamp(1rem,2vw,1.2rem)] max-w-2xl mx-auto mb-10">
+                    无需复杂剪辑，自动运镜，用 Python 脚本快速产出教程/演示视频
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 max-w-md mx-auto mb-16">
+                    <a href="#features" class="px-6 py-3 bg-primary hover:bg-primary/90 rounded-lg font-semibold transition-colors shadow-lg shadow-primary/20">
+                        看核心功能
+                    </a>
+                    <a href="#install" class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-lg font-semibold transition-colors">
+                        快速开始
+                    </a>
+                </div>
+
+                <div class="mt-8 max-w-3xl mx-auto rounded-xl overflow-hidden border border-primary/30 shadow-lg shadow-primary/10 bg-dark/80 p-1">
+                    <div class="video-wrapper relative aspect-video bg-dark/50">
+                        <video class="w-full h-full" controls style="z-index: 51 !important;">
+                            <source src="./videos/CodeVideo.mp4" type="video/mp4">
+                            您的浏览器不支持视频播放，请使用现代浏览器如Chrome、Firefox或Edge。
+                        </video>
+                        <div class="absolute inset-0 bg-dark/60 flex items-center justify-center opacity-0 transition-opacity" id="video-loading">
+                            <div class="flex flex-col items-center gap-3">
+                                <div class="w-10 h-10 border-2 border-primary/50 border-t-primary rounded-full animate-spin"></div>
+                                <span class="text-gray-300 text-sm">加载示例视频中...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-dark/90 px-4 py-3 text-sm text-gray-400 flex justify-between items-center">
+                        <span><i class="fa fa-info-circle mr-1 text-primary"></i> 示例</span>
+                        <span class="text-xs">支持 1080p/60fps 导出</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="py-24 relative">
+            <div class="container mx-auto px-4 content-above-watermark">
+                <h2 class="text-3xl font-bold text-center mb-6">核心功能</h2>
+                <p class="text-gray-400 text-center max-w-2xl mx-auto mb-16">三步搞定编程视频，从代码到成片全自动化</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div class="bg-white/5 hover:bg-white/10 p-6 rounded-xl border border-white/10 transition-all duration-300 hover:translate-y-[-5px] hover:border-primary/30 group">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                            <i class="fa fa-keyboard-o text-primary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">智能打字</h3>
+                        <p class="text-gray-400 mb-4">自定义打字速度，模拟真实编程过程，无需手动调整</p>
+                        <div class="text-xs text-primary/80 flex items-center gap-1">
+                            <i class="fa fa-check-circle"></i>
+                            <span>支持多语言语法高亮</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/5 hover:bg-white/10 p-6 rounded-xl border border-white/10 transition-all duration-300 hover:translate-y-[-5px] hover:border-secondary/30 group">
+                        <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+                            <i class="fa fa-terminal text-secondary text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">实时输出</h3>
+                        <p class="text-gray-400 mb-4">实时渲染命令行输出、颜色高亮、进度条，还原程序运行场景</p>
+                        <div class="text-xs text-secondary/80 flex items-center gap-1">
+                            <i class="fa fa-check-circle"></i>
+                            <span>渲染过程美观、可见</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-white/5 hover:bg-white/10 p-6 rounded-xl border border-white/10 transition-all duration-300 hover:translate-y-[-5px] hover:border-accent/30 group">
+                        <div class="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center mb-4 group-hover:bg-accent/20 transition-colors">
+                            <i class="fa fa-magic text-accent text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-3">自动运镜</h3>
+                        <p class="text-gray-400 mb-4">代码变化时，自动生成晃动效果，引起注意，提高教程观看体验</p>
+                        <div class="text-xs text-accent/80 flex items-center gap-1">
+                            <i class="fa fa-check-circle"></i>
+                            <span>可调节晃动强度/时长</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="max-w-5xl mx-auto mt-20 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                        <div class="w-8 h-8 bg-primary/10 rounded flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa fa-image text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">轻松上手</h4>
+                            <p class="text-gray-400 text-sm">三行代码即可生成专业编程视频，无需复杂剪辑</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                        <div class="w-8 h-8 bg-primary/10 rounded flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa fa-sliders text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">语法高亮</h4>
+                            <p class="text-gray-400 text-sm">使用pygments进行语法高亮，支持多种编程语言</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                        <div class="w-8 h-8 bg-primary/10 rounded flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa fa-fast-forward text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">批量渲染</h4>
+                            <p class="text-gray-400 text-sm">支持多脚本批量生成视频，适合系列教程制作</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4 p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-colors">
+                        <div class="w-8 h-8 bg-primary/10 rounded flex items-center justify-center flex-shrink-0 mt-1">
+                            <i class="fa fa-plug text-primary text-sm"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold mb-1">个性设置</h4>
+                            <p class="text-gray-400 text-sm">画面缩放、打字速度皆可自定义</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="install" class="py-24 bg-gradient-main relative">
+            <div class="container mx-auto px-4 max-w-3xl content-above-watermark">
+                <h2 class="text-3xl font-bold text-center mb-6">快速开始</h2>
+                <p class="text-gray-400 text-center max-w-2xl mx-auto mb-12">5分钟上手，从安装到生成第一个视频</p>
+
+                <div class="bg-white/5 rounded-xl p-6 border border-white/10 shadow-lg shadow-primary/5">
+                    <div class="mb-10 pb-8 border-b border-white/10">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <span class="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs">1</span>
+                            安装依赖库
+                        </h3>
+                        <div class="bg-dark rounded-lg p-4 font-mono text-sm overflow-x-auto code-block">
+                            <code id="step1-code" class="language-bash">pip install CodeVideoRenderer</code>
+                            <button class="absolute top-2 right-2 px-2 py-1 text-xs bg-primary/20 hover:bg-primary/30 rounded transition-colors copy-btn" data-target="step1-code">
+                                <i class="fa fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <p class="text-gray-400 text-xs mt-3">
+                            <i class="fa fa-info-circle mr-1 text-primary"></i>要求 Python 3.9+ 版本
+                        </p>
+                    </div>
+
+                    <div class="mb-10 pb-8 border-b border-white/10">
+                        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                            <span class="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-xs">2</span>
+                            编写渲染脚本
+                        </h3>
+                        <div class="bg-dark rounded-lg p-4 font-mono text-sm overflow-x-auto code-block relative">
+                            <pre><code id="step2-code" class="language-python">from CodeVideoRenderer import *
+video = CodeVideo(code_string="print('Hello World!')", language='python')
+video.render()</code></pre>
+                            <button class="absolute top-2 right-2 px-2 py-1 text-xs bg-primary/20 hover:bg-primary/30 rounded transition-colors copy-btn" data-target="step2-code">
+                                <i class="fa fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                        <p class="text-gray-400 text-xs mt-3">
+                            <i class="fa fa-lightbulb-o mr-1 text-secondary"></i> 可通过创建多个CodeVideo对象，实现批量生成
+                        </p>
+                    </div>
+
+                    <div class="mt-12 text-center">
+                        <h3 class="text-xl font-semibold mb-4">想要了解更多？</h3>
+                        <a href="https://zhuchongjing.github.io/CodeVideoRenderer-docs" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/20 rounded-lg transition-colors">
+                            <i class="fa fa-book"></i>
+                            <span>查看完整文档</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- <section id="docs" class="py-20 bg-dark relative">
+            <div class="container mx-auto px-4 max-w-3xl text-center content-above-watermark">
+                <h2 class="text-2xl font-bold mb-6">完整文档即将上线</h2>
+                <p class="text-gray-400 mb-8">目前可通过 GitHub 仓库查看详细使用说明和示例代码</p>
+                <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary/10 hover:bg-primary/20 rounded-lg transition-colors">
+                    <i class="fa fa-github"></i>
+                    <span>访问 GitHub 仓库</span>
+                </a>
+            </div>
+        </section> -->
+
+        <footer class="py-12 border-t border-white/10 relative">
+            <div class="container mx-auto px-4 content-above-watermark">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                    <div class="flex items-center gap-2">
+                        <i class="fa fa-code text-primary text-2xl"></i>
+                        <!-- span class="text-xl font-bold text-glow">CodeVideoRenderer</span> -->
+                        <img src="./images/name.svg">
+                    </div>
+                    <div class="flex gap-6">
+                        <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-github text-lg"></i>
+                        </a>
+                        <a href="https://zhuchongjing.github.io/CodeVideoRenderer-docs" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-book text-lg"></i>
+                        </a>
+                        <a href="mailto:zhuchongjing_pypi@163.com" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-envelope text-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="text-center text-gray-500 text-sm">
+                    <p>© 2025 CodeVideoRenderer by ZhuChongjing. 开源项目，基于 MIT 协议授权。</p>
+                    <p class="mt-2">本工具仅用于合法合规的内容创作，请勿用于侵权或违法用途。</p>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            window.addEventListener('scroll', function() {
+                const navbar = document.getElementById('navbar');
+                if (window.scrollY > 50) {
+                    navbar.classList.add('py-2');
+                    navbar.classList.remove('py-4');
+                } else {
+                    navbar.classList.add('py-4');
+                    navbar.classList.remove('py-2');
+                }
+            });
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        window.scrollTo({
+                            top: target.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const codeElement = document.getElementById(targetId);
+                    const codeText = codeElement.textContent;
+
+                    navigator.clipboard.writeText(codeText).then(() => {
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fa fa-check mr-1"></i> 已复制';
+                        this.classList.remove('bg-primary/20');
+                        this.classList.add('bg-accent/30');
+
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('bg-accent/30');
+                            this.classList.add('bg-primary/20');
+                        }, 2000);
+                    });
+                });
+            });
+
+            const videoElement = document.querySelector('video');
+            const videoLoading = document.getElementById('video-loading');
+
+            if (videoElement) {
+                videoElement.addEventListener('loadstart', function() {
+                    videoLoading.classList.remove('opacity-0');
+                });
+
+                videoElement.addEventListener('loadeddata', function() {
+                    videoLoading.classList.add('opacity-0');
+                });
+
+                videoElement.addEventListener('error', function() {
+                    videoLoading.innerHTML = '<div class="flex flex-col items-center gap-3"><i class="fa fa-exclamation-circle text-secondary text-xl"></i><span class="text-gray-300 text-sm">视频加载失败，请检查路径</span></div>';
+                });
+            }
+
+            document.querySelectorAll('.watermark').forEach(watermark => {
+                watermark.addEventListener('animationiteration', function() {
+                    this.style.opacity = 0;
+                    setTimeout(() => {
+                        this.style.opacity = 1;
+                    }, 500);
+                });
+
+                setTimeout(() => {
+                    watermark.style.opacity = 1;
+                }, 1000);
+            });
+        </script>
+    </body>
+</html>
+
+
+
