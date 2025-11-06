@@ -25,19 +25,17 @@
 
 ---
 
-Latest version: `v1.0.7.post1`
+Latest version: `v1.0.7.post2`
 
 Python version requirements: `>=3.9`
 
-Python dependency library: `manim>=0.17.0`, `pydantic>=2.0`
+Python dependency library: `manim>=0.17.0`, `pydantic>=2.0`, `rich>=13.0.0`
 
 Third-party software dependency: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
 --- 
 
 > [!NOTE]
-> 查看更多信息 For more information：[`Wiki`](https://github.com/ZhuChongjing/CodeVideoRenderer/wiki)
->
 > 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。<br/>
 If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
 
@@ -57,7 +55,7 @@ pip install CodeVideoRenderer
 
 ```python
 from CodeVideoRenderer import *
-video = CodeVideo(code_string="print('Hello World!')", language='python')
+video = CameraFollowCursorCV(code_string="print('Hello World!')", language='python')
 video.render()
 ```
 
