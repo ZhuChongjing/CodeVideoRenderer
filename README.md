@@ -25,7 +25,7 @@
 
 ---
 
-Latest version: `v1.0.7.post2`
+Latest version: `v1.0.7.post3`
 
 Python version requirements: `>=3.9`
 
