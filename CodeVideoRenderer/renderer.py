@@ -5,7 +5,7 @@ from pydantic import validate_call, Field
 # from Python standard library
 from contextlib import contextmanager
 from typing import Annotated
-import logging, random, sys, os, time, string, re
+import logging, random, sys, os, shutil, time, string, re
 
 class CodeVideo:
 
@@ -61,6 +61,7 @@ class CodeVideo:
 
         self.code_str = code_str
         self.code_str_lines = self.code_str.split("\n")
+        self.code_str = '.' + self.code_str
         self.scene = self._create_scene()
         self.output = True
 
@@ -147,7 +148,7 @@ class CodeVideo:
             raise ValueError("video_name cannot be empty")
         config.output_file = self.video_name
 
-        output_max_width = os.get_terminal_size().columns - 19
+        output_max_width = shutil.get_terminal_size((270, 27)).columns - 19
 
         class code_video(MovingCameraScene):
             
@@ -195,6 +196,12 @@ class CodeVideo:
                     }
                 )
                 line_number_mobject = code_block.submobjects[1].set_color(GREY).set_z_index(2)
+                # Remove placeholders, fix the offset of the x-coordinate.
+                submobject = code_block.submobjects[2][0].submobjects.pop(0)
+                if code_block.submobjects[2].submobjects[0]:
+                    width = code_block.submobjects[2][0].submobjects[0].get_x() - submobject.get_x()
+                    for index in range(len(code_block.submobjects[2].submobjects[0]) - 1, -1, -1):
+                        code_block.submobjects[2][0][index].set_x(code_block.submobjects[2][0][index].get_x() - width)
                 code_mobject = code_block.submobjects[2].set_z_index(2)
 
                 number_of_lines = len(line_number_mobject)
@@ -212,7 +219,9 @@ class CodeVideo:
                 ).submobjects[2]
 
                 # Adjust baseline alignment
-                if all(check in "acegmnopqrsuvwxyz" + string.whitespace for check in CodeVideo_self.code_str_lines[0]):
+                if CodeVideo_self.code_str_lines[0] == '':
+                    code_mobject.align_to(line_number_mobject, DOWN)
+                if all(check in "acegmnopqrsuvwxyz" + string.whitespace for check in CodeVideo_self.code_str_lines[0]) and code_mobject[0]:
                     initial_y = code_mobject[0].get_y()
                     code_mobject[0].align_to(line_number_mobject[0], DOWN)
                     occupy[0].align_to(line_number_mobject[0], DOWN)
@@ -335,7 +344,7 @@ class CodeVideo:
                 )
                 self.wait()
 
-            def render(self):
+            def render(self, preview: bool = False):
                 """Override render to add timing log."""
                 start_time = time.time()
                 with self._no_manim_output():
@@ -353,4 +362,3 @@ class CodeVideo:
         """Render the scene, optionally with console output."""
         self.output = output
         self.scene.render()
-
