@@ -25,33 +25,29 @@
 
 ---
 
-Latest version: `v1.0.7.post3`
+## 基本信息
 
-Python version requirements: `>=3.9`
+最新版本：`v1.0.8`
 
-Python dependency library: `manim>=0.17.0`, `pydantic>=2.0`, `rich>=13.0.0`
+Python版本要求：`>=3.9`
 
-Third-party software dependency: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
+Python依赖库: `manim>=0.17.0`
 
---- 
+第三方软件依赖: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
 > [!NOTE]
-> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。<br/>
-If you encounter any issues, please send an email to [my email address](mailto:zhuchongjing_pypi@163.com). We welcome bug feedback, and we will fix them as soon as possible.
+> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
 
-本库用于生成输入代码的视频，相机会跟随光标移动。<br/>
-This library is used to generate videos of input code, with the camera following the cursor movement.
+## 安装
 
-> [!IMPORTANT]
-> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。<br/>
-Animation rendering is done with `manim`, please ensure `manim` runs properly before use.
-
-命令行安装 Command Line Installation：
 ```bash
 pip install CodeVideoRenderer
 ```
 
-**示例 Example**
+> [!IMPORTANT]
+> 使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
+
+## 使用方法
 
 ```python
 from CodeVideoRenderer import *
@@ -59,5 +55,47 @@ video = CameraFollowCursorCV(code_string="print('Hello World!')", language='pyth
 video.render()
 ```
 
+### 基本参数
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `video_name` | `str` | `"CameraFollowCursorCV`" | 生成的视频文件名称，必须提供 |
+| `code_string` | `str` | `None` | 要演示的代码字符串，与`code_file`二选一 |
+| `code_file` | `str` | `None` | 要读取的代码文件路径，与`code_string`二选一 |
+| `language` | `str` | `None` | 代码语言，用于语法高亮显示 |
+
+### 排版与动画参数
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `line_spacing` | `float` | `DEFAULT_LINE_SPACING`[^1] | 代码行之间的间距，必须大于0 |
+| `interval_range` | `tuple[float, float]` | `(DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL)`[^2] | 字符输入的时间间隔范围，单位为秒，元组中第一个值必须小于等于第二个值 |
+
+### 相机控制参数
+
+| 参数名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `camera_floating_max_value` | `float` | `0.1` | 相机浮动效果的最大偏移值，控制相机轻微晃动的幅度 |
+| `camera_move_interval` | `float` | `0.1` | 相机自动移动的时间间隔，单位为秒 |
+| `camera_move_duration` | `float` | `0.5` | 相机移动到新位置的持续时间，单位为秒，影响移动的平滑度 |
+| `camera_scale` | `float` | `0.5` | 相机缩放比例，控制代码在画面中的显示大小 |
+
+### 使用注意事项
+
+> [!WARNING]
+> 1. `code_string` 和 `code_file` 必须且只能提供其中一个
+> 2. 所有时间相关参数必须大于或等于`SHORTEST_POSSIBLE_DURATION`[^3]
+> 3. 相机控制相关参数必须大于或等于`0`
+> 4. 代码内容不能为空，且只能包含系统支持的字符
+
+该类通过 `render()` 方法执行视频渲染，并可选择是否在控制台显示输出信息。渲染过程中会展示代码输入的进度条，并在完成后显示渲染时间和文件保存位置。
+        
 > [!CAUTION]
-> 传入的代码中不能含有非ASCII字符。<br/>The passed code must not contain non-ASCII characters.
+> 传入的代码中不能含有非ASCII字符。
+
+[^1]: 在`/renderer/config.py`中，定义`DEFAULT_LINE_SPACING = 0.8`
+[^2]: 在`/renderer/config.py`中，定义`DEFAULT_TYPE_INTERVAL = 0.15`
+[^3]: 在`/renderer/config.py`中，定义`SHORTEST_POSSIBLE_DURATION = 0.0166667`
+
+## 鸣谢
+感谢给`CodeVideoRenderer`提出宝贵建议的各位！
