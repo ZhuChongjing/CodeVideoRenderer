@@ -93,9 +93,9 @@ video.render()
 > [!CAUTION]
 > 传入的代码中不能含有非ASCII字符。
 
-[^1]: 在`/renderer/config.py`中，定义`DEFAULT_LINE_SPACING = 0.8`
-[^2]: 在`/renderer/config.py`中，定义`DEFAULT_TYPE_INTERVAL = 0.15`
-[^3]: 在`/renderer/config.py`中，定义`SHORTEST_POSSIBLE_DURATION = 0.0166667`
+[^1]: 在`renderer/config.py`中，定义`DEFAULT_LINE_SPACING = 0.8`
+[^2]: 在`renderer/config.py`中，定义`DEFAULT_TYPE_INTERVAL = 0.15`
+[^3]: 在`renderer/config.py`中，定义`SHORTEST_POSSIBLE_DURATION = 0.0166667`
 
 ## 鸣谢
 感谢给`CodeVideoRenderer`提出宝贵建议的各位！
