@@ -27,7 +27,7 @@
 
 ## 基本信息
 
-最新版本：`v1.0.8`
+最新版本：`v1.0.8.post1`
 
 Python版本要求：`>=3.9`
 
@@ -98,13 +98,9 @@ video.render()
 ## 鸣谢
 感谢给`CodeVideoRenderer`提出宝贵建议的各位！
 
-<a href="https://www.douyin.com/user/MS4wLjABAAAAuIknm2_gFZa7gxNw2o-FhWlTR-yl4VHPuRxjxJy88p3iin2s9O5t2f7pylFLCZfC">
-	<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/douyin_%E6%AC%BE%E5%86%AC.png" width=30 >
-</a> <a href="https://www.douyin.com/user/MS4wLjABAAAAPsW8ElarFqE08lFoTd49nQwHfHBr25pz4fXRnHI-xrc3ruPwprfpgyxFcSqHNN5Q">
-	<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/douyin_Goway_Hui.png" width=30 >
-</a> <a href="mailto:heigirl5201314@vip.qq.com">
-	<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/email_%E7%A0%B4%E7%A2%8E%E5%B0%8F%E8%9D%B4%E8%9D%B6INFP.png" width=30 >
-</a>
+[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/douyin_%E6%AC%BE%E5%86%AC.png" width=30 >](https://www.douyin.com/user/MS4wLjABAAAAuIknm2_gFZa7gxNw2o-FhWlTR-yl4VHPuRxjxJy88p3iin2s9O5t2f7pylFLCZfC)
+[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/douyin_Goway_Hui.png" width=30 >](https://www.douyin.com/user/MS4wLjABAAAAPsW8ElarFqE08lFoTd49nQwHfHBr25pz4fXRnHI-xrc3ruPwprfpgyxFcSqHNN5Q)
+[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/email_%E7%A0%B4%E7%A2%8E%E5%B0%8F%E8%9D%B4%E8%9D%B6INFP.png" width=30 >](mailto:heigirl5201314@vip.qq.com)
 
 ## 联系我们
 
