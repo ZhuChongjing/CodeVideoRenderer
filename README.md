@@ -31,9 +31,9 @@
 
 Python版本要求：`>=3.9`
 
-Python依赖库: `manim>=0.17.0`
+Python依赖库：`manim>=0.17.0`
 
-第三方软件依赖: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
+第三方软件依赖：[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
 ## 安装
 
@@ -83,7 +83,7 @@ video.render()
 > 1. `code_string` 和 `code_file` 必须且只能提供其中一个
 > 2. 所有时间相关参数必须大于或等于`SHORTEST_POSSIBLE_DURATION`[^3]
 > 3. 相机控制相关参数必须大于或等于`0`
-> 4. 代码内容不能为空，且只能包含系统支持的字符
+> 4. 代码内容不能为空，且只能包含`AVAILABLE_CHARACTERS`[^4]
 
 该类通过 `render()` 方法执行视频渲染，并可选择是否在控制台显示输出信息。渲染过程中会展示代码输入的进度条，并在完成后显示渲染时间和文件保存位置。
         
@@ -93,6 +93,7 @@ video.render()
 [^1]: 在`renderer/config.py`中，定义`DEFAULT_LINE_SPACING = 0.8`
 [^2]: 在`renderer/config.py`中，定义`DEFAULT_TYPE_INTERVAL = 0.15`
 [^3]: 在`renderer/config.py`中，定义`SHORTEST_POSSIBLE_DURATION = 0.0166667`
+[^4]: 在`renderer/config.py`中，定义``AVAILABLE_CHARACTERS = """0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ \t\n"""``
 
 ## 鸣谢
 感谢给`CodeVideoRenderer`提出宝贵建议的各位！
