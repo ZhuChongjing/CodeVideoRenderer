@@ -35,9 +35,6 @@ Python依赖库: `manim>=0.17.0`
 
 第三方软件依赖: [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
-> [!NOTE]
-> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
-
 ## 安装
 
 ```bash
@@ -107,3 +104,8 @@ video.render()
 </a> <a href="mailto:heigirl5201314@vip.qq.com">
 	<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/avatars/email_%E7%A0%B4%E7%A2%8E%E5%B0%8F%E8%9D%B4%E8%9D%B6INFP.png" width=30 >
 </a>
+
+## 联系我们
+
+> [!NOTE]
+> 发现任何问题请发送至[我的邮箱](mailto:zhuchongjing_pypi@163.com)，欢迎大家来找茬，我们会尽快修复。
