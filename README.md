@@ -127,7 +127,9 @@ def render(output: bool = DEFAULT_OUTPUT_VALUE) -> None
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `output` | `bool` | `True` | 渲染时是否输出 |
+| `output` | `bool` | `DEFAULT_OUTPUT_VALUE`[^5] | 渲染时是否输出 |
+
+[^5]: 在`renderer/config.py`中，定义`DEFAULT_OUTPUT_VALUE = True`
 
 ## 鸣谢
 感谢给`CodeVideoRenderer`提出宝贵建议的各位！
