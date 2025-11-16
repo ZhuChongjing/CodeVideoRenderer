@@ -1,7 +1,8 @@
 from contextlib import contextmanager
 from io import StringIO
-import logging, sys
 from manim import config
+from functools import wraps
+import logging, sys, inspect
 
 from .config import *
 
@@ -30,11 +31,6 @@ def no_manim_output():
         if stderr_content:
             print(stderr_content, file=ORIGINAL_STDERR)
 
-def render_output(CV, text, **kwargs):
-    """Print output only if enabled."""
-    if CV.output:
-        print(text, file=ORIGINAL_STDOUT, **kwargs)
-
 def strip_empty_lines(text):
     lines = text.split("\n")
     
@@ -47,3 +43,24 @@ def strip_empty_lines(text):
         end -= 1
     
     return '\n'.join(lines[start:end])
+
+
+def type_checker(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        sig = inspect.signature(func)
+        bound_args = sig.bind(*args, **kwargs)
+        
+        for param_name, param_value in bound_args.arguments.items():
+            param_type = sig.parameters[param_name].annotation
+            if param_type is inspect.Parameter.empty:
+                continue  # 无注解则不校验
+            
+            if not isinstance(param_value, param_type):
+                raise ValueError(
+                    f"Parameter '{param_name}': Expected '{param_type.__name__}', got '{type(param_value).__name__}'"
+                )
+        
+        # 类型校验通过，执行原函数
+        return func(*args, **kwargs)
+    return wrapper
