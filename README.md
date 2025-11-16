@@ -27,11 +27,11 @@
 
 ## 基本信息
 
-最新版本：`v1.0.8.post1`
+最新版本：`v1.0.9`
 
 Python版本要求：`>=3.9`
 
-Python依赖库：`manim>=0.17.0`
+Python依赖库：`manim>=0.17.0`, `rich>=13.0.0`
 
 第三方软件依赖：[<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/FFmpeg.png" width="80" align="center" alt="FFmpeg"/>](https://ffmpeg.org//) [<img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/README_files/MikTex.png" width="30" align="center" alt="MikTex"/>](https://miktex.org/download)
 
@@ -52,9 +52,6 @@ video = CameraFollowCursorCV(code_string="print('Hello World!')", language='pyth
 video.render()
 ```
 
-> [!NOTE]
->
-> `CodeVideo`在版本`v1.0.7.post2`中更名为`CameraFollowCursorCV`
 
 ## 代码视频对象
 
@@ -66,12 +63,15 @@ class CameraFollowCursorCV(
     language: str = None,
     line_spacing: float = DEFAULT_LINE_SPACING,
     interval_range: tuple[float, float] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
-    camera_floating_max_value: float = 0.1,
-    camera_move_interval: float = 0.1,
-    camera_move_duration: float = 0.5,
     camera_scale: float = 0.5
 )
 ```
+
+> [!NOTE]
+>
+> 在`v1.0.7.post2`版本中更名为`CameraFollowCursorCV`，原名`CodeVideo`
+>
+> 参数`camera_floating_max_value`、`camera_move_interval`、`camera_move_duration`在`v1.0.9`版本中被删除
 
 ### 基本参数
 
@@ -103,9 +103,6 @@ class CameraFollowCursorCV(
 
 | 参数名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
-| `camera_floating_max_value` | `float` | `0.1` | 相机浮动效果的最大偏移值，控制相机轻微晃动的幅度 |
-| `camera_move_interval` | `float` | `0.1` | 相机自动移动的时间间隔，单位为秒 |
-| `camera_move_duration` | `float` | `0.5` | 相机移动到新位置的持续时间，单位为秒，影响移动的平滑度 |
 | `camera_scale` | `float` | `0.5` | 相机缩放比例，控制代码在画面中的显示大小 |
 
 > [!WARNING]
