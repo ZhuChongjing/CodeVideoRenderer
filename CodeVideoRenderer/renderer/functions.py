@@ -2,6 +2,8 @@ from contextlib import contextmanager
 from io import StringIO
 from manim import config
 from functools import wraps
+from typing import get_args, get_origin
+from types import UnionType
 import logging, sys, inspect
 
 from .config import *
@@ -44,6 +46,10 @@ def strip_empty_lines(text):
     
     return '\n'.join(lines[start:end])
 
+def typeName(item_type):
+    if isinstance(item_type, UnionType):
+        return str(item_type).replace(" | ", "' or '")
+    return item_type.__name__
 
 def type_checker(func):
     @wraps(func)
@@ -54,13 +60,32 @@ def type_checker(func):
         for param_name, param_value in bound_args.arguments.items():
             param_type = sig.parameters[param_name].annotation
             if param_type is inspect.Parameter.empty:
-                continue  # 无注解则不校验
+                continue  # 无注解则跳过
             
-            if not isinstance(param_value, param_type):
-                raise ValueError(
-                    f"Parameter '{param_name}': Expected '{param_type.__name__}', got '{type(param_value).__name__}'"
-                )
+            # 处理带参数的泛型 tuple（如 tuple[float, float]）
+            if get_origin(param_type) is tuple:
+                # 校验是否为 tuple 实例
+                if not isinstance(param_value, tuple):
+                    raise TypeError(
+                        f"Parameter '{param_name}': Expected 'tuple', got '{type(param_value).__name__}'"
+                    )
+                # 校验长度和元素类型
+                item_types = get_args(param_type)
+                if len(param_value) != len(item_types):
+                    raise ValueError(
+                        f"Parameter '{param_name}' length mismatch: Expected {len(item_types)}, got {len(param_value)}"
+                    )
+                for idx, (item, item_type) in enumerate(zip(param_value, item_types)):
+                    if not isinstance(item, item_type):
+                        raise TypeError(
+                            f"Parameter '{param_name}' item (index: {idx}): Expected '{typeName(item_type)}', got '{type(item).__name__}'"
+                        )
+            
+            # 普通类型
+            else:
+                if not isinstance(param_value, param_type):
+                        raise TypeError(f"Parameter '{param_name}': Expected '{typeName(param_type)}', got '{type(param_value).__name__}'")
+                        
         
-        # 类型校验通过，执行原函数
         return func(*args, **kwargs)
     return wrapper

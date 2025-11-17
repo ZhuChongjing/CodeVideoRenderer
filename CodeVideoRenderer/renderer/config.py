@@ -26,15 +26,14 @@ output_yellow = [229, 229, 16]
 output_green = [13, 188, 121]
 output_grey = [135, 135, 135]
 
-MARKUP_YELLOW = f'[rgb({','.join(str(rgb) for rgb in output_yellow)})]'
-MARKUP_GREEN = f'[rgb({','.join(str(rgb) for rgb in output_green)})]'
-MARKUP_GREY = f'[rgb({','.join(str(rgb) for rgb in output_grey)})]'
-MARKUP_ITALIC = '[italic]'
-MARKUP_RESET = '[/]'
+MARKUP_YELLOW = f"[rgb({','.join(str(rgb) for rgb in output_yellow)})]"
+MARKUP_GREEN = f"[rgb({','.join(str(rgb) for rgb in output_green)})]"
+MARKUP_GREY = f"[rgb({','.join(str(rgb) for rgb in output_grey)})]"
+MARKUP_ITALIC = f"[italic]"
+MARKUP_RESET = f"[/]"
 
 # 其他设置
 CODE_OFFSET = 0.04
 EMPTY_CHARACTER = ' \t\n'
 AVAILABLE_CHARACTERS = digits + ascii_letters + punctuation + EMPTY_CHARACTER
 OCCUPY_CHARACTER = '('
-SHORTEST_POSSIBLE_DURATION = round(1/config.frame_rate, 7)

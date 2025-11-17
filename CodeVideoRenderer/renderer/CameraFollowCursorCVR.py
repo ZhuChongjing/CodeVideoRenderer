@@ -24,9 +24,9 @@ class CameraFollowCursorCV:
         code_string: str = None,
         code_file: str = None,
         language: str = None,
-        line_spacing: float = DEFAULT_LINE_SPACING,
-        interval_range: tuple[float, float] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
-        camera_scale: float = 0.5
+        line_spacing: float | int = DEFAULT_LINE_SPACING,
+        interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
+        camera_scale: float | int = 0.5
     ):
         # video_name
         if not video_name:
@@ -190,6 +190,7 @@ class CameraFollowCursorCV:
                 with Progress(
                     TextColumn("[progress.description]{task.description}"),
                     BarColumn(),
+                    TextColumn("[yellow]{task.completed}/{task.total}"),
                     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
                     TimeRemainingColumn(),
                     TransferSpeedColumn(),
@@ -227,6 +228,7 @@ class CameraFollowCursorCV:
 
                         # 如果当前行为空行，跳过
                         if self.code_str_lines[line] == '' or char_num == 0:
+                            progress.remove_task(current_line_progress)
                             continue
                         
                         first_non_space_index = len(self.code_str_lines[line]) - len(self.code_str_lines[line].lstrip())
