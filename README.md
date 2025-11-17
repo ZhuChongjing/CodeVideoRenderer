@@ -27,7 +27,7 @@
 
 ## 基本信息
 
-最新版本：`v1.0.9`
+最新版本：`v1.0.9.post1`
 
 Python版本要求：`>=3.9`
 
@@ -61,9 +61,9 @@ class CameraFollowCursorCV(
     code_string: str = None,
     code_file: str = None,
     language: str = None,
-    line_spacing: float = DEFAULT_LINE_SPACING,
-    interval_range: tuple[float, float] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
-    camera_scale: float = 0.5
+    line_spacing: float | int = DEFAULT_LINE_SPACING,
+    interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
+    camera_scale: float | int = 0.5
 )
 ```
 
@@ -97,7 +97,7 @@ class CameraFollowCursorCV(
 
 > [!WARNING]
 >
-> 所有时间相关参数必须大于或等于`SHORTEST_POSSIBLE_DURATION`[^3]
+> 所有时间相关参数必须大于或等于$`\frac{1}{当前帧率}`$（取七位小数）
 
 ### 相机控制参数
 
@@ -111,7 +111,6 @@ class CameraFollowCursorCV(
 
 [^1]: 在`renderer/config.py`中，定义`DEFAULT_LINE_SPACING = 0.8`
 [^2]: 在`renderer/config.py`中，定义`DEFAULT_TYPE_INTERVAL = 0.15`
-[^3]: 在`renderer/config.py`中，定义`SHORTEST_POSSIBLE_DURATION = 0.0166667`
 [^4]: 在`renderer/config.py`中，定义``AVAILABLE_CHARACTERS = """0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ \t\n"""``
 
 ## 渲染
