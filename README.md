@@ -44,14 +44,19 @@ pip install CodeVideoRenderer
 > [!TIP]
 > 本库使用`manim`进行动画渲染，使用前请确保`manim`能够正常运行。
 
-## 使用方法
+## 示例
+
+### 简单代码
 
 ```python
 from CodeVideoRenderer import *
-video = CameraFollowCursorCV(code_string="print('Hello World!')", language='python')
+video = CameraFollowCursorCV(video_name="Hello World", code_string="print('Hello World!')", language='python')
 video.render()
 ```
 
+总用时4.53秒
+
+https://github.com/user-attachments/assets/f4f016c5-04cf-4669-b6d2-1f0d884fd2a5
 
 ## 代码视频对象
 
