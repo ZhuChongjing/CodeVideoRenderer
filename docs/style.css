@@ -15,6 +15,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    min-width: 0; 
 }
 
 html {
@@ -27,7 +28,7 @@ body {
     color: var(--color-black);
     background-color: var(--color-bg-white);
     text-rendering: optimizeLegibility;
-    overflow-x: hidden;
+    overflow-x: hidden; 
 }
 
 code {
@@ -112,12 +113,16 @@ nav a:hover { color: var(--color-link); }
     justify-content: center;
     text-align: center;
     background-color: var(--color-bg-white);
+    width: 100vw; 
 }
 
 .hero-section h2 {
     font-size: 3.5rem;
     font-weight: 700;
     margin-bottom: 20px;
+    /* 关键修复：允许长单词换行 */
+    overflow-wrap: break-word; 
+    word-wrap: break-word;
 }
 
 .hero-section p {
@@ -276,14 +281,17 @@ footer .container {
     transition-delay: var(--animation-delay, 0s);
 }
 
+/* -------------------------------------- */
+/* 媒体查询：平板优化 (小于 768px) */
+/* -------------------------------------- */
 @media (max-width: 768px) {
     .feature-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
-    
+
     .section-padding { padding: 80px 0; }
-    
+
     .hero-section h2 {
         font-size: 3rem;
     }
@@ -293,15 +301,37 @@ footer .container {
     }
 }
 
+/* -------------------------------------- */
+/* 媒体查询：手机优化 (小于 480px) */
+/* -------------------------------------- */
 @media (max-width: 480px) {
     .container {
-        padding: 0 0px;
+        padding: 0 10px; /* 进一步优化间距 */
     }
-    
+
     header .container {
-        padding: 14px 16px;
+        flex-wrap: wrap; 
+        justify-content: space-around;
+        padding: 10px 10px;
     }
-    
+
+    .logo {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 8px;
+        font-size: 1.2rem;
+    }
+
+    nav {
+        width: 100%;
+        text-align: center;
+    }
+
+    nav a {
+        margin: 0 5px;
+        font-size: 0.85rem;
+    }
+
     h3 {
         font-size: 2rem;
     }
@@ -309,9 +339,9 @@ footer .container {
     .subtitle-fade-in {
         font-size: 1.1rem;
     }
-    
+
     .hero-section h2 {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
     }
 
     .hero-section p {
@@ -321,10 +351,10 @@ footer .container {
     .feature-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .section-padding { padding: 60px 0; }
-    
-    nav a {
-        margin-left: 8px;
+
+    .main-mockup-card pre {
+        font-size: 0.9rem;
     }
 }
