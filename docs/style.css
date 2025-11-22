@@ -295,7 +295,7 @@ footer .container {
 
 @media (max-width: 480px) {
     .container {
-        padding: 0 5px;
+        padding: 0 0px;
     }
     
     header .container {
@@ -329,3 +329,4 @@ footer .container {
     }
 
 }
+
