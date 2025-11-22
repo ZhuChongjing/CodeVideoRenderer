@@ -6,21 +6,29 @@
     <title>CodeVideoRenderer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
-<body data-theme="light"> 
+<body> 
     
+    <div class="bg-glow"></div>
+
     <header>
         <div class="container">
-            <h1 class="logo"><i class="fas fa-code"></i> <code style="font-size: 1.2em;">CodeVideoRenderer</code></h1>
+            <h1 class="logo">
+                <i class="fas fa-code text-accent"></i> 
+                <code>CodeVideoRenderer</code>
+            </h1>
             <nav>
-                <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank">
+                <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" title="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
-                <a href="mailto:zhuchongjing_pypi@163.com" target="_blank">
+                <a href="mailto:zhuchongjing_pypi@163.com" target="_blank" title="Email">
                     <i class="fas fa-envelope"></i>
                 </a>
-                <a href="#docs">
+                <a href="./docs.html" title="Documentation">
                     <i class="fas fa-book"></i>
                 </a>
             </nav>
@@ -29,27 +37,35 @@
 
     <section id="hero" class="hero-section section-full-height">
         <div class="container">
-            <h3 class="text-fade-in">
-                <code>CodeVideoRenderer</code>
-            </h3>
+            <div class="badge text-fade-in"><code>v1.0.9.post2</code> 现在可用</div>
             <h2 class="text-fade-in">
-                <strong>智能相机</strong>跟随动画
+                让代码演示<br>
+                <span class="gradient-text">极具电影感</span>
             </h2>
-            <p class="text-fade-in">告别枯燥录屏。利用核心模块，将您的代码演示提升至电影级的专业水准。</p>
-            <a href="#product" class="btn btn-primary text-fade-in">探索核心技术</a>
+            <p class="text-fade-in">告别枯燥录屏。利用 <code>Python</code> 核心模块，生成带有智能运镜、语法高亮和丝滑动画的专业视频。</p>
+            
+            <div class="hero-btns text-fade-in">
+                <a href="#product" class="btn btn-primary">探索核心技术</a>
+                <span class="install-cmd">
+                    pip install CodeVideoRenderer
+                    <i class="far fa-copy copy-icon" onclick="navigator.clipboard.writeText('pip install CodeVideoRenderer'); alert('命令已复制！')"></i>
+                </span>
+            </div>
         </div>
     </section>
 
-    <section id="product" class="section-padding bg-white">
+    <section id="product" class="section-padding">
         <div class="container">
             <h3 class="title-fade-in">一切，聚焦于你</h3>
             <p class="subtitle-fade-in">光标移动，摄像机即动。平滑的缩放和跟随，只为呈现最佳的演示视角。</p>
 
             <div class="main-mockup-card scroll-zoom-in">
                 <div class="window-bar">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
+                    <div class="dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
                     <span class="title">demo.py</span>
                 </div>
                 <pre><code class="python">from CodeVideoRenderer import CameraFollowCursorCV
@@ -62,81 +78,79 @@ video.render()</code></pre>
         </div>
     </section>
 
-    <section id="features" class="section-padding bg-light-gray">
+    <section id="features" class="section-padding">
         <div class="container">
             <h3 class="title-fade-in">
                 <p>精确可控的渲染引擎</p>
             </h3>
             <div class="feature-grid three-col">
                 <div class="feature-card scroll-fade-in" style="--animation-delay: 0s;">
-                    <i class="fas fa-down-left-and-up-right-to-center icon-large"></i>
+                    <div class="icon-box">
+                        <i class="fas fa-video"></i>
+                    </div>
                     <h4>相机缩放</h4>
-                    <p>当光标遇到长行代码时，摄像机会<strong>动态缩小</strong>以保持视野。</p>
+                    <p>当光标遇到长行代码时，摄像机会<strong>动态缩小</strong>以保持视野，宛如电影运镜。</p>
                 </div>
                 <div class="feature-card scroll-fade-in" style="--animation-delay: 0.1s;">
-                    <i class="fas fa-clock icon-large"></i>
-                    <h4>打字间隔</h4>
+                    <div class="icon-box">
+                        <i class="fas fa-keyboard"></i>
+                    </div>
+                    <h4>拟人输入</h4>
                     <p><strong>自定义</strong>打字间隔的随机范围。避免机械式输入，增强真实感。</p>
                 </div>
                 <div class="feature-card scroll-fade-in" style="--animation-delay: 0.2s;">
-                    <i class="fas fa-text-height icon-large"></i>
-                    <h4>行间距</h4>
+                    <div class="icon-box">
+                        <i class="fas fa-text-height"></i>
+                    </div>
+                    <h4>排版控制</h4>
                     <p><strong>自定义</strong>代码行之间的垂直间距，精确控制代码文本的排版密度。</p>
                 </div>
                 <div class="feature-card scroll-fade-in" style="--animation-delay: 0.3s;">
-                    <i class="fas fa-file-code icon-large"></i>
-                    <h4>代码输入</h4>
-                    <p>支持<strong>直接输入</strong>代码字符串或读取文件。</p>
+                    <div class="icon-box">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h4>灵活输入</h4>
+                    <p>支持<strong>直接输入</strong>代码字符串或读取文件，无缝集成到你的工作流。</p>
                 </div>
                    <div class="feature-card scroll-fade-in" style="--animation-delay: 0.4s;">
-                    <i class="fas fa-terminal icon-large"></i>
-                    <h4>进度反馈</h4>
-                    <p>渲染时在终端<strong>实时显示</strong>基于 <code>rich</code> 的进度条、渲染耗时和详细摘要。</p>
+                    <div class="icon-box">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h4>实时反馈</h4>
+                    <p>渲染时在终端<strong>实时显示</strong>基于 <code>rich</code> 的进度条、耗时统计和详细摘要。</p>
                 </div>
                    <div class="feature-card scroll-fade-in" style="--animation-delay: 0.5s;">
-                    <i class="fab fa-python icon-large"></i>
-                    <h4><code>Manim</code> 核心</h4>
-                    <p>基于强大的 <code>Manim</code> 动画引擎，保证输出视频的<strong>极高画质</strong>和渲染的<strong>稳定性</strong>。</p>
+                    <div class="icon-box">
+                        <i class="fab fa-python"></i>
+                    </div>
+                    <h4>强大核心</h4>
+                    <p>基于强大的 $\mathbb{M}\text{anim}$ 动画引擎，保证输出视频的<strong>超高画质</strong>和极高的稳定性。</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="guide" class="section-padding">
+    <section id="docs" class="section-padding elements-center">
         <div class="container">
             <h3 class="title-fade-in">
-                <p>即刻开始您的创作</p>
+                <p>准备好开始了吗？</p>
             </h3>
-            <p class="subtitle-fade-in"><code>CodeVideoRenderer</code> 简化了 <code>Manim</code> 的复杂性，让您专注于代码本身。</p>
-
-            <div class="main-mockup-card scroll-zoom-in">
-                <div class="window-bar">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
-                    <span class="title">cmd.exe</span>
-                </div>
-                <pre><code class="bash">pip install CodeVideoRenderer</code></pre>
-            </div>
-        </div>
-    </section>
-
-    <section id="docs" class="section-padding elements-center bg-light-gray">
-        <div class="container">
-            <h3 class="title-fade-in">
-                <p>查看更多内容</p>
-            </h3>
-            <p class="subtitle-fade-in">完整文档即将上线，敬请期待！</p>
+            <p class="subtitle-fade-in"><code>CodeVideoRenderer</code> 简化了 $\mathbb{M}\text{anim}$ 的复杂性，使您专注于代码本身。</p>
             
-            <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="btn btn-secondary scroll-fade-in">
-                前往<code>GitHub</code>仓库 <i class="fas fa-arrow-right"></i>
-            </a>
+            <div class="cta-group scroll-fade-in">
+                <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="btn btn-primary">
+                    <i class="fab fa-github"></i> 前往 GitHub 仓库
+                </a>
+                <a href="./docs.html" class="btn btn-secondary">
+                    阅读文档
+                </a>
+            </div>
         </div>
     </section>
     
     <footer>
         <div class="container">
-            <p class="copyright">Copyright © 2025 ZhuChongjing. All rights reserved.</p>
+            <p class="copyright">Copyright © 2025 ZhuChongjing. All rights reserved. Released under MIT License.</p>
         </div>
     </footer>
 

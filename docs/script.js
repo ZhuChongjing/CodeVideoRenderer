@@ -1,41 +1,38 @@
 document.addEventListener('DOMContentLoaded', (event) => {
-    // 1. 启用 highlight.js
     hljs.highlightAll();
 
-    // 2. ----------------------------------
-    // A. 英雄区文本动画 (只触发一次)
-    // ----------------------------------
-    const heroElements = document.querySelectorAll("#hero .text-fade-in");
+    renderMathInElement(document.body, {
+        delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false},
+            {left: '\\(', right: '\\)', display: false},
+            {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+    });
 
-    // 为英雄区设置一个短暂的延时，确保在页面加载后立即触发
-    const heroDelay = 200; 
+    const heroElements = document.querySelectorAll("#hero .text-fade-in");
+    const heroDelay = 100; 
 
     heroElements.forEach((el, index) => {
         setTimeout(() => {
             el.classList.add('visible');
-        }, heroDelay + (index * 150)); // 依次延迟显示
+        }, heroDelay + (index * 100)); 
     });
 
-    // 3. ----------------------------------
-    // B. 通用滚动动画 (Intersection Observer)
-    // ----------------------------------
-
-    // 收集所有需要滚动动画的元素
     const scrollAnimatedElements = document.querySelectorAll(
         ".title-fade-in, .subtitle-fade-in, .scroll-fade-in, .scroll-zoom-in"
     );
 
     const observerOptions = {
-        threshold: 0.1, // 元素 10% 进入视口时触发
-        rootMargin: "0px 0px -100px 0px" // 底部提前 100px 触发
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px"
     };
 
     const scrollObserver = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
-                // 如果元素可见，添加 visible 类
                 entry.target.classList.add("visible");
-                // 停止观察，避免重复触发
                 observer.unobserve(entry.target);
             }
         });
@@ -44,4 +41,37 @@ document.addEventListener('DOMContentLoaded', (event) => {
     scrollAnimatedElements.forEach(el => {
         scrollObserver.observe(el);
     });
+
+    // === 文档页面的 ScrollSpy (滚动监听) ===
+    const sections = document.querySelectorAll('.docs-content section');
+    const navLinks = document.querySelectorAll('.sidebar-nav .nav-link');
+
+    // 只有在文档页面存在 section 时才运行
+    if (sections.length > 0) {
+        const observerOptions = {
+            root: null,
+            rootMargin: '-100px 0px -70% 0px', // 调整触发线，让高亮更自然
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // 移除所有 active 类
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    
+                    // 找到对应的链接并添加 active 类
+                    const id = entry.target.getAttribute('id');
+                    const activeLink = document.querySelector(`.sidebar-nav a[href="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    }
 });
