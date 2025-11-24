@@ -600,7 +600,7 @@ footer {
     line-height: 1.7;
 }
 
-.docs-content code:not(pre code) {
+.code-with-bg {
     background: rgba(59, 130, 246, 0.1);
     color: var(--color-accent);
     padding: 2px 6px;
@@ -608,7 +608,25 @@ footer {
     font-size: 0.9em;
 }
 
-.code { font-family: var(--font-code); }
+.class {
+    color: rgb(13, 188, 121);
+}
+
+.variable {
+    color: rgb(156, 220, 254);
+}
+
+.string {
+    color: rgb(206, 145, 120);
+}
+
+.number {
+    color: rgb(181, 206, 168);
+}
+
+.function {
+    color: rgb(220, 220, 170);
+}
 
 .text-link {
     color: var(--color-accent);

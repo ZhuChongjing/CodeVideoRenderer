@@ -1,3 +1,5 @@
+<!-- START OF FILE docs.html -->
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -28,15 +30,12 @@
                 </h1>
             </a>
             <nav>
-                <!-- 1. GitHub -->
                 <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" title="GitHub">
                     <i class="fab fa-github"></i>
                 </a>
-                <!-- 2. Email (保留不删) -->
                 <a href="mailto:zhuchongjing_pypi@163.com" target="_blank" title="Email">
                     <i class="fas fa-envelope"></i>
                 </a>
-                <!-- 3. Home (替换原来的文档图标) -->
                 <a href="index.html" title="返回首页">
                     <i class="fas fa-home"></i>
                 </a>
@@ -56,7 +55,7 @@
                 </div>
                 <div class="nav-group">
                     <span class="nav-title">核心类</span>
-                    <a href="#CameraFollowCursorCV" class="nav-link">CameraFollowCursorCV</a>
+                    <a href="#CameraFollowCursorCV" class="nav-link"><code>CameraFollowCursorCV</code></a>
                     <a href="#init-params" class="nav-link">初始化参数</a>
                     <a href="#render-method" class="nav-link">渲染方法</a>
                 </div>
@@ -74,17 +73,17 @@
             <!-- 简介 -->
             <section id="intro">
                 <h1>简介</h1>
-                <p><code>CameraFollowCursorCV</code> 是本库的核心类，专门设计用于模拟代码输入的动画过程。它通过逐行、逐字符的动画效果，配合平滑的摄像机跟随，创造出具有专业水准的代码演示视频。</p>
+                <p><code class="class">CameraFollowCursorCV</code> 是本库的核心类，专门设计用于模拟代码输入的动画过程。它通过逐行、逐字符的动画效果，配合平滑的摄像机跟随，创造出具有专业水准的代码演示视频。</p>
                 <div class="tip-box">
                     <i class="fas fa-star"></i>
-                    <span><strong>特性：</strong> 支持基于 <code>rich</code> 的终端进度条、动态缩放算法、以及随机打字间隔模拟。</span>
+                    <span><strong><code>v1.1.0</code> 新特性：</strong> 引入了基于 <code>numpy</code> 的相机律动算法，在打字过程中产生自然的微振荡，大幅提升观感流畅度。</span>
                 </div>
             </section>
 
             <!-- 安装 -->
             <section id="install">
                 <h2>安装依赖</h2>
-                <p>本库依赖于 <code>manim</code> 和 <code>rich</code>。确保您的环境中已安装 <a href="https://www.python.org/downloads/" target="_blank" class="code">Python 3.9+</a> 以及 <a href="https://ffmpeg.org/download.html" target="_blank" class="code">FFmpeg</a>。</p>
+                <p>本库依赖于 <code class="code-with-bg">manim</code>, <code class="code-with-bg">rich</code> 以及 <code class="code-with-bg">numpy</code>。确保您的环境中已安装 <a href="https://www.python.org/downloads/" target="_blank"><code>Python 3.9+</code></a> 以及 <a href="https://ffmpeg.org/download.html" target="_blank"><code>FFmpeg</code></a>。</p>
                 <div class="code-block-wrapper">
                     <pre><code class="bash">pip install CodeVideoRenderer</code></pre>
                     <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install CodeVideoRenderer');alert('Copied!')"><i class="far fa-copy"></i></button>
@@ -111,7 +110,7 @@ video.render()</code></pre>
 
             <!-- 类定义 -->
             <section id="CameraFollowCursorCV">
-                <h2><code>CameraFollowCursorCV</code> 类</h2>
+                <h2><code class="class">CameraFollowCursorCV</code> 类</h2>
                 <p>该类继承并封装了 $\mathbb{M}\text{anim}$ 的场景逻辑，自动处理光标移动、换行、缩进以及摄像机的运动轨迹。</p>
                 <div class="code-block-wrapper">
                     <pre><code class="python">class CameraFollowCursorCV(
@@ -128,7 +127,7 @@ video.render()</code></pre>
 
             <!-- 初始化参数 -->
             <section id="init-params">
-                <h3>初始化参数 <code>__init__</code></h3>
+                <h3>初始化参数 <code class="function">__init__</code></h3>
                 <p>在创建实例时，您可以配置以下参数来控制视频的生成细节：</p>
 
                 <table class="docs-table">
@@ -141,72 +140,51 @@ video.render()</code></pre>
                     </thead>
                     <tbody>
                         <tr>
-                            <td><code>video_name</code></td>
-                            <td><code>str</code></td>
+                            <td><code class="variable">video_name</code></td>
+                            <td><code class="class">str</code></td>
                             <td>输出视频的文件名（无需后缀）。</td>
                         </tr>
                         <tr>
-                            <td><code>code_string</code></td>
-                            <td><code>str</code></td>
+                            <td><code class="variable">code_string</code></td>
+                            <td><code class="class">str</code></td>
                             <td>直接传入的代码字符串。</td>
                         </tr>
                         <tr>
-                            <td><code>code_file</code></td>
-                            <td><code>str</code></td>
+                            <td><code class="variable">code_file</code></td>
+                            <td><code class="class">str</code></td>
                             <td>代码文件的路径。支持读取本地文件内容。</td>
                         </tr>
                         <tr>
-                            <td><code>language</code></td>
-                            <td><code>str</code></td>
-                            <td>用于语法高亮的语言名称（如 <code>"python"</code>、<code>"c++"</code>等）。</td>
+                            <td><code class="variable">language</code></td>
+                            <td><code class="class">str</code></td>
+                            <td>用于语法高亮的语言名称（如 <code class="string">"python"</code>、<code class="string">"c++"</code>等）。</td>
                         </tr>
                         <tr>
-                            <td><code>line_spacing</code></td>
-                            <td><code>float | int</code></td>
-                            <td>行间距。默认值基于配置常量，必须大于 0。</td>
+                            <td><code class="variable">line_spacing</code></td>
+                            <td><code class="class">float</code><code> | </code><code class="class">int</code></td>
+                            <td>行间距。默认值基于配置常量，必须大于 <code class="number">0</code>。</td>
                         </tr>
                         <tr>
-                            <td><code>interval_range</code></td>
-                            <td><code>tuple</code></td>
-                            <td>打字间隔范围 <code>(min, max)</code>。单位为秒。</td>
+                            <td><code class="variable">interval_range</code></td>
+                            <td><code class="class">tuple</code></td>
+                            <td>打字间隔范围 <code>(</code><code class="variable">min</code><code>, </code><code class="variable">max</code><code>)</code>。单位为秒。</td>
                         </tr>
                         <tr>
-                            <td><code>camera_scale</code></td>
-                            <td><code>float | int</code></td>
-                            <td>相机的初始缩放比例。默认为 <code>0.5</code>。</td>
+                            <td><code class="variable">camera_scale</code></td>
+                            <td><code class="class">float</code><code> | </code><code class="class">int</code></td>
+                            <td>相机的初始缩放比例。默认为 <code class="number">0.5</code>。</td>
                         </tr>
                     </tbody>
                 </table>
-
-                <div class="tip-box">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span><strong>注意：</strong> <code>code_string</code> 和 <code>code_file</code> 只能二选一，否则会抛出 <code>ValueError</code>。</span>
-                </div>
             </section>
 
             <!-- 渲染方法 -->
             <section id="render-method">
-                <h3>渲染方法 <code>render()</code></h3>
+                <h3>渲染方法 <code class="function">render</code><code>()</code></h3>
                 <div class="code-block-wrapper">
                     <pre><code class="python">def render(self, output: bool = True) -> None:</code></pre>
                 </div>
-                <p>启动 $\mathbb{M}\text{anim}$ 渲染流程。渲染过程中会在控制台通过 <code>rich</code> 库显示详细的进度条、当前行号以及预计剩余时间。</p>
-                <table class="docs-table">
-                    <thead>
-                        <tr>
-                            <th style="width: 20%">参数名</th>
-                            <th style="width: 20%">类型</th>
-                            <th>说明</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><code>output</code></td>
-                            <td><code>bool</code></td>
-                            <td>是否在控制台输出日志信息。默认为 <code>True</code>。</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <p>启动 $\mathbb{M}\text{anim}$ 渲染流程。渲染前会在控制台通过 <code class="class">rich</code><code>.</code><code class="class">panel</code> 打印任务摘要，并显示包含速度和剩余时间的详细进度条。</p>
             </section>
 
             <!-- 输入处理逻辑 -->
@@ -214,8 +192,8 @@ video.render()</code></pre>
                 <h2>输入源处理逻辑</h2>
                 <p>库内部会对输入的代码进行严格的预处理，以保证渲染稳定性：</p>
                 <ol>
-                    <li><strong>Tab 转换</strong>: 所有的制表符 <code>\t</code> 会被自动展开为空格（默认宽度 4）。</li>
-                    <li><strong>字符校验</strong>: 自动检测代码中是否包含 $\mathbb{M}\text{anim}$ 无法渲染的非法字符或非 ASCII 字符（当使用默认字体时）。</li>
+                    <li><strong>Tab 转换</strong>: 所有的制表符 <code class="string">\t</code> 会被自动展开为空格（默认宽度 4）。</li>
+                    <li><strong>字符校验</strong>: 自动检测代码中是否包含 $\mathbb{M}\text{anim}$ 无法渲染的非法字符。</li>
                     <li><strong>空行处理</strong>: 代码首尾的空行会被自动剔除，但保留段落间的空行以维持格式。</li>
                 </ol>
             </section>
@@ -223,56 +201,55 @@ video.render()</code></pre>
             <!-- 算法 -->
             <section id="algo">
                 <h2>动态相机算法</h2>
-                <p>为了确保长代码行也能完整显示，<code>CameraFollowCursorCV</code> 实现了一套自适应缩放算法。系统每渲染一个字符，都会判断是否需要拉远镜头。</p>
                 
-                <h3>核心公式</h3>
+                <h3>自适应缩放 (Adaptive Scaling)</h3>
+                <p>为了确保长代码行也能完整显示，系统每渲染一个字符，都会判断是否需要拉远镜头。<code>v1.1.0</code> 优化了视觉系数。</p>
+                
                 <div class="math-block">
-                    $$ D = \frac{X_\text{cam} - X_\text{origin}}{12} $$
+                    $$ D = \frac{X_\text{cam} - X_\text{origin}}{14.22} $$
                 </div>
                 
-                <h3>变量含义</h3>
+                <p>如果计算出的目标系数 $D$ 大于当前的相机缩放，系统将触发 <code class="function">scale</code> 动画，将相机平滑拉远。</p>
+
+                <h3>视觉律动 (Visual Rhythm)</h3>
+                <p><code>v1.1.0</code> 引入了模拟呼吸感的微振荡算法。在输入一行代码时，相机不再是死板地水平移动，而是会产生极其微小的垂直浮动。浮动轨迹由以下公式决定：</p>
+
+                <div class="math-block">
+                    $$ \Delta y = A \cdot \sin(\pi \alpha) \cdot \sin(\omega \alpha) $$
+                </div>
+
                 <table class="docs-table">
                     <thead>
                         <tr>
-                            <th>变量符号</th>
-                            <th>代码对应</th>
-                            <th>含义解析</th>
+                            <th>变量</th>
+                            <th>含义</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>$D$</td>
-                            <td><code>distance</code></td>
-                            <td><strong>目标缩放系数</strong>。表示为了完整显示当前代码行宽度，相机所需的最小缩放比例。</td>
+                            <td>$A$</td>
+                            <td>振幅。设定为相机当前画幅高度的 $2.5\%$。</td>
                         </tr>
                         <tr>
-                            <td>$X_\text{cam}$</td>
-                            <td><code>camera.frame.get_x()</code></td>
-                            <td><strong>相机中心横坐标</strong>。在跟随模式下，这通常等于当前<strong>光标</strong>的中心横坐标。</td>
+                            <td>$\alpha$</td>
+                            <td>当前行的输入进度 ($0 \to 1$)。</td>
                         </tr>
                         <tr>
-                            <td>$X_\text{origin}$</td>
-                            <td><code>line_number.get_x()</code></td>
-                            <td><strong>原点</strong>。这里使用<strong>行号对象</strong>的横坐标作为参考原点。</td>
+                            <td>$\sin(\pi \alpha)$</td>
+                            <td><strong>包络线 (Envelope)</strong>。确保振荡在行首和行尾衰减为 0，保证平滑过渡。</td>
+                        </tr>
+                        <tr>
+                            <td>$\omega$</td>
+                            <td>振荡频率。基于当前行的字符总长度动态计算。</td>
                         </tr>
                     </tbody>
                 </table>
-
-                <h3>判断逻辑</h3>
-                <p>如果计算出的目标系数 $D$ 大于当前的相机缩放，则触发 <code>scale</code> 动画，将相机平滑拉远，确保光标始终处于视口右侧的安全区域内。</p>
-                <div class="code-block-wrapper">
-                    <pre><code class="python">def JUDGE_cameraScaleAnimation():
-    distance = (scene.camera.frame.get_x() - line_number_mobject.get_x()) / 12
-    if distance > self.camera_scale:
-        scene.Animation_list.append({"scale": distance/self.camera_scale})
-        self.camera_scale = distance</code></pre>
-                </div>
+                <p>这种叠加了包络线的正弦振荡，使得长行代码的输入过程具有了类似“书写节奏”的自然起伏感。</p>
             </section>
 
         </main>
     </div>
     
-    <!-- Footer -->
     <footer>
         <div class="container">
             <p class="copyright">Copyright © 2025 ZhuChongjing. All rights reserved. Released under MIT License.</p>
