@@ -1,14 +1,13 @@
 from manim import *
 from pathlib import Path
-from rich import traceback
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 from rich.panel import Panel
 import random, time, string, shutil
+import numpy as np
 
 from .functions import *
 from .config import *
 
-traceback.install(extra_lines=1)
 config.disable_caching = True
 
 class CameraFollowCursorCV:
@@ -57,8 +56,10 @@ class CameraFollowCursorCV:
             raise ValueError("line_spacing must be greater than 0")
 
         # interval_range
-        if not all(interval >= round(1/config.frame_rate, 7) for interval in interval_range):
-            raise ValueError(f"interval_range must be greater than or equal to {round(1/config.frame_rate, 7)}")
+        shortest_possible_duration = round(1/config.frame_rate, 7)
+        if not all(interval >= shortest_possible_duration for interval in interval_range):
+            raise ValueError(f"interval_range must be greater than or equal to {shortest_possible_duration}")
+        del shortest_possible_duration
         if interval_range[0] > interval_range[1]:
             raise ValueError("The first term of interval_range must be less than or equal to the second term")
 
@@ -137,55 +138,62 @@ class CameraFollowCursorCV:
                     stroke_width=0
                 ).set_z_index(1).set_y(occupy[0].get_y())
                 
-                # 初始化相机位置
+                # 初始化光标位置
                 cursor.align_to(occupy[0][0], LEFT).set_y(occupy[0][0].get_y())
-                scene.camera.frame.scale(self.camera_scale).move_to(cursor.get_center())
-                scene.add(cursor, line_number_mobject[0].set_color(WHITE), code_line_rectangle)
-                scene.wait()
 
+                # 入场动画
+                target_center = cursor.get_center()
+                start_center = target_center + UP * 3
+                scene.camera.frame.scale(self.camera_scale).move_to(start_center)
+                scene.add(cursor, line_number_mobject[0].set_color(WHITE), code_line_rectangle)
+
+                scene.play(
+                    scene.camera.frame.animate.move_to(target_center),
+                    run_time=1,
+                    rate_func=rate_functions.ease_out_cubic
+                )
+                
                 # 定义固定动画
                 scene.Animation_list = []
                 def linebreakAnimation():
                     scene.Animation_list.append({"move_to": cursor.get_center()})
 
-                def move_camera_to_cursor():
-                    scene.Animation_list.append({"move_to": cursor.get_center()})
-
                 def JUDGE_cameraScaleAnimation():
-                    distance = (scene.camera.frame.get_x() - line_number_mobject.get_x()) / 12
+                    distance = (scene.camera.frame.get_x() - line_number_mobject.get_x()) / 14.22
                     if distance > self.camera_scale:
                         scene.Animation_list.append({"scale": distance/self.camera_scale})
                         self.camera_scale = distance
 
                 def playAnimation(**kwargs):
                     if scene.Animation_list:
-                        # 同时执行camera.move_to()和camera.scale()会导致只执行scale()
-                        # 因此需要camera.move_to().scale()才能同时进行
                         cameraAnimation = scene.camera.frame.animate
+
                         for anim in scene.Animation_list:
                             if "move_to" in anim:
                                 cameraAnimation.move_to(anim["move_to"])
                             elif "scale" in anim:
                                 cameraAnimation.scale(anim["scale"])
+                        
                         scene.play(cameraAnimation, **kwargs)
                         scene.Animation_list.clear()
                         del cameraAnimation
 
                 # 输出渲染信息
-                DEFAULT_OUTPUT_CONSOLE.print(
-                    f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}\n"
-                    f"{MARKUP_GREY}Start Rendering '{self.video_name}.mp4'{MARKUP_RESET}\n",
-                    Panel(
-                        f"{MARKUP_GREEN}Total:{MARKUP_RESET}\n"
-                        f" - line: {MARKUP_YELLOW}{total_line_numbers}{MARKUP_RESET}\n"
-                        f" - character: {MARKUP_YELLOW}{total_char_numbers}{MARKUP_RESET}\n"
-                        f"{MARKUP_GREEN}Settings:{MARKUP_RESET}\n"
-                        f" - language: {MARKUP_ITALIC}{MARKUP_YELLOW}{self.language if self.language else '-'}{MARKUP_RESET}",
-                        border_style="blue",
-                        title="Summary",
-                        expand=False,
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.print(
+                        f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}\n"
+                        f"{MARKUP_GREY}Start Rendering '{self.video_name}.mp4'{MARKUP_RESET}\n",
+                        Panel(
+                            f"{MARKUP_GREEN}Total:{MARKUP_RESET}\n"
+                            f" - line: {MARKUP_YELLOW}{total_line_numbers}{MARKUP_RESET}\n"
+                            f" - character: {MARKUP_YELLOW}{total_char_numbers}{MARKUP_RESET}\n"
+                            f"{MARKUP_GREEN}Settings:{MARKUP_RESET}\n"
+                            f" - language: {MARKUP_ITALIC}{MARKUP_YELLOW}{self.language if self.language else '-'}{MARKUP_RESET}",
+                            border_style="blue",
+                            title="Summary",
+                            expand=False,
+                        )
                     )
-                )
 
                 with Progress(
                     TextColumn("[progress.description]{task.description}"),
@@ -194,7 +202,7 @@ class CameraFollowCursorCV:
                     TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
                     TimeRemainingColumn(),
                     TransferSpeedColumn(),
-                    console=DEFAULT_OUTPUT_CONSOLE
+                    console=DEFAULT_OUTPUT_CONSOLE if self.output else None
                 ) as progress:
                     total_progress = progress.add_task(description="[yellow]Total[/yellow]", total=total_char_numbers)
 
@@ -232,6 +240,7 @@ class CameraFollowCursorCV:
                             continue
                         
                         first_non_space_index = len(self.code_str_lines[line]) - len(self.code_str_lines[line].lstrip())
+                        total_typing_chars = char_num # 当前行实际要打的字数
 
                         # 遍历当前行的每个字符
                         for column in range(first_non_space_index, char_num+first_non_space_index):
@@ -239,22 +248,55 @@ class CameraFollowCursorCV:
                             occupy_char = occupy[line][column]
                             scene.add(code_mobject[line][column])
                             cursor.next_to(occupy_char, RIGHT, buff=DEFAULT_CURSOR_TO_CHAR_BUFFER).set_y(code_line_rectangle.get_y())
-
+                            
+                            # 相机持续摆动逻辑
+                            
+                            line_break = False
                             if column == first_non_space_index and first_non_space_index != 0:
-                                linebreakAnimation() # 如果它是行中的第一个字符，且该行有缩进，进行换行动画
+                                # 如果是缩进后的第一个字符，先执行换行归位
+                                linebreakAnimation()
+                                line_break = True
                             else:
-                                move_camera_to_cursor() # 它不是行中的第一个字符，无需换行动画，线性移动相机到光标位置
+                                # 计算当前行的进度 (0.0 -> 1.0)
+                                current_idx = column - first_non_space_index
+                                max_idx = total_typing_chars - 1
+                                
+                                if max_idx > 0:
+                                    alpha = current_idx / max_idx
+                                else:
+                                    alpha = 1.0
+                                
+                                # 包络线 sin(alpha * pi)，确保头尾为0
+                                envelope = np.sin(alpha * np.pi)
+                                
+                                # 振荡项: sin(alpha * omega)
+                                wave_count = total_typing_chars / 15
+                                omega = wave_count * 2 * np.pi
+                                oscillation = np.sin(alpha * omega)
+                                
+                                # 振幅为相机框高度的 2.5%
+                                amplitude = scene.camera.frame.height * 0.025
+                                offset_y = amplitude * envelope * oscillation
+                                
+                                target_pos = cursor.get_center() + UP * offset_y
+                                scene.Animation_list.append({"move_to": target_pos})
 
+                            # 缩放检测 & 播放
                             JUDGE_cameraScaleAnimation()
-                            playAnimation(run_time=random.uniform(*self.interval_range), rate_func=rate_functions.linear)
+                            playAnimation(
+                                run_time=DEFAULT_LINE_BREAK_RUN_TIME if line_break else random.uniform(*self.interval_range),
+                                rate_func=rate_functions.smooth if line_break else rate_functions.linear
+                            )
 
-                            # output progress
+
+                            # 输出进度
                             progress.advance(total_progress, advance=1)
                             progress.advance(current_line_progress, advance=1)
                         
                         progress.remove_task(current_line_progress)
 
-                DEFAULT_OUTPUT_CONSOLE.print()
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.print("Please wait...\n", markup=False)
                 scene.wait()
 
             def render(scene):
@@ -264,17 +306,17 @@ class CameraFollowCursorCV:
                     super().render()
                 end_time = time.time()
                 total_render_time = end_time - start_time
-                DEFAULT_OUTPUT_CONSOLE.print(
-                    f"File ready at {MARKUP_GREEN}'{scene.renderer.file_writer.movie_file_path}'{MARKUP_RESET}\n"
-                    f"{MARKUP_GREY}Rendering finished in {total_render_time:.2f}s{MARKUP_RESET}\n"
-                    f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}",
-                )
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.print(
+                        f"File ready at {MARKUP_GREEN}'{scene.renderer.file_writer.movie_file_path}'{MARKUP_RESET}\n"
+                        f"{MARKUP_GREY}Rendering finished in {total_render_time:.2f}s{MARKUP_RESET}\n"
+                        f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}",
+                    )
 
         return CameraFollowCursorCVScene()
 
+    @type_checker
     def render(self, output: bool = DEFAULT_OUTPUT_VALUE):
         """Render the scene, optionally with console output."""
-        if not isinstance(output, bool):
-            raise ValueError("'output' must be a boolean value")
         self.output = output
         self.scene.render()

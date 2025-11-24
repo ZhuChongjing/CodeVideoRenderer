@@ -84,8 +84,7 @@ def type_checker(func):
             # 普通类型
             else:
                 if not isinstance(param_value, param_type):
-                        raise TypeError(f"Parameter '{param_name}': Expected '{typeName(param_type)}', got '{type(param_value).__name__}'")
+                    raise TypeError(f"Parameter '{param_name}': Expected '{typeName(param_type)}', got '{type(param_value).__name__}'")
                         
-        
         return func(*args, **kwargs)
     return wrapper
