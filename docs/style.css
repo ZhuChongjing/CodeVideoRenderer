@@ -1,8 +1,6 @@
-/* --- START OF FILE style.css --- */
-
 :root {
     /* 字体设置 */
-    --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-primary: '华文中宋', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-code: 'Fira Code', 'JetBrains Mono', 'Consolas', 'Menlo', monospace;
     
     /* 暗黑模式配色板 (Slate/Blue Theme) */
@@ -22,6 +20,15 @@
     /* 阴影效果 */
     --shadow-glow: 0 0 20px rgba(59, 130, 246, 0.15);
     --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
+
+    /* 代码高亮颜色 */
+    --color-code-class: #0DBC79;
+    --color-code-variable: #9CDCFE;
+    --color-code-string: #CE9178;
+    --color-code-number: #B5CEA8;
+    --color-code-function: #DCDCAA;
+    --color-code-literal: #569CD6;
+    --color-code-constant: #4FC1FF;
 }
 
 /* 基础重置 */
@@ -77,6 +84,25 @@ code {
     font-family: var(--font-code);
 }
 
+a  {
+    color: #60a5fa;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: all 0.2s ease;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+a:hover {
+    color: #ffffff;
+    background-color: rgba(59, 130, 246, 0.2);
+    text-decoration-color: transparent;
+    text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
+    cursor: pointer;
+}
+
 .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -115,7 +141,30 @@ header .container {
     color: var(--color-text-main);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px; /* 增加一点间距 */
+}
+
+/* Logo 图标尺寸控制 */
+.site-icon {
+    width: 36px;       /* 桌面端大小 */
+    height: 36px;
+    flex-shrink: 0;    /* 防止被压缩 */
+    transition: transform 0.3s ease;
+}
+
+/* 悬停时的微妙动画 */
+.logo:hover .site-icon {
+    transform: rotate(-5deg) scale(1.05);
+}
+
+/* 光标闪烁动画 */
+.cursor-blink {
+    animation: blink-animation 1s step-end infinite;
+}
+
+@keyframes blink-animation {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .text-accent { color: var(--color-accent); }
@@ -127,7 +176,7 @@ nav a {
     font-size: 1.1rem;
     transition: color 0.3s;
 }
-nav a:hover { color: var(--color-accent); }
+.nav-button:hover { color: var(--color-accent); }
 
 /* --- 按钮样式 --- */
 .btn {
@@ -258,6 +307,430 @@ nav a:hover { color: var(--color-accent); }
     transform: scale(0.9);
 }
 
+/* --- GitHub Star Button (移植自 React 组件) --- */
+.btn-github-star {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 36px; /* h-9 */
+    padding: 0 16px; /* px-4 */
+    background-color: #000; /* bg-black */
+    color: white; /* text-white */
+    border-radius: 6px; /* rounded-md */
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    text-decoration: none;
+    overflow: hidden;
+    transition: all 0.3s ease-out;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    /* 保持按钮宽度限制，防止过宽 */
+    max-width: 208px; 
+    white-space: nowrap;
+}
+
+.btn-github-star:hover {
+    background-color: rgba(0, 0, 0, 0.9); /* hover:bg-black/90 */
+    box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--color-bg-body); /* 模拟 hover:ring-2 ring-offset-2 */
+}
+
+/* 光扫动画 (Shine Effect) */
+.btn-github-star .shine {
+    position: absolute;
+    right: 0;
+    margin-top: -3rem; /* -mt-12 */
+    height: 8rem; /* h-32 */
+    width: 2rem; /* w-8 */
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateX(3rem) rotate(12deg);
+    transition: transform 1s ease-out;
+    pointer-events: none;
+}
+
+.btn-github-star:hover .shine {
+    transform: translateX(-15rem) rotate(12deg);
+}
+
+/* 按钮内部布局 */
+.btn-github-star .content-left {
+    display: flex;
+    align-items: center;
+    z-index: 1;
+}
+
+.btn-github-star .content-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 8px;
+    z-index: 1;
+}
+
+/* SVG 图标样式 */
+.btn-github-star .github-logo {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    margin-right: 4px;
+}
+
+.btn-github-star .star-icon {
+    width: 16px;
+    height: 16px;
+    color: #6b7280; /* text-gray-500 */
+    transition: color 0.3s;
+}
+
+.btn-github-star:hover .star-icon {
+    color: #fde047; /* hover:text-yellow-300 */
+}
+
+.btn-github-star .count {
+    font-family: var(--font-code); /* tabular-nums via code font */
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+}
+
+#github-link { display: none; }
+
+/* --- 联系方式区块 (Restyled for Dark Slate/Blue Theme) --- */
+.feedback .parent {
+  width: 290px;
+  height: 300px;
+  perspective: 1000px;
+}
+
+.feedback .card {
+  height: 100%;
+  border-radius: 50px;
+  /* 替换原绿色渐变为深色卡片渐变 */
+  background: linear-gradient(135deg, var(--color-bg-card) 0%, #0f172a 100%);
+  border: 1px solid var(--color-border);
+  transition: all 0.5s ease-in-out;
+  transform-style: preserve-3d;
+  /* 替换绿色阴影为深色阴影 + 蓝色微光 */
+  box-shadow: rgba(0, 0, 0, 0.4) 40px 50px 25px -40px, rgba(59, 130, 246, 0.1) 0px 25px 25px -5px;
+}
+
+.feedback .glass {
+  transform-style: preserve-3d;
+  position: absolute;
+  inset: 8px;
+  border-radius: 55px;
+  border-top-right-radius: 100%;
+  /* 调整为深色玻璃拟态 */
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 100%);
+  transform: translate3d(0px, 0px, 25px);
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.05); /* 添加微弱上边框 */
+  transition: all 0.5s ease-in-out;
+}
+
+.feedback .content {
+  padding: 100px 60px 0px 30px;
+  transform: translate3d(0, 0, 26px);
+}
+
+.feedback .content .title {
+  display: block;
+  /* 替换绿色标题为品牌蓝/白色 */
+  color: var(--color-text-main);
+  font-weight: 900;
+  font-size: 20px;
+}
+
+.feedback .content .text {
+  display: block;
+  /* 替换绿色文字为静音灰蓝 */
+  color: var(--color-text-muted);
+  font-size: 15px;
+  margin-top: 20px;
+  line-height: 1.5;
+}
+
+.feedback .bottom {
+  padding: 10px 12px;
+  transform-style: preserve-3d;
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translate3d(0, 0, 26px);
+}
+
+.feedback .bottom .view-more {
+  display: flex;
+  align-items: center;
+  width: 40%;
+  justify-content: flex-end;
+  transition: all 0.2s ease-in-out;
+}
+
+.feedback .bottom .view-more:hover {
+  transform: translate3d(0, 0, 10px);
+}
+
+.feedback .bottom .view-more .view-more-button {
+  background: none;
+  border: none;
+  color: var(--color-accent);
+  font-weight: bolder;
+  font-size: 12px;
+}
+
+.feedback .bottom .view-more .svg {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 3px;
+  max-height: 15px;
+}
+
+.feedback .bottom .social-buttons-container {
+  display: flex;
+  gap: 10px;
+  transform-style: preserve-3d;
+}
+
+.feedback .bottom .social-buttons-container .social-link {
+  transform-style: preserve-3d;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button {
+  width: 30px;
+  aspect-ratio: 1;
+  padding: 5px;
+  /* 按钮背景改为深色 */
+  background: var(--color-bg-body);
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: grid;
+  place-content: center;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 5px -5px;
+  transition: all 0.3s ease;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:first-child {
+  transition: transform 0.2s ease-in-out 0.4s, box-shadow 0.2s ease-in-out 0.4s, background 0.3s;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:nth-child(2) {
+  transition: transform 0.2s ease-in-out 0.6s, box-shadow 0.2s ease-in-out 0.6s, background 0.3s;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:nth-child(3) {
+  transition: transform 0.2s ease-in-out 0.8s, box-shadow 0.2s ease-in-out 0.8s, background 0.3s;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button .svg {
+  width: 15px;
+  /* 图标颜色改为次级文本色 */
+  fill: var(--color-text-muted);
+  transition: fill 0.3s;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:hover .svg {
+  fill: white;
+}
+
+.feedback .bottom .social-buttons-container .social-link .social-button:active {
+  background: var(--color-accent-hover);
+}
+
+.feedback .logo {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform-style: preserve-3d;
+}
+
+.feedback .logo .circle {
+  display: block;
+  position: absolute;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  top: 0;
+  right: 0;
+  box-shadow: rgba(0, 0, 0, 0.2) -10px 10px 20px 0px;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  /* 圆圈背景色改为品牌蓝半透明 */
+  background: rgba(59, 130, 246, 0.15);
+  transition: all 0.5s ease-in-out;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.feedback .logo .circle1 {
+  width: 170px;
+  transform: translate3d(0, 0, 20px);
+  top: 8px;
+  right: 8px;
+}
+
+.feedback .logo .circle2 {
+  width: 140px;
+  transform: translate3d(0, 0, 40px);
+  top: 10px;
+  right: 10px;
+  -webkit-backdrop-filter: blur(1px);
+  backdrop-filter: blur(1px);
+  transition-delay: 0.4s;
+}
+
+.feedback .logo .circle3 {
+  width: 110px;
+  transform: translate3d(0, 0, 60px);
+  top: 17px;
+  right: 17px;
+  transition-delay: 0.8s;
+}
+
+.feedback .logo .circle4 {
+  width: 80px;
+  transform: translate3d(0, 0, 80px);
+  top: 23px;
+  right: 23px;
+  transition-delay: 1.2s;
+}
+
+.feedback .logo .circle5 {
+  width: 50px;
+  transform: translate3d(0, 0, 100px);
+  top: 30px;
+  right: 30px;
+  display: grid;
+  place-content: center;
+  transition-delay: 1.6s;
+  background: var(--color-accent); /* 中心圆使用实色品牌蓝 */
+}
+
+.feedback .logo .circle5 .svg {
+  width: 20px;
+  fill: white;
+}
+
+/* Hover 状态下的 3D 变换 */
+.feedback .parent:hover .card {
+  transform: rotate3d(1, 1, 0, 30deg);
+  box-shadow: rgba(0, 0, 0, 0.5) 30px 50px 25px -40px, rgba(59, 130, 246, 0.15) 0px 25px 30px 0px;
+}
+
+.feedback .parent:hover .card .bottom .social-buttons-container .social-button {
+  transform: translate3d(0, 0, 50px);
+  box-shadow: rgba(0, 0, 0, 0.3) -5px 20px 10px 0px;
+}
+
+.feedback .parent:hover .card .logo .circle2 {
+  transform: translate3d(0, 0, 60px);
+}
+
+.feedback .parent:hover .card .logo .circle3 {
+  transform: translate3d(0, 0, 80px);
+}
+
+.feedback .parent:hover .card .logo .circle4 {
+  transform: translate3d(0, 0, 100px);
+}
+
+.feedback .parent:hover .card .logo .circle5 {
+  transform: translate3d(0, 0, 120px);
+}
+
+/* --- 双列布局 --- */
+.two-col {
+    display: flex;
+    align-items: center; /* 垂直居中对齐 */
+    justify-content: center;
+    gap: 60px; /* 左右两列的间距 */
+    flex-wrap: wrap; /* 移动端自动换行 */
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* 确保左侧 3D 卡片容器居中 */
+.feedback {
+    display: flex;
+    justify-content: center;
+    flex: 1; /* 占用一半空间 */
+}
+
+/* --- 右侧头像与文本样式 --- */
+.feedback-card {
+    flex: 1; /* 占用另一半空间 */
+    min-width: 300px;
+    padding: 20px;
+    text-align: left;
+}
+
+.community-stats h4 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.community-stats p {
+    color: var(--color-text-muted);
+    margin-bottom: 24px;
+    font-size: 1.05rem;
+}
+
+/* 头像组容器 */
+.avatar-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+/* 单个头像样式 */
+.avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 3px solid var(--color-bg-body); /* 利用边框颜色模拟切割效果 */
+    margin-left: -18px; /* 负边距实现重叠 */
+    background-color: var(--color-bg-card);
+    object-fit: cover;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.avatar:first-child {
+    margin-left: 0;
+}
+
+/* 头像悬停效果：跳出并高亮 */
+.avatar:hover {
+    transform: translateY(-8px) scale(1.1);
+    z-index: 10; /* 确保悬停时浮在最上层 */
+    border-color: var(--color-accent);
+}
+
+/* 最后一个“+”号头像 */
+.avatar.more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-bg-card-hover);
+    color: var(--color-text-main);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-code);
+}
 
 /* --- 通用区块样式 --- */
 .section-padding { padding: 100px 0; }
@@ -440,6 +913,11 @@ footer {
     .section-padding { padding: 60px 0; }
 }
 
+@media (max-width: 600px) {
+    #github-star-link { display: none; }
+    #github-link { display: inline-block; }
+}
+
 @media (max-width: 480px) {
     /* 1. 调整容器内边距，腾出更多空间 */
     .container { 
@@ -498,9 +976,9 @@ footer {
     .bg-glow { opacity: 0.5; }
 }
 
-/* =========================================
-   Documentation Page Styles (Append to style.css)
-   ========================================= */
+/* =========================
+   Documentation Page Styles 
+   ========================= */
 
 /* --- Docs Layout --- */
 .docs-layout {
@@ -529,7 +1007,7 @@ footer {
 }
 
 .nav-title {
-    font-size: 0.85rem;
+    font-size: 1rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -562,6 +1040,7 @@ footer {
 }
 
 /* --- Main Content --- */
+
 .docs-content {
     flex: 1;
     min-width: 0; /* 防止代码块撑破 flex 容器 */
@@ -600,33 +1079,17 @@ footer {
     line-height: 1.7;
 }
 
-.code-with-bg {
-    background: rgba(59, 130, 246, 0.1);
-    color: var(--color-accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.9em;
+.docs-content td code {
+    color: white;
 }
 
-.class {
-    color: rgb(13, 188, 121);
-}
-
-.variable {
-    color: rgb(156, 220, 254);
-}
-
-.string {
-    color: rgb(206, 145, 120);
-}
-
-.number {
-    color: rgb(181, 206, 168);
-}
-
-.function {
-    color: rgb(220, 220, 170);
-}
+.class { color: var(--color-code-class) !important; }
+.variable { color: var(--color-code-variable) !important; }
+.string { color: var(--color-code-string) !important; }
+.number { color: var(--color-code-number) !important; }
+.function { color: var(--color-code-function) !important; }
+.literal { color: var(--color-code-literal) !important; }
+.constant { color: var(--color-code-constant) !important; }
 
 .text-link {
     color: var(--color-accent);
@@ -695,29 +1158,6 @@ footer {
 
 .docs-table tr:hover td {
     background: rgba(255, 255, 255, 0.02);
-}
-
-.docs-content p a,
-.docs-content li a,
-.docs-content table a {
-    color: #60a5fa;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-    transition: all 0.2s ease;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-.docs-content p a:hover,
-.docs-content li a:hover,
-.docs-content table a:hover {
-    color: #ffffff;
-    background-color: rgba(59, 130, 246, 0.2);
-    text-decoration-color: transparent;
-    text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
-    cursor: pointer;
 }
 
 /* --- Responsive Docs --- */
