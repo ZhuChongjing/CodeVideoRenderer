@@ -95,7 +95,7 @@ a:not(.social-link) {
     font-weight: 500;
 }
 
-a:not(.social-link):hover {
+a:hover:not(.social-link) {
     color: #ffffff;
     background-color: rgba(59, 130, 246, 0.2);
     text-decoration-color: transparent;
@@ -1199,3 +1199,4 @@ footer {
     }
 
 }
+
