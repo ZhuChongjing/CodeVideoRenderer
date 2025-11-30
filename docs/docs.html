@@ -24,7 +24,23 @@
         <div class="container">
             <a href="index.html" style="text-decoration: none;">
                 <h1 class="logo">
-                    <i class="fas fa-code text-accent"></i> 
+                    <svg class="site-icon" width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logo_gradient" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#60a5fa" />
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="15" y="15" width="70" height="70" rx="12" stroke="url(#logo_gradient)" stroke-width="6" fill="none"/>
+                        <path d="M30 15V22 M50 15V22 M70 15V22" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M30 78V85 M50 78V85 M70 78V85" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M37 38 L57 50 L37 62" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));"/>
+                        <line x1="65" y1="32" x2="65" y2="68" stroke="#0DBC79" stroke-width="6" stroke-linecap="round" class="cursor-blink"/>
+                    </svg>
                     <code>CodeVideoRenderer</code>
                 </h1>
             </a>
@@ -330,3 +346,4 @@ video.render()</code></pre>
 </body>
 
 </html>
+
