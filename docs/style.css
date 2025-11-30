@@ -84,7 +84,7 @@ code {
     font-family: var(--font-code);
 }
 
-a  {
+a:not(.social-link) {
     color: #60a5fa;
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -95,7 +95,7 @@ a  {
     font-weight: 500;
 }
 
-a:hover {
+a:not(.social-link):hover {
     color: #ffffff;
     background-color: rgba(59, 130, 246, 0.2);
     text-decoration-color: transparent;
@@ -1197,4 +1197,5 @@ footer {
         border-left: none;
         border-bottom-color: var(--color-accent);
     }
+
 }
