@@ -22,13 +22,16 @@
     --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.3);
 
     /* 代码高亮颜色 */
-    --color-code-class: #0DBC79;
-    --color-code-variable: #9CDCFE;
-    --color-code-string: #CE9178;
-    --color-code-number: #B5CEA8;
-    --color-code-function: #DCDCAA;
-    --color-code-literal: #569CD6;
-    --color-code-constant: #4FC1FF;
+    --color-code-class: rgb(13, 188, 121);
+    --color-code-variable: rgb(156, 220, 254);
+    --color-code-string: rgb(206, 145, 120);
+    --color-code-number: rgb(181, 206, 168);
+    --color-code-function: rgb(220, 220, 170);
+    --color-code-literal: rgb(86, 156, 214);
+    --color-code-constant: rgb(79, 193, 255);
+    --color-code-parenthesis-first: rgb(255, 215, 0);
+
+    --code-bg-font-size: 0.9rem;
 }
 
 /* 基础重置 */
@@ -84,25 +87,6 @@ code {
     font-family: var(--font-code);
 }
 
-footer a {
-    color: #60a5fa;
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 4px;
-    transition: all 0.2s ease;
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-weight: 500;
-}
-
-footer a:hover {
-    color: #ffffff;
-    background-color: rgba(59, 130, 246, 0.2);
-    text-decoration-color: transparent;
-    text-shadow: 0 0 8px rgba(96, 165, 250, 0.5);
-    cursor: pointer;
-}
-
 .container {
     max-width: 1100px;
     margin: 0 auto;
@@ -117,47 +101,92 @@ footer a:hover {
     padding: 0 !important;
 }
 
-/* --- Header 导航栏 --- */
+/* --- Split Bubble Header (双胶囊布局) --- */
 header {
-    background: rgba(15, 23, 42, 0.85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--color-border);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: fixed;
+    top: 24px;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    pointer-events: none; /* 关键：让头部背景透明区域不阻挡点击 */
+    animation: header-slide-in 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes header-slide-in {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 24px;
+    /* 移除之前的 padding，让胶囊自己控制 */
+    padding: 0 24px; 
 }
 
+/* 
+   胶囊公共样式 
+   应用于: 左侧Logo链接 和 右侧Nav
+*/
+header .container > a,
+header nav {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    box-shadow: 
+        0 4px 20px -1px rgba(0, 0, 0, 0.2), 
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    pointer-events: auto; /* 恢复胶囊内部的点击 */
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 左侧 Logo 胶囊 */
+header .container > a {
+    text-decoration: none;
+    padding: 6px 20px 6px 8px; /* 左侧留给图标，右侧多留点给文字 */
+    display: flex;
+    align-items: center;
+}
+
+/* 右侧 Nav 胶囊 */
+header nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px; /* 紧凑的内边距 */
+}
+
+/* Logo 内部样式 */
 .logo {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--color-text-main);
     display: flex;
     align-items: center;
-    gap: 12px; /* 增加一点间距 */
+    gap: 12px;
+    margin: 0; /* 重置 h1 margin */
 }
 
-/* Logo 图标尺寸控制 */
 .site-icon {
-    width: 36px;       /* 桌面端大小 */
-    height: 36px;
-    flex-shrink: 0;    /* 防止被压缩 */
-    transition: transform 0.3s ease;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    transition: transform 0.4s ease;
 }
 
-/* 悬停时的微妙动画 */
-.logo:hover .site-icon {
-    transform: rotate(-5deg) scale(1.05);
+/* 整个胶囊悬停时的效果 */
+header .container > a:hover .site-icon {
+    transform: rotate(-10deg) scale(1.1);
 }
 
-/* 光标闪烁动画 */
+header .container > a:hover {
+    background: rgba(15, 23, 42, 0.85);
+    transform: translateY(-2px);
+}
+
 .cursor-blink {
     animation: blink-animation 1s step-end infinite;
 }
@@ -167,16 +196,36 @@ header .container {
     50% { opacity: 0; }
 }
 
-.text-accent { color: var(--color-accent); }
-
-nav a {
+/* 导航链接样式 (Bubble Buttons) */
+header nav a.nav-button {
     color: var(--color-text-muted);
     text-decoration: none;
-    margin-left: 20px;
     font-size: 1.1rem;
-    transition: color 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
-.nav-button:hover { color: var(--color-accent); }
+
+header nav a.nav-button:hover { 
+    color: var(--color-text-main);
+    background: rgba(255, 255, 255, 0.1); 
+    transform: scale(1.05);
+}
+
+header nav a.nav-button:active {
+    transform: scale(0.95);
+}
+
+#github-star-link {
+    margin-left: 6px;
+    margin-right: 6px;
+    /* 修正 Star 按钮在胶囊里的高度 */
+    height: 32px; 
+}
 
 /* --- 按钮样式 --- */
 .btn {
@@ -217,12 +266,12 @@ nav a {
 
 /* --- Hero (首屏) 区域 --- */
 .hero-section {
-    min-height: 85vh; /* 略微调整高度 */
+    min-height: 85vh; 
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding-top: 80px;
+    padding-top: 140px; 
     padding-bottom: 80px;
 }
 
@@ -249,7 +298,7 @@ nav a {
 
 .gradient-text {
     background: linear-gradient(to right, #60a5fa, #a78bfa);
-    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -307,41 +356,40 @@ nav a {
     transform: scale(0.9);
 }
 
-/* --- GitHub Star Button (移植自 React 组件) --- */
+/* --- GitHub Star Button --- */
 .btn-github-star {
     position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    height: 36px; /* h-9 */
-    padding: 0 16px; /* px-4 */
-    background-color: #000; /* bg-black */
-    color: white; /* text-white */
-    border-radius: 6px; /* rounded-md */
-    font-size: 0.875rem; /* text-sm */
-    font-weight: 500; /* font-medium */
+    height: 36px;
+    padding: 0 16px;
+    background-color: rgba(0, 0, 0, 0.4); 
+    color: white;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
     text-decoration: none;
     overflow: hidden;
     transition: all 0.3s ease-out;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    /* 保持按钮宽度限制，防止过宽 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
     max-width: 208px; 
     white-space: nowrap;
 }
 
 .btn-github-star:hover {
-    background-color: rgba(0, 0, 0, 0.9); /* hover:bg-black/90 */
-    box-shadow: 0 0 0 2px #000, 0 0 0 4px var(--color-bg-body); /* 模拟 hover:ring-2 ring-offset-2 */
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
 }
 
-/* 光扫动画 (Shine Effect) */
 .btn-github-star .shine {
     position: absolute;
     right: 0;
-    margin-top: -3rem; /* -mt-12 */
-    height: 8rem; /* h-32 */
-    width: 2rem; /* w-8 */
+    margin-top: -3rem; 
+    height: 8rem; 
+    width: 2rem; 
     background-color: rgba(255, 255, 255, 0.1);
     transform: translateX(3rem) rotate(12deg);
     transition: transform 1s ease-out;
@@ -352,7 +400,6 @@ nav a {
     transform: translateX(-15rem) rotate(12deg);
 }
 
-/* 按钮内部布局 */
 .btn-github-star .content-left {
     display: flex;
     align-items: center;
@@ -367,7 +414,6 @@ nav a {
     z-index: 1;
 }
 
-/* SVG 图标样式 */
 .btn-github-star .github-logo {
     width: 16px;
     height: 16px;
@@ -378,294 +424,42 @@ nav a {
 .btn-github-star .star-icon {
     width: 16px;
     height: 16px;
-    color: #6b7280; /* text-gray-500 */
+    color: #6b7280; 
     transition: color 0.3s;
 }
 
 .btn-github-star:hover .star-icon {
-    color: #fde047; /* hover:text-yellow-300 */
+    color: #fde047;
 }
 
 .btn-github-star .count {
-    font-family: var(--font-code); /* tabular-nums via code font */
+    font-family: var(--font-code);
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.05em;
 }
 
 #github-link { display: none; }
 
-/* --- 联系方式区块 (Restyled for Dark Slate/Blue Theme) --- */
-.feedback .parent {
-  width: 290px;
-  height: 300px;
-  perspective: 1000px;
-}
-
-.feedback .card {
-  height: 100%;
-  border-radius: 50px;
-  /* 替换原绿色渐变为深色卡片渐变 */
-  background: linear-gradient(135deg, var(--color-bg-card) 0%, #0f172a 100%);
-  border: 1px solid var(--color-border);
-  transition: all 0.5s ease-in-out;
-  transform-style: preserve-3d;
-  /* 替换绿色阴影为深色阴影 + 蓝色微光 */
-  box-shadow: rgba(0, 0, 0, 0.4) 40px 50px 25px -40px, rgba(59, 130, 246, 0.1) 0px 25px 25px -5px;
-}
-
-.feedback .glass {
-  transform-style: preserve-3d;
-  position: absolute;
-  inset: 8px;
-  border-radius: 55px;
-  border-top-right-radius: 100%;
-  /* 调整为深色玻璃拟态 */
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.08) 100%);
-  transform: translate3d(0px, 0px, 25px);
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-top: 1px solid rgba(255, 255, 255, 0.05); /* 添加微弱上边框 */
-  transition: all 0.5s ease-in-out;
-}
-
-.feedback .content {
-  padding: 100px 60px 0px 30px;
-  transform: translate3d(0, 0, 26px);
-}
-
-.feedback .content .title {
-  display: block;
-  /* 替换绿色标题为品牌蓝/白色 */
-  color: var(--color-text-main);
-  font-weight: 900;
-  font-size: 20px;
-}
-
-.feedback .content .text {
-  display: block;
-  /* 替换绿色文字为静音灰蓝 */
-  color: var(--color-text-muted);
-  font-size: 15px;
-  margin-top: 20px;
-  line-height: 1.5;
-}
-
-.feedback .bottom {
-  padding: 10px 12px;
-  transform-style: preserve-3d;
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  right: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transform: translate3d(0, 0, 26px);
-}
-
-.feedback .bottom .view-more {
-  display: flex;
-  align-items: center;
-  width: 40%;
-  justify-content: flex-end;
-  transition: all 0.2s ease-in-out;
-}
-
-.feedback .bottom .view-more:hover {
-  transform: translate3d(0, 0, 10px);
-}
-
-.feedback .bottom .view-more .view-more-button {
-  background: none;
-  border: none;
-  color: var(--color-accent);
-  font-weight: bolder;
-  font-size: 12px;
-}
-
-.feedback .bottom .view-more .svg {
-  fill: none;
-  stroke: var(--color-accent);
-  stroke-width: 3px;
-  max-height: 15px;
-}
-
-.feedback .bottom .social-buttons-container {
-  display: flex;
-  gap: 10px;
-  transform-style: preserve-3d;
-}
-
-.feedback .bottom .social-buttons-container .social-link {
-  transform-style: preserve-3d;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button {
-  width: 30px;
-  aspect-ratio: 1;
-  padding: 5px;
-  /* 按钮背景改为深色 */
-  background: var(--color-bg-body);
-  border-radius: 50%;
-  border: 1px solid var(--color-border);
-  display: grid;
-  place-content: center;
-  box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 5px -5px;
-  transition: all 0.3s ease;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:first-child {
-  transition: transform 0.2s ease-in-out 0.4s, box-shadow 0.2s ease-in-out 0.4s, background 0.3s;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:nth-child(2) {
-  transition: transform 0.2s ease-in-out 0.6s, box-shadow 0.2s ease-in-out 0.6s, background 0.3s;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:nth-child(3) {
-  transition: transform 0.2s ease-in-out 0.8s, box-shadow 0.2s ease-in-out 0.8s, background 0.3s;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button .svg {
-  width: 15px;
-  /* 图标颜色改为次级文本色 */
-  fill: var(--color-text-muted);
-  transition: fill 0.3s;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:hover {
-  background: var(--color-accent);
-  border-color: var(--color-accent);
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:hover .svg {
-  fill: white;
-}
-
-.feedback .bottom .social-buttons-container .social-link .social-button:active {
-  background: var(--color-accent-hover);
-}
-
-.feedback .logo {
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform-style: preserve-3d;
-}
-
-.feedback .logo .circle {
-  display: block;
-  position: absolute;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  top: 0;
-  right: 0;
-  box-shadow: rgba(0, 0, 0, 0.2) -10px 10px 20px 0px;
-  -webkit-backdrop-filter: blur(5px);
-  backdrop-filter: blur(5px);
-  /* 圆圈背景色改为品牌蓝半透明 */
-  background: rgba(59, 130, 246, 0.15);
-  transition: all 0.5s ease-in-out;
-  border: 1px solid rgba(59, 130, 246, 0.1);
-}
-
-.feedback .logo .circle1 {
-  width: 170px;
-  transform: translate3d(0, 0, 20px);
-  top: 8px;
-  right: 8px;
-}
-
-.feedback .logo .circle2 {
-  width: 140px;
-  transform: translate3d(0, 0, 40px);
-  top: 10px;
-  right: 10px;
-  -webkit-backdrop-filter: blur(1px);
-  backdrop-filter: blur(1px);
-  transition-delay: 0.4s;
-}
-
-.feedback .logo .circle3 {
-  width: 110px;
-  transform: translate3d(0, 0, 60px);
-  top: 17px;
-  right: 17px;
-  transition-delay: 0.8s;
-}
-
-.feedback .logo .circle4 {
-  width: 80px;
-  transform: translate3d(0, 0, 80px);
-  top: 23px;
-  right: 23px;
-  transition-delay: 1.2s;
-}
-
-.feedback .logo .circle5 {
-  width: 50px;
-  transform: translate3d(0, 0, 100px);
-  top: 30px;
-  right: 30px;
-  display: grid;
-  place-content: center;
-  transition-delay: 1.6s;
-  background: var(--color-accent); /* 中心圆使用实色品牌蓝 */
-}
-
-.feedback .logo .circle5 .svg {
-  width: 20px;
-  fill: white;
-}
-
-/* Hover 状态下的 3D 变换 */
-.feedback .parent:hover .card {
-  transform: rotate3d(1, 1, 0, 30deg);
-  box-shadow: rgba(0, 0, 0, 0.5) 30px 50px 25px -40px, rgba(59, 130, 246, 0.15) 0px 25px 30px 0px;
-}
-
-.feedback .parent:hover .card .bottom .social-buttons-container .social-button {
-  transform: translate3d(0, 0, 50px);
-  box-shadow: rgba(0, 0, 0, 0.3) -5px 20px 10px 0px;
-}
-
-.feedback .parent:hover .card .logo .circle2 {
-  transform: translate3d(0, 0, 60px);
-}
-
-.feedback .parent:hover .card .logo .circle3 {
-  transform: translate3d(0, 0, 80px);
-}
-
-.feedback .parent:hover .card .logo .circle4 {
-  transform: translate3d(0, 0, 100px);
-}
-
-.feedback .parent:hover .card .logo .circle5 {
-  transform: translate3d(0, 0, 120px);
-}
-
 /* --- 双列布局 --- */
 .two-col {
     display: flex;
-    align-items: center; /* 垂直居中对齐 */
+    align-items: center; 
     justify-content: center;
-    gap: 60px; /* 左右两列的间距 */
-    flex-wrap: wrap; /* 移动端自动换行 */
+    gap: 60px; 
+    flex-wrap: wrap; 
     max-width: 1000px;
     margin: 0 auto;
 }
 
-/* 确保左侧 3D 卡片容器居中 */
 .feedback {
     display: flex;
     justify-content: center;
-    flex: 1; /* 占用一半空间 */
+    flex: 1; 
 }
 
 /* --- 右侧头像与文本样式 --- */
 .feedback-card {
-    flex: 1; /* 占用另一半空间 */
+    flex: 1; 
     min-width: 300px;
     padding: 20px;
     text-align: left;
@@ -676,7 +470,7 @@ nav a {
     font-weight: 700;
     margin-bottom: 16px;
     background: linear-gradient(to right, #fff, #94a3b8);
-    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -698,8 +492,8 @@ nav a {
     width: 54px;
     height: 54px;
     border-radius: 50%;
-    border: 3px solid var(--color-bg-body); /* 利用边框颜色模拟切割效果 */
-    margin-left: -18px; /* 负边距实现重叠 */
+    border: 3px solid var(--color-bg-body); 
+    margin-left: -18px; 
     background-color: var(--color-bg-card);
     object-fit: cover;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.3s;
@@ -713,14 +507,12 @@ nav a {
     margin-left: 0;
 }
 
-/* 头像悬停效果：跳出并高亮 */
 .avatar:hover {
     transform: translateY(-8px) scale(1.1);
-    z-index: 10; /* 确保悬停时浮在最上层 */
+    z-index: 10; 
     border-color: var(--color-accent);
 }
 
-/* 最后一个“+”号头像 */
 .avatar.more {
     display: flex;
     align-items: center;
@@ -756,7 +548,7 @@ h3 {
 
 /* --- 代码演示窗口 --- */
 .main-mockup-card {
-    background: #0d1117; /* GitHub Dark dim 风格 */
+    background: #0d1117; 
     border-radius: 12px;
     box-shadow: var(--shadow-card);
     border: 1px solid var(--color-border);
@@ -787,7 +579,7 @@ h3 {
     font-family: var(--font-code);
     font-size: 0.85rem;
     color: var(--color-text-muted);
-    margin-right: 52px; /* 平衡左侧点点的宽度，保持居中 */
+    margin-right: 52px; 
     opacity: 0.8;
 }
 
@@ -896,7 +688,6 @@ footer {
     transform: translateY(0) scale(1);
 }
 
-/* 延迟控制 */
 .feature-card.scroll-fade-in {
     transition-delay: var(--animation-delay, 0s);
 }
@@ -911,52 +702,61 @@ footer {
         gap: 20px;
     }
     .section-padding { padding: 60px 0; }
+    
+    header { top: 16px; }
 }
 
 @media (max-width: 600px) {
     #github-star-link { display: none; }
-    #github-link { display: inline-block; }
+    #github-link { display: inline-flex; }
 }
 
 @media (max-width: 480px) {
-    /* 1. 调整容器内边距，腾出更多空间 */
     .container { 
         padding: 0 16px; 
     }
     
-    /* 2. 核心修复：强制 Header 不换行，且垂直居中 */
+    /* 
+       移动端双胶囊优化：
+       1. 确保 Header 宽度正确
+       2. 删除了之前隐藏 .logo code 的代码
+       3. 调整内边距，确保有足够空间放下两个胶囊
+    */
+    header {
+        top: 10px;
+        width: 100%; 
+    }
+    
     header .container {
-        display: flex;
-        flex-wrap: nowrap;       /* 禁止换行 */
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 16px;      /* 减小 Header 上下左右的 padding */
-        gap: 10px;               /* 限制 Logo 和 Nav 之间的最小间距 */
+        padding: 0 12px; /* 边缘留一点空隙 */
+        gap: 8px; 
     }
 
-    /* 3. 缩小 Logo 字体，并允许文字在极窄情况下显示省略号，而不是挤压图标 */
+    /* 缩小 Logo 胶囊的内边距，给文字腾地方 */
+    header .container > a {
+        padding: 5px 12px 5px 6px;
+    }
+
+    /* 稍微缩小 Logo 文字大小 */
     .logo {
-        font-size: 0.95rem;      /* 调小字体 (原 1.2rem) */
-        white-space: nowrap;     /* 文字不换行 */
-        overflow: hidden;
-        text-overflow: ellipsis; /* 超出显示... */
-        min-width: 0;            /* Flex 子项溢出修复 */
+        font-size: 0.95rem;
+        gap: 8px;
     }
 
-    /* 4. 保护导航栏区域不被压缩 */
-    nav {
-        display: flex;           /* 确保图标排成一行 */
-        flex-shrink: 0;          /* 核心：禁止图标区域缩小，确保三个都在 */
-        align-items: center;
+    .logo .site-icon {
+        width: 28px;
+        height: 28px;
     }
 
-    /* 5. 减小图标之间的间距 */
-    nav a {
-        margin-left: 12px;       /* 减小间距 (原 20px) */
-        font-size: 1rem;         /* 稍微调小图标大小 */
+    header nav {
+        flex-shrink: 0;
+    }
+    
+    header nav a.nav-button {
+        width: 36px;
+        height: 36px;
     }
 
-    /* 其他移动端样式保持不变 */
     .hero-section h2 { font-size: 2.2rem; }
     
     .hero-btns { 
@@ -984,26 +784,31 @@ footer {
 .docs-layout {
     display: flex;
     gap: 60px;
-    margin-top: 40px;
+    margin-top: 120px; 
     margin-bottom: 60px;
     min-height: 80vh;
 }
 
-/* --- Sidebar --- */
+/* --- Sidebar (修复: 明确不使用 flex 或重置为 column) --- */
 .docs-sidebar {
     width: 240px;
     flex-shrink: 0;
     position: sticky;
-    top: 100px; /* 距离顶部的距离，考虑 header 高度 */
+    top: 100px;
     height: fit-content;
     max-height: calc(100vh - 120px);
     overflow-y: auto;
 }
 
+/* 侧边栏导航容器：垂直排列 */
+.sidebar-nav {
+    display: block; 
+}
+
 .nav-group {
     margin-bottom: 24px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
 }
 
 .nav-title {
@@ -1024,7 +829,7 @@ footer {
     padding: 6px 12px;
     border-left: 2px solid transparent;
     transition: all 0.2s;
-    margin-left: 0; /* Override header nav styles */
+    margin-left: 0; 
 }
 
 .nav-link:hover {
@@ -1040,18 +845,19 @@ footer {
 }
 
 /* --- Main Content --- */
-
 .docs-content {
     flex: 1;
-    min-width: 0; /* 防止代码块撑破 flex 容器 */
+    min-width: 0; 
 }
 
 .docs-content section {
     margin-bottom: 60px;
-    scroll-margin-top: 100px; /* 锚点定位偏移 */
+    scroll-margin-top: 140px; 
 }
 
-.docs-content a {
+footer a,
+.docs-content a,
+.link-with-bg {
     color: #60a5fa;
     text-decoration: underline;
     text-decoration-thickness: 1px;
@@ -1062,7 +868,9 @@ footer {
     font-weight: 500;
 }
 
-.docs-content a:hover {
+footer a:hover,
+.docs-content a:hover,
+.link-with-bg:hover {
     color: #ffffff;
     background-color: rgba(59, 130, 246, 0.2);
     text-decoration-color: transparent;
@@ -1109,6 +917,7 @@ footer {
 .function { color: var(--color-code-function) !important; }
 .literal { color: var(--color-code-literal) !important; }
 .constant { color: var(--color-code-constant) !important; }
+.parenthesis-first { color: var(--color-code-parenthesis-first) !important; }
 
 .text-link {
     color: var(--color-accent);
@@ -1184,6 +993,7 @@ footer {
     .docs-layout {
         flex-direction: column;
         gap: 30px;
+        margin-top: 100px;
     }
     
     .docs-sidebar {
@@ -1216,5 +1026,4 @@ footer {
         border-left: none;
         border-bottom-color: var(--color-accent);
     }
-
-    }
+}

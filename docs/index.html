@@ -18,26 +18,28 @@
 
     <header>
         <div class="container">
-            <h1 class="logo">
-                <svg class="site-icon" width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                        <linearGradient id="logo_gradient" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stop-color="#3b82f6" />
-                            <stop offset="100%" stop-color="#60a5fa" />
-                        </linearGradient>
-                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                            <feGaussianBlur stdDeviation="3" result="blur" />
-                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                        </filter>
-                    </defs>
-                    <rect x="15" y="15" width="70" height="70" rx="12" stroke="url(#logo_gradient)" stroke-width="6" fill="none"/>
-                    <path d="M30 15V22 M50 15V22 M70 15V22" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M30 78V85 M50 78V85 M70 78V85" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
-                    <path d="M37 38 L57 50 L37 62" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));"/>
-                    <line x1="65" y1="32" x2="65" y2="68" stroke="#0DBC79" stroke-width="6" stroke-linecap="round" class="cursor-blink"/>
-                </svg>
-                <code>CodeVideoRenderer</code>
-            </h1>
+            <a href="index.html" style="text-decoration: none;">
+                <h1 class="logo">
+                    <svg class="site-icon" width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logo_gradient" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#3b82f6" />
+                                <stop offset="100%" stop-color="#60a5fa" />
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="15" y="15" width="70" height="70" rx="12" stroke="url(#logo_gradient)" stroke-width="6" fill="none"/>
+                        <path d="M30 15V22 M50 15V22 M70 15V22" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M30 78V85 M50 78V85 M70 78V85" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
+                        <path d="M37 38 L57 50 L37 62" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));"/>
+                        <line x1="65" y1="32" x2="65" y2="68" stroke="#0DBC79" stroke-width="6" stroke-linecap="round" class="cursor-blink"/>
+                    </svg>
+                    <code>CodeVideoRenderer</code>
+                </h1>
+            </a>
             <nav>
                 <a id="github-star-link" href="https://github.com/ZhuChongjing/CodeVideoRenderer" target="_blank" class="btn-github-star">
                     <span class="shine"></span>
@@ -49,15 +51,13 @@
                         <svg class="star-icon" fill="currentColor" viewBox="0 0 24 24">
                             <path clip-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" fill-rule="evenodd" />
                         </svg>
-                        <code id="star-count">-</code>
+                        <code id="star-count"></code>
                         <script>
-                            window.onload = function() {
-                                fetch('https://api.github.com/repos/ZhuChongjing/CodeVideoRenderer')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        document.getElementById('star-count').textContent = data.stargazers_count;
-                                    });
-                            }
+                            fetch('https://api.github.com/repos/ZhuChongjing/CodeVideoRenderer')
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById('star-count').textContent = data.stargazers_count;
+                                });
                         </script>
                     </div>
                 </a>
@@ -76,8 +76,21 @@
 
     <section id="hero" class="hero-section section-full-height">
         <div class="container">
-            <!-- 更新版本号 -->
-            <div class="badge text-fade-in"><code>v1.1.0</code> 现在可用 <code>(2025/11/24)</code></div>
+            <div class="badge text-fade-in">最新版本：<code id="latest-version">---</code> <code id="release-time">---</code></div>
+            <script>
+                fetch('https://pypi.org/pypi/CodeVideoRenderer/json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const latestVersion = data.info.version;
+                        document.getElementById('latest-version').textContent = 'v' + latestVersion;
+                        const releaseTime = new Date(data.releases[latestVersion][0].upload_time).toLocaleString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                        });
+                        document.getElementById('release-time').textContent = '(' + releaseTime + ')';
+                        });
+            </script>
             <h2 class="text-fade-in">
                 让代码演示<br>
                 <span class="gradient-text">极具电影感</span>
@@ -193,93 +206,21 @@ video.render()</code></pre>
             <h3 class="title-fade-in">
                 <p>我们欢迎反馈</p>
             </h3>
-            <p class="subtitle-fade-in">您可以通过<strong>抖音</strong>、<strong>邮箱</strong>或<strong>GitHub仓库</strong>与我们联系。</p>
-            <div class="two-col">
-                <div class="feedback">
-                    <div class="scroll-fade-in">
-                        <div class="parent">
-                            <div class="card">
-                                <div class="logo">
-                                    <span class="circle circle1"></span>
-                                    <span class="circle circle2"></span>
-                                    <span class="circle circle3"></span>
-                                    <span class="circle circle4"></span>
-                                    <span class="circle circle5">
-                                        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <defs>
-                                                <linearGradient id="logo_gradient" x1="0" y1="100" x2="100" y2="0" gradientUnits="userSpaceOnUse">
-                                                    <stop offset="0%" stop-color="#3b82f6" />
-                                                    <stop offset="100%" stop-color="#60a5fa" />
-                                                </linearGradient>
-                                                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                                                    <feGaussianBlur stdDeviation="3" result="blur" />
-                                                    <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                                                </filter>
-                                            </defs>
-                                            <rect x="15" y="15" width="70" height="70" rx="12" stroke="url(#logo_gradient)" stroke-width="6" fill="#0f172a"/>
-                                            <path d="M30 15V22 M50 15V22 M70 15V22" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
-                                            <path d="M30 78V85 M50 78V85 M70 78V85" stroke="url(#logo_gradient)" stroke-width="4" stroke-linecap="round"/>
-                                            <path d="M37 38 L57 50 L37 62" stroke="#f1f5f9" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none" style="filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));"/>
-                                            <line x1="65" y1="32" x2="65" y2="68" stroke="#0DBC79" stroke-width="6" stroke-linecap="round"/>
-                                        </svg>
-                                    </span>
-
-                                </div>
-                                <div class="glass"></div>
-                                <div class="content">
-                                    <span class="title">联系我们</span>
-                                    <span class="text">欢迎大家来找茬！如果您发现任何问题，请随时联系我们，我们会尽快回复。</span>
-                                </div>
-                                <div class="bottom">
-                                    
-                                    <div class="social-buttons-container">
-                                        <a href="https://www.douyin.com/user/MS4wLjABAAAARrTya1bIs9cvLXdWP7wo2ZiuYa3jAqQszrF4Qci58I1n8SQyd_6Rw9E8s2K3LfB2" class="social-link">
-                                            <button class="social-button .social-button1">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="svg">
-                                                    <path d="M544.5 273.9C500.5 274 457.5 260.3 421.7 234.7L421.7 413.4C421.7 446.5 411.6 478.8 392.7 506C373.8 533.2 347.1 554 316.1 565.6C285.1 577.2 251.3 579.1 219.2 570.9C187.1 562.7 158.3 545 136.5 520.1C114.7 495.2 101.2 464.1 97.5 431.2C93.8 398.3 100.4 365.1 116.1 336C131.8 306.9 156.1 283.3 185.7 268.3C215.3 253.3 248.6 247.8 281.4 252.3L281.4 342.2C266.4 337.5 250.3 337.6 235.4 342.6C220.5 347.6 207.5 357.2 198.4 369.9C189.3 382.6 184.4 398 184.5 413.8C184.6 429.6 189.7 444.8 199 457.5C208.3 470.2 221.4 479.6 236.4 484.4C251.4 489.2 267.5 489.2 282.4 484.3C297.3 479.4 310.4 469.9 319.6 457.2C328.8 444.5 333.8 429.1 333.8 413.4L333.8 64L421.8 64C421.7 71.4 422.4 78.9 423.7 86.2C426.8 102.5 433.1 118.1 442.4 131.9C451.7 145.7 463.7 157.5 477.6 166.5C497.5 179.6 520.8 186.6 544.6 186.6L544.6 274z"/>
-                                                </svg>
-                                            </button>
-                                        </a>
-                                        <a href="mailto:zhuchongjing_pypi@163.com" class="social-link">
-                                            <button class="social-button .social-button2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="svg">
-                                                    <path d="M125.4 128C91.5 128 64 155.5 64 189.4C64 190.3 64 191.1 64.1 192L64 192L64 448C64 483.3 92.7 512 128 512L512 512C547.3 512 576 483.3 576 448L576 192L575.9 192C575.9 191.1 576 190.3 576 189.4C576 155.5 548.5 128 514.6 128L125.4 128zM528 256.3L528 448C528 456.8 520.8 464 512 464L128 464C119.2 464 112 456.8 112 448L112 256.3L266.8 373.7C298.2 397.6 341.7 397.6 373.2 373.7L528 256.3zM112 189.4C112 182 118 176 125.4 176L514.6 176C522 176 528 182 528 189.4C528 193.6 526 197.6 522.7 200.1L344.2 335.5C329.9 346.3 310.1 346.3 295.8 335.5L117.3 200.1C114 197.6 112 193.6 112 189.4z"/>
-                                                </svg>
-                                            </button>
-                                        </a>
-                                        <a href="https://github.com/ZhuChongjing/CodeVideoRenderer" class="social-link">
-                                            <button class="social-button .social-button3">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" class="svg">
-                                                    <path d="M237.9 461.4C237.9 463.4 235.6 465 232.7 465C229.4 465.3 227.1 463.7 227.1 461.4C227.1 459.4 229.4 457.8 232.3 457.8C235.3 457.5 237.9 459.1 237.9 461.4zM206.8 456.9C206.1 458.9 208.1 461.2 211.1 461.8C213.7 462.8 216.7 461.8 217.3 459.8C217.9 457.8 216 455.5 213 454.6C210.4 453.9 207.5 454.9 206.8 456.9zM251 455.2C248.1 455.9 246.1 457.8 246.4 460.1C246.7 462.1 249.3 463.4 252.3 462.7C255.2 462 257.2 460.1 256.9 458.1C256.6 456.2 253.9 454.9 251 455.2zM316.8 72C178.1 72 72 177.3 72 316C72 426.9 141.8 521.8 241.5 555.2C254.3 557.5 258.8 549.6 258.8 543.1C258.8 536.9 258.5 502.7 258.5 481.7C258.5 481.7 188.5 496.7 173.8 451.9C173.8 451.9 162.4 422.8 146 415.3C146 415.3 123.1 399.6 147.6 399.9C147.6 399.9 172.5 401.9 186.2 425.7C208.1 464.3 244.8 453.2 259.1 446.6C261.4 430.6 267.9 419.5 275.1 412.9C219.2 406.7 162.8 398.6 162.8 302.4C162.8 274.9 170.4 261.1 186.4 243.5C183.8 237 175.3 210.2 189 175.6C209.9 169.1 258 202.6 258 202.6C278 197 299.5 194.1 320.8 194.1C342.1 194.1 363.6 197 383.6 202.6C383.6 202.6 431.7 169 452.6 175.6C466.3 210.3 457.8 237 455.2 243.5C471.2 261.2 481 275 481 302.4C481 398.9 422.1 406.6 366.2 412.9C375.4 420.8 383.2 435.8 383.2 459.3C383.2 493 382.9 534.7 382.9 542.9C382.9 549.4 387.5 557.3 400.2 555C500.2 521.8 568 426.9 568 316C568 177.3 455.5 72 316.8 72zM169.2 416.9C167.9 417.9 168.2 420.2 169.9 422.1C171.5 423.7 173.8 424.4 175.1 423.1C176.4 422.1 176.1 419.8 174.4 417.9C172.8 416.3 170.5 415.6 169.2 416.9zM158.4 408.8C157.7 410.1 158.7 411.7 160.7 412.7C162.3 413.7 164.3 413.4 165 412C165.7 410.7 164.7 409.1 162.7 408.1C160.7 407.5 159.1 407.8 158.4 408.8zM190.8 444.4C189.2 445.7 189.8 448.7 192.1 450.6C194.4 452.9 197.3 453.2 198.6 451.6C199.9 450.3 199.3 447.3 197.3 445.4C195.1 443.1 192.1 442.8 190.8 444.4zM179.4 429.7C177.8 430.7 177.8 433.3 179.4 435.6C181 437.9 183.7 438.9 185 437.9C186.6 436.6 186.6 434 185 431.7C183.6 429.4 181 428.4 179.4 429.7z"/>
-                                                </svg>
-                                            </button>
-                                        </a>
-                                    </div>
-                                    <!-- <div class="view-more">
-                                        <button class="view-more-button">View more</button>
-                                        <svg class="svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"></path></svg>
-                                    </div> -->
-                                </div>
-                            </div>
+            <p class="subtitle-fade-in">您可以通过<a class="link-with-bg" href="https://www.douyin.com/user/MS4wLjABAAAARrTya1bIs9cvLXdWP7wo2ZiuYa3jAqQszrF4Qci58I1n8SQyd_6Rw9E8s2K3LfB2">抖音</a>、<a class="link-with-bg" href="mailto:zhuchongjing_pypi@163.com">邮箱</a>或<a class="link-with-bg" href="https://github.com/ZhuChongjing/CodeVideoRenderer/issues">GitHub仓库的Issues页面</a>与我们联系。</p>
+            <div class="feedback-card">
+                <div class="community-stats">
+                    <div class="avatar-group">
+                        <img src="./images/github_CN-WenYu.jpeg" alt="User" class="avatar">
+                        <img src="./images/douyin_po_sui_xiao_hu_die_INFP.jpeg" alt="User" class="avatar">
+                        <div class="avatar more">
+                            <i class="fas fa-plus"></i>
                         </div>
                     </div>
+                    
+                    <h4>加入开发者社区</h4>
+                    <p><code>CodeVideoRenderer</code> 正在被越来越多的开发者、教育工作者和技术博主使用。</p>
+                    <p>无论您是制作教程、分享代码片段，还是进行技术演讲，这里都有您需要的一切。不仅如此，您还可以直接提出功能建议，共同塑造未来的版本。</p>
                 </div>
-                <div class="feedback-card scroll-fade-in">
-                    <div class="community-stats">
-                        <div class="avatar-group">
-                            <img src="./images/github_CN-WenYu.jpeg" alt="User" class="avatar">
-                            <img src="./images/douyin_po_sui_xiao_hu_die_INFP.jpeg" alt="User" class="avatar">
-                            <div class="avatar more">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                        </div>
-                        
-                        <h4>加入开发者社区</h4>
-                        <p><code>CodeVideoRenderer</code> 正在被越来越多的开发者、教育工作者和技术博主使用。</p>
-                        <p>无论您是制作教程、分享代码片段，还是进行技术演讲，这里都有您需要的一切。不仅如此，您还可以直接提出功能建议，共同塑造未来的版本。</p>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
     </section>

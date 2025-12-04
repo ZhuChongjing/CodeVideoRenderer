@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文档 - CodeVideoRenderer</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <!-- 样式表引用 -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="furo.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-    
-    <!-- 脚本引用 -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
 </head>
 <body> 
     
@@ -56,15 +53,13 @@
                         <svg class="star-icon" fill="currentColor" viewBox="0 0 24 24">
                             <path clip-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" fill-rule="evenodd" />
                         </svg>
-                        <code id="star-count">-</code>
+                        <code id="star-count"></code>
                         <script>
-                            window.onload = function() {
-                                fetch('https://api.github.com/repos/ZhuChongjing/CodeVideoRenderer')
-                                    .then(response => response.json())
-                                    .then(data => {
-                                        document.getElementById('star-count').textContent = data.stargazers_count;
-                                    });
-                            }
+                            fetch('https://api.github.com/repos/ZhuChongjing/CodeVideoRenderer')
+                                .then(response => response.json())
+                                .then(data => {
+                                    document.getElementById('star-count').textContent = data.stargazers_count;
+                                });
                         </script>
                     </div>
                 </a>
@@ -87,7 +82,7 @@
             <nav class="sidebar-nav">
                 <div class="nav-group">
                     <span class="nav-title">开始</span>
-                    <a href="#intro" class="nav-link active">简介</a>
+                    <a href="#intro" class="nav-link">简介</a>
                     <a href="#install" class="nav-link">安装</a>
                     <a href="#quickstart" class="nav-link">快速上手</a>
                 </div>
@@ -99,18 +94,61 @@
                 </div>
                 <div class="nav-group">
                     <span class="nav-title">进阶</span>
-                    <a href="#input-logic" class="nav-link">输入源处理</a>
-                    <a href="#algo" class="nav-link">相机算法</a>
+                    <a href="#input-logic" class="nav-link">输入源处理逻辑</a>
+                    <a href="#algo" class="nav-link">动态相机算法</a>
+                </div>
+                <div class="nav-group">
+                    <span class="nav-title">更新日志</span>
+                    <a href="#1.1.0" class="nav-link"><code>v1.1.0</code></a>
+                    <a href="#1.0.9.post2" class="nav-link"><code>v1.0.9.post2</code></a>
+                    <a href="#1.0.9.post1" class="nav-link"><code>v1.0.9.post1</code></a>
+                    <a href="#1.0.9" class="nav-link"><code>v1.0.9</code></a>
+                    <a href="#1.0.8.post1" class="nav-link"><code>v1.0.8.post1</code></a>
+                    <a href="#1.0.8" class="nav-link"><code>v1.0.8</code></a>
+                    <a href="#1.0.7.post3" class="nav-link"><code>v1.0.7.post3</code></a>
+                    <a href="#1.0.7.post2" class="nav-link"><code>v1.0.7.post2</code></a>
+                    <a href="#1.0.7.post1" class="nav-link"><code>v1.0.7.post1</code></a>
+                    <a href="#1.0.7" class="nav-link"><code>v1.0.7</code></a>
+                    <a href="#1.0.6" class="nav-link"><code>v1.0.6</code></a>
+                    <a href="#1.0.5.post2" class="nav-link"><code>v1.0.5.post2</code></a>
+                    <a href="#1.0.5.post1" class="nav-link"><code>v1.0.5.post1</code></a>
+                    <a href="#1.0.5" class="nav-link"><code>v1.0.5</code></a>
+                    <a href="#1.0.4" class="nav-link"><code>v1.0.4</code></a>
+                    <a href="#1.0.3" class="nav-link"><code>v1.0.3</code></a>
+                    <a href="#earlier" class="nav-link">更早</a>
                 </div>
             </nav>
         </aside>
 
         <!-- 右侧主内容 -->
         <main class="docs-content">
-            
+
+            <div class="admonition important">
+                <p class="admonition-title">文档版本检查</p>
+                <p class="admonition-text" id="docs-version-check">正在检测文档版本...</p>
+            </div>
+            <script>
+                const docsVersion = '1.1.0';
+                fetch('https://pypi.org/pypi/CodeVideoRenderer/json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const latestVersion = data.info.version;
+                        const docsVersionCheck = document.getElementById('docs-version-check');
+                        if (latestVersion === docsVersion) {
+                            docsVersionCheck.innerHTML = `您正在查看的文档版本为 <code class="number">${docsVersion}</code>，已是最新版本。`;
+                        } else {
+                            docsVersionCheck.innerHTML = `您正在查看的文档版本为 <code class="number">${docsVersion}</code>，最新版本为 <code class="number">${latestVersion}</code>。最新版文档正在全力编写中，请耐心等待！`;
+                        }})
+                    .catch(error => {
+                        const docsVersionCheck = document.getElementById('docs-version-check');
+                        docsVersionCheck.innerHTML = `无法检测最新版本。您正在查看的文档版本为 <code class="number">${docsVersion}</code>。`;
+                    });
+            </script>
+
             <!-- 简介 -->
+            <h1>开始</h1>
             <section id="intro">
-                <h1>简介</h1>
+                <h2>简介</h2>
                 <p><code class="class">CameraFollowCursorCV</code> 是本库的核心类，专门设计用于模拟代码输入的动画过程。它通过逐行、逐字符的动画效果，配合平滑的摄像机跟随，创造出具有专业水准的代码演示视频。</p>
                 <div class="admonition note">
                     <p class="admonition-title"><code>v1.1.0</code> 新特性</p>
@@ -123,8 +161,8 @@
                 <h2>安装</h2>
                 <div class="admonition tip">
                     <p class="admonition-title">安装要求</p>
-                    <p class="admonition-text"><strong><code>Python</code> 版本要求：</strong><code style="color: white;">>=3.9</code></p>
-                    <p class="admonition-text"><strong><code>Python</code> 包依赖：</strong><code style="color: white;"><span class="class">manim</span>>=0.17.0, <span class="class">rich</span>>=13.0.0</code></p>
+                    <p class="admonition-text"><strong>Python 版本要求：</strong><code style="color: white;">>=3.9</code></p>
+                    <p class="admonition-text"><strong>Python 包依赖：</strong><code style="color: white;"><span class="class">manim</span>>=0.17.0, <span class="class">rich</span>>=13.0.0</code></p>
                     <p class="admonition-text"><strong>第三方软件依赖：</strong><a href="https://ffmpeg.org/" target="_blank" title="FFmpeg"><code style="color: white;">FFmpeg</code></a></p>
                 </div>
                 <p>您可以通过以下命令安装：</p>
@@ -153,8 +191,9 @@ video.render()</code></pre>
             </section>
 
             <!-- 类定义 -->
+            <h1>核心类</h1>
             <section id="CameraFollowCursorCV">
-                <h2><code class="class">CameraFollowCursorCV</code> 类</h2>
+                <h2><code class="class">CameraFollowCursorCV</code></h2>
                 <div class="versionchanged">
                     <p><span class="versionmodified">在<code>1.0.7.post2</code>版本中</span>将原名<code class="class">CodeVideo</code>改为<code class="class">CameraFollowCursorCV</code></p>
                 </div>
@@ -233,13 +272,13 @@ video.render()</code></pre>
                 <div class="admonition warning">
                     <p class="admonition-title">注意</p>
                     <p class="admonition-text"><code class="variable">code_string</code> 和 <code class="variable">code_file</code> 必须且只能提供其中一个。</p>
-                    <p class="admonition-text">代码内容不能为空，且只能包含<code class="constant">AVAILABLE_CHARACTERS</code>。</p>
+                    <p class="admonition-text">代码内容不能为空，且只能包含 <code class="constant">AVAILABLE_CHARACTERS</code>。</p>
                     <p class="admonition-text">所有时间相关参数必须大于或等于$\small\cfrac{1}{当前帧率}$（取七位小数）。</p>
             </section>
 
             <!-- 渲染方法 -->
             <section id="render-method">
-                <h3>渲染方法 <code class="function">render</code><code>()</code></h3>
+                <h3>渲染方法 <code><span class="function">render</span><span class="parenthesis-first">()</span></code></h3>
                 <div class="code-block-wrapper">
                     <pre><code class="python">def render(self, output: bool = True) -> None:</code></pre>
                 </div>
@@ -263,6 +302,7 @@ video.render()</code></pre>
             </section>
 
             <!-- 输入处理逻辑 -->
+            <h1>进阶</h1>
             <section id="input-logic">
                 <h2>输入源处理逻辑</h2>
                 <p>库内部会对输入的代码进行严格的预处理，以保证渲染稳定性：</p>
@@ -278,7 +318,7 @@ video.render()</code></pre>
                 <h2>动态相机算法</h2>
                 
                 <h3>自适应缩放</h3>
-                <p>为了确保长代码行也能完整显示，系统每渲染一个字符，都会判断是否需要拉远镜头。<code>v1.1.0</code> 优化了视觉系数。</p>
+                <p>为了确保长代码行也能完整显示，系统每渲染一个字符，都会判断是否需要拉远镜头。<code class="number">v1.1.0</code> 优化了视觉系数。</p>
                 
                 <div class="math-block">
                     $$ D = \frac{X_\text{cam} - X_\text{origin}}{14.22} $$
@@ -287,7 +327,7 @@ video.render()</code></pre>
                 <p>如果计算出的目标系数 $D$ 大于当前的相机缩放，系统将触发 <code class="function">scale</code> 动画，将相机平滑拉远。</p>
 
                 <h3>视觉律动</h3>
-                <p><code>v1.1.0</code> 引入了模拟呼吸感的微振荡算法。在输入一行代码时，相机不再是死板地水平移动，而是会产生极其微小的垂直浮动。浮动轨迹由以下公式决定：</p>
+                <p><code class="number">v1.1.0</code> 引入了模拟呼吸感的微振荡算法。在输入一行代码时，相机不再是死板地水平移动，而是会产生极其微小的垂直浮动。浮动轨迹由以下公式决定：</p>
 
                 <div class="math-block">
                     $$ \Delta y = A \cdot \sin(\pi \alpha) \cdot \sin(\omega \alpha) $$
@@ -322,6 +362,104 @@ video.render()</code></pre>
                 <p>这种叠加了包络线的正弦振荡，使得长行代码的输入过程具有了类似“书写节奏”的自然起伏感。</p>
             </section>
 
+            <!-- 更新日志 -->
+            <h1>更新日志</h1>
+            <section id="1.1.0">
+                <h2><code>v1.1.0</code></h2>
+                <p>修改相机运动逻辑</p>
+                <p>增加开头动画</p>
+                <p>修复在 <code class="function">render</code> 中使用 <code style="color: white;"><span class="variable">output</span>=<span class="literal">False</span></code> 时无法终止输出的问题</p>
+            </section>
+            <section id="1.0.9.post2">
+                <h2><code>v1.0.9.post2</code></h2>
+                <p>更改光标与字符的间距</p>
+            </section>
+            <section id="1.0.9.post1">
+                <h2><code>v1.0.9.post1</code></h2>
+                <p>修复 <code class="function">type_checker</code> 装饰器的部分问题</p>
+                <p>更改进度条样式，增加 <code class="string">{task.completed}/{task.total}</code> 一栏</p>
+            </section>
+            <section id="1.0.9">
+                <h2><code>v1.0.9</code></h2>
+                <p>修改相机运动逻辑，重写相机移动逻辑，增加相机自动缩放功能</p>
+                <p>使用 <code class="class">rich</code> 输出渲染开始时的数据</p>
+                <p>重写渲染进度条，现使用 <code style="color: white;"><span class="class">rich</span>.<span class="class">progress</span></code> 进行进度条输出</p>
+                <p>重写类型检查，使用 <code style="color: white;"><span class="class">rich</span>.<span class="class">traceback</span></code> 抛出更美观的错误</p>
+            </section>
+            <section id="1.0.8.post1">
+                <h2><code>v1.0.8.post1</code></h2>
+                <p>修复 <code>__init__.py</code> 的问题</p>
+            </section>
+            <section id="1.0.8">
+                <h2><code>v1.0.8</code></h2>
+                <p>修复代码偏移问题</p>
+                <p>由于 <code>Cascadia Code</code> 会将 <code class="string">>=</code> 变成 <code class="string">≥</code> 导致 <code class="class">manim</code> 内部错误，因此将字体换回 <code>Consolas</code></p>
+                <p>删除 <code>/renderer/config.py</code> 中的无用常量</p>
+            </section>
+            <section id="1.0.7.post3">
+                <h2><code>v1.0.7.post3</code></h2>
+                <p><code>pip</code> 未上传完整代码，重新上传</p>
+            </section>
+            <section id="1.0.7.post2">
+                <h2><code>v1.0.7.post2</code></h2>
+                <p>修复了代码开头有空行时的渲染问题</p>
+                <p>禁止 <code class="class">manim</code> 缓存以加快渲染速度</p>
+            </section>
+            <section id="1.0.7.post1">
+                <h2><code>v1.0.7.post1</code></h2>
+                <p>修复使用 <code class="variable">code_file</code> 时出现的问题</p>
+            </section>
+            <section id="1.0.7">
+                <h2><code>v1.0.7</code></h2>
+                <p>更新 <code>pip</code> 安装依赖配置</p>
+                <p>参数更改：</p>
+                <ul>
+                    <li><code class="variable">camera_floating_maximum_value</code> → <code class="variable">camera_floating_max_value</code></li>
+                    <li><code class="variable">screen_scale</code> → <code class="variable">camera_scale</code></li>
+                </ul>
+                <p>报错信息优化</p>
+            </section>
+            <section id="1.0.6">
+                <h2><code>v1.0.6</code></h2>
+                <p>修复代码超长导致进度条格式错误的问题</p>
+                <p>重构（<code>renderer</code>）：优化 <code class="class">CodeVideoRenderer</code> 的结构和错误处理（详见<a href="https://github.com/ZhuChongjing/CodeVideoRenderer/pull/1">#1</a>）</p>
+            </section>
+            <section id="1.0.5.post2">
+                <h2><code>v1.0.5.post2</code></h2>
+                <p>修复了 <code>pip</code> 依赖库安装版本问题，确保所有依赖库的版本与项目要求一致。</p>
+                <p>修复渲染输出的ANSI转义在不同编译器显示颜色不同的问题。</p>
+            </section>
+            <section id="1.0.5.post1">
+                <h2><code>v1.0.5.post1</code></h2>
+                <p>修复通过 <code>pip</code> 安装失败的问题</p>
+            </section>
+            <section id="1.0.5">
+                <h2><code>v1.0.5</code></h2>
+                <p>新增 <code class="variable">output</code> 参数到 <code class="function">render</code> 方法中，用于控制渲染输出。</p>
+                <p>将 <code class="function">CodeVideo</code> 从函数变为类 <code class="class">CodeVideo</code>，以提高代码的可维护性和扩展性。</p>
+            </section>
+            <section id="1.0.4">
+                <h2><code>v1.0.4</code></h2>
+                <p>修复渲染时间计算问题</p>
+                <p>删除 <code class="variable">font</code> 参数</p>
+                <p>优化终端渲染信息</p>
+                <p>优化代码运行速度</p>
+            </section>
+            <section id="1.0.3">
+                <h2><code>v1.0.3</code></h2>
+                <p>修复代码偏移问题（<code class="class">manim</code> 自带 bug）</p>
+                <p>修复换行时相机不及时移动的问题</p>
+                <p>修复光标在换行时不在开头停顿的问题</p>
+                <p>每行代码首尾空白字符不参与动画，以免增加动画时长</p>
+                <p>当前行背景宽度更改</p>
+                <p>新增 <code class="variable">line_spacing</code> 参数用于更改行距</p>
+                <p>优化终端渲染信息</p>
+                <p>优化相机移动逻辑</p>
+            </section>
+            <section id="earlier">
+                <h2>更早</h2>
+                <p><code>1.0.3</code> 及之前版本没有更新日志</p>
+            </section>
         </main>
     </div>
     
