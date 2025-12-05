@@ -86,6 +86,7 @@ class CameraFollowCursorCV(
 | `code_string` | `str` | `None` | 要演示的代码字符串，与`code_file`二选一 |
 | `code_file` | `str` | `None` | 要读取的代码文件路径，与`code_string`二选一 |
 | `language` | `str` | `None` | 代码语言，用于语法高亮显示 |
+| `render` | `str` | `cairo` | cairo为cpu计算，opengl为gpu计算 |
 
 > [!WARNING]
 > 
