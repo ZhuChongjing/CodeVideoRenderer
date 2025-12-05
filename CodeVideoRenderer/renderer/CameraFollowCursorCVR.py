@@ -23,10 +23,22 @@ class CameraFollowCursorCV:
         code_string: str = None,
         code_file: str = None,
         language: str = None,
+        render: str | RendererType = RendererType.CAIRO,
         line_spacing: float | int = DEFAULT_LINE_SPACING,
         interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
         camera_scale: float | int = 0.5
     ):
+        if isinstance(render, str):
+            if render == 'cpu':
+                render = 'cairo'
+            elif render == 'gpu':
+                render = 'opengl'
+        config.renderer = render
+        if config.renderer == RendererType.CAIRO:
+            print('当前模式：CPU')
+        else:
+            print('当前模式：GPU')
+
         # video_name
         if not video_name:
             raise ValueError("video_name must be provided")
@@ -96,7 +108,7 @@ class CameraFollowCursorCV:
                     fill_opacity=1,
                     fill_color=WHITE,
                     color=WHITE,
-                ).set_z_index(2)
+                )
 
                 # 创建代码块
                 code_block = Code(
@@ -108,8 +120,8 @@ class CameraFollowCursorCV:
                         'line_spacing': self.line_spacing
                     }
                 )
-                line_number_mobject = code_block.submobjects[1].set_color(GREY).set_z_index(2)
-                code_mobject = code_block.submobjects[2].set_z_index(2)
+                line_number_mobject = code_block.submobjects[1].set_color(GREY)
+                code_mobject = code_block.submobjects[2]
 
                 total_line_numbers = len(line_number_mobject)
                 total_char_numbers = len(''.join(line.strip() for line in self.code_str.split('\n')))
@@ -136,16 +148,27 @@ class CameraFollowCursorCV:
                     color="#333333",
                     fill_opacity=1,
                     stroke_width=0
-                ).set_z_index(1).set_y(occupy[0].get_y())
+                ).set_y(occupy[0].get_y())
+
+                # 处理使用  RendererType.CAIRO 时的问题，调整了 scene.add 添加顺序， 应该不用启用下方代码
+                # if config.renderer == RendererType.CAIRO:
+                #     cursor = cursor.set_z_index(2)
+                #     line_number_mobject = line_number_mobject.set_z_index(2)
+                #     code_mobject = code_mobject.set_z_index(2)
+                #     code_line_rectangle = code_line_rectangle.set_z_index(1)
                 
                 # 初始化光标位置
                 cursor.align_to(occupy[0][0], LEFT).set_y(occupy[0][0].get_y())
+
+                # 兼容opengl语法
+                if config.renderer == RendererType.OPENGL:
+                    scene.camera.frame = scene.camera
 
                 # 入场动画
                 target_center = cursor.get_center()
                 start_center = target_center + UP * 3
                 scene.camera.frame.scale(self.camera_scale).move_to(start_center)
-                scene.add(cursor, line_number_mobject[0].set_color(WHITE), code_line_rectangle)
+                scene.add(line_number_mobject[0].set_color(WHITE), code_line_rectangle, cursor)
 
                 scene.play(
                     scene.camera.frame.animate.move_to(target_center),
@@ -243,11 +266,23 @@ class CameraFollowCursorCV:
                         total_typing_chars = char_num # 当前行实际要打的字数
 
                         # 遍历当前行的每个字符
-                        for column in range(first_non_space_index, char_num+first_non_space_index):
+                        submobjects_char_index = 0
+                        for column in range(first_non_space_index, char_num + first_non_space_index):
 
                             occupy_char = occupy[line][column]
-                            scene.add(code_mobject[line][column])
-                            cursor.next_to(occupy_char, RIGHT, buff=DEFAULT_CURSOR_TO_CHAR_BUFFER).set_y(code_line_rectangle.get_y())
+                            # 处理manim==0.19.1更新出现的空格Dot消失问题
+                            if self.code_str_lines[line][column].isspace():
+                                space = Dot(radius=0, fill_opacity=0, stroke_opacity=0)
+                                if column == 0:
+                                    space.move_to(code_mobject[line][submobjects_char_index].get_center())
+                                else:
+                                    space.move_to(code_mobject[line][submobjects_char_index - 1].get_center())
+                                scene.add(space)
+                            else:
+                                scene.add(code_mobject[line][submobjects_char_index])
+                                submobjects_char_index += 1
+                            cursor.next_to(occupy_char, RIGHT, buff=DEFAULT_CURSOR_TO_CHAR_BUFFER).set_y(
+                                code_line_rectangle.get_y())
                             
                             # 相机持续摆动逻辑
                             
