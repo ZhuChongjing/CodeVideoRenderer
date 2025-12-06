@@ -1,14 +1,278 @@
 from manim import *
 from pathlib import Path
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 from rich.panel import Panel
-import random, time, string, shutil
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
+from copy import copy
+from contextlib import contextmanager
+from io import StringIO
+from functools import wraps
+from typing import get_args, get_origin, Literal
+from os import PathLike
+from types import UnionType
+from moviepy import VideoFileClip
+from PIL import Image, ImageFilter, ImageEnhance
+from proglog import ProgressBarLogger
+from collections import OrderedDict
 import numpy as np
+import random, time, string, sys, inspect, time
 
-from .functions import *
 from .config import *
 
-config.disable_caching = True
+@contextmanager
+def no_manim_output():
+    """
+    Context manager used to execute code without outputting Manim logs.
+    """
+    sys.stdout = StringIO()
+    stderr_buffer = StringIO()
+    sys.stderr = stderr_buffer
+    config.progress_bar = "none"
+
+    try:
+        yield
+    finally:
+        sys.stdout = ORIGINAL_STDOUT
+        sys.stderr = ORIGINAL_STDERR
+        config.progress_bar = ORIGINAL_PROGRESS_BAR
+        stderr_content = stderr_buffer.getvalue()
+        if stderr_content:
+            print(stderr_content, file=ORIGINAL_STDERR)
+
+def strip_empty_lines(text: str):
+    """
+    Remove empty lines from the beginning and end of a string.
+    """
+    lines = text.split("\n")
+    
+    start = 0
+    while start < len(lines) and lines[start].strip() == '':
+        start += 1
+    
+    end = len(lines)
+    while end > start and lines[end - 1].strip() == '':
+        end -= 1
+    
+    return '\n'.join(lines[start:end])
+
+def typeName(item_type):
+    """
+    Get the name of a type, handling union types and generic tuples.
+    """
+    if isinstance(item_type, UnionType):
+        return str(item_type).replace(" | ", "' or '")
+    return item_type.__name__
+
+def type_checker(func):
+    """
+    Decorator to check types of function arguments and return value.
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        sig = inspect.signature(func)
+        bound_args = sig.bind(*args, **kwargs)
+        
+        for param_name, param_value in bound_args.arguments.items():
+            param_type = sig.parameters[param_name].annotation
+            if param_type is inspect.Parameter.empty:
+                continue  # 无注解则跳过
+            
+            # 处理带参数的泛型 tuple（如 tuple[float, float]）
+            if get_origin(param_type) is tuple:
+                # 校验是否为 tuple 实例
+                if not isinstance(param_value, tuple):
+                    raise TypeError(
+                        f"Parameter '{param_name}': Expected 'tuple', got '{type(param_value).__name__}'"
+                    )
+                # 校验长度和元素类型
+                item_types = get_args(param_type)
+                if len(param_value) != len(item_types):
+                    raise ValueError(
+                        f"Parameter '{param_name}' length mismatch: Expected {len(item_types)}, got {len(param_value)}"
+                    )
+                for idx, (item, item_type) in enumerate(zip(param_value, item_types)):
+                    if not isinstance(item, item_type):
+                        raise TypeError(
+                            f"Parameter '{param_name}' item (index: {idx}): Expected '{typeName(item_type)}', got '{type(item).__name__}'"
+                        )
+                    
+            elif get_origin(param_type) is Literal:
+                # 校验是否为 Literal 中的值
+                if param_value not in get_args(param_type):
+                    raise ValueError(
+                        f"Parameter '{param_name}': Expected value in {get_args(param_type)}, got '{param_value}'"
+                    )
+            
+            # 普通类型
+            else:
+                if not isinstance(param_value, param_type):
+                    raise TypeError(f"Parameter '{param_name}': Expected '{typeName(param_type)}', got '{type(param_value).__name__}'")
+                        
+        return func(*args, **kwargs)
+    return wrapper
+
+def add_glow_effect(input_path: PathLike, output_path: PathLike, output: bool):
+    """
+    Add a glow effect to a video.
+    """
+    # 内部帧处理函数
+    def _frame_glow(t: np.ndarray):
+        # 获取MoviePy的numpy帧并转为PIL图像
+        frame = t.astype(np.uint8)
+        pil_img = Image.fromarray(frame).convert("RGBA")
+
+        # 提升基础亮度
+        brightness_enhancer = ImageEnhance.Brightness(pil_img)
+        pil_img = brightness_enhancer.enhance(1.2)
+
+        # 创建模糊光晕层
+        glow = pil_img.filter(ImageFilter.GaussianBlur(radius=10))
+
+        # 提升光晕的亮度和饱和度
+        glow_bright_enhancer = ImageEnhance.Brightness(glow)
+        glow = glow_bright_enhancer.enhance(1.5)
+        glow_color_enhancer = ImageEnhance.Color(glow)
+        glow = glow_color_enhancer.enhance(1.2)
+
+        # 混合原图像与光晕层
+        soft_glow_img = Image.blend(glow, pil_img, 0.4)
+        glow_frame = np.array(soft_glow_img.convert("RGB")).astype(np.uint8)
+        return np.clip(glow_frame, 0, 255)
+    
+    glow_video: VideoFileClip = VideoFileClip(input_path).image_transform(_frame_glow)
+    glow_video.write_videofile(output_path, codec='libx264', audio=True, logger=RichProgressBarLogger(output=output, title="Glow Effect", leave_bars=False))
+
+def PROGRESS_BAR(output: bool):
+    """
+    Create a Rich progress bar.
+    """
+    return Progress(
+        TextColumn("[progress.description]{task.description}"),
+        BarColumn(),
+        TextColumn("[yellow]{task.completed}/{task.total}"),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+        TimeRemainingColumn(),
+        TransferSpeedColumn(),
+        console=DEFAULT_OUTPUT_CONSOLE if output else None
+    )
+
+class RichProgressBarLogger(ProgressBarLogger):
+    """
+    A progress logger that uses Rich to display progress bars.
+    """
+    def __init__(
+        self,
+        output: bool,
+        title: str,
+        init_state=None,
+        bars=None,
+        leave_bars=True,
+        ignored_bars=None,
+        logged_bars="all",
+        print_messages=True,
+        min_time_interval=0.1,
+        ignore_bars_under=0,
+    ):
+        # 调用父类构造函数，初始化核心属性
+        super().__init__(
+            init_state=init_state,
+            bars=bars,
+            ignored_bars=ignored_bars,
+            logged_bars=logged_bars,
+            ignore_bars_under=ignore_bars_under,
+            min_time_interval=min_time_interval,
+        )
+        
+        # 初始化自定义属性
+        self.leave_bars = leave_bars
+        self.print_messages = print_messages
+        self.output = output
+        self.title = title
+        self.start_time = time.time()
+        
+        # 初始化 Rich 进度条
+        self.progress_bar = copy(PROGRESS_BAR(self.output))
+        self.rich_bars = OrderedDict()  # 存储 {bar_name: task_id}
+        
+        # 启动 Rich 进度条
+        if self.progress_bar and not self.progress_bar.live.is_started:
+            self.progress_bar.start()
+
+    def new_tqdm_bar(self, bar):
+        """
+        Create a Rich progress bar task for the given bar.
+        """
+        if not self.output or self.progress_bar is None:
+            return
+        
+        # 关闭已有进度条
+        if bar in self.rich_bars:
+            self.close_tqdm_bar(bar)
+        
+        # 获取父类维护的进度条信息
+        infos = self.bars[bar]
+        # 创建 Rich 进度条任务
+        task_id = self.progress_bar.add_task(description=f"{MARKUP_YELLOW}{self.title}{MARKUP_RESET}", total=infos["total"])
+        self.rich_bars[bar] = task_id
+
+    def close_tqdm_bar(self, bar):
+        """
+        Close the Rich progress bar task for the given bar.
+        """
+        if not self.output or self.progress_bar is None:
+            return
+        
+        if bar in self.rich_bars:
+            task_id = self.rich_bars[bar]
+            # 若不需要保留，移除任务
+            if not self.leave_bars:
+                self.progress_bar.remove_task(task_id)
+            del self.rich_bars[bar]
+
+    def bars_callback(self, bar, attr, value, old_value):
+        """
+        Update the Rich progress bar task based on the attribute change.
+        """
+        if bar not in self.rich_bars:
+            self.new_tqdm_bar(bar)
+        
+        task_id = self.rich_bars.get(bar)
+        if attr == "index":
+            # 处理帧数更新（核心）
+            if value >= old_value:
+                total = self.bars[bar]["total"]
+                # 计算处理速度
+                elapsed = time.time() - self.start_time
+                speed = value / elapsed if elapsed > 0 else 0.0
+                
+                # 更新 Rich 进度条
+                self.progress_bar.update(
+                    task_id,
+                    completed=value,
+                    speed=speed
+                )
+                
+                # 完成后关闭（复刻原逻辑）
+                if total and (value >= total):
+                    self.close_tqdm_bar(bar)
+            else:
+                # 帧数回退：重置进度条
+                self.new_tqdm_bar(bar)
+                self.progress_bar.update(self.rich_bars[bar], completed=value)
+        
+        # elif attr == "message":
+        #     # 处理消息更新（复刻原 postfix 逻辑）
+        #     self.progress_bar.update(
+        #         task_id,
+        #         message=value[:20],  # 截断长消息
+        #         description=f"{self.bars[bar]['title']}: {value[:20]}"
+        #     )
+
+    def stop(self):
+        """
+        Stop the Rich progress bar.
+        """
+        if self.progress_bar and self.progress_bar.live.is_started:
+            self.progress_bar.stop()
 
 class CameraFollowCursorCV:
     """
@@ -17,28 +281,15 @@ class CameraFollowCursorCV:
     """
 
     @type_checker
-    def __init__(
-        self,
+    def __init__(self,
         video_name: str = "CameraFollowCursorCV",
         code_string: str = None,
         code_file: str = None,
         language: str = None,
-        render: str | RendererType = RendererType.CAIRO,
         line_spacing: float | int = DEFAULT_LINE_SPACING,
         interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
         camera_scale: float | int = 0.5
     ):
-        if isinstance(render, str):
-            if render == 'cpu':
-                render = 'cairo'
-            elif render == 'gpu':
-                render = 'opengl'
-        config.renderer = render
-        if config.renderer == RendererType.CAIRO:
-            print('当前模式：CPU')
-        else:
-            print('当前模式：GPU')
-
         # video_name
         if not video_name:
             raise ValueError("video_name must be provided")
@@ -88,13 +339,9 @@ class CameraFollowCursorCV:
         self.code_str = strip_empty_lines(code_str)
         self.code_str_lines = self.code_str.split("\n")
         self.scene = self._create_scene()
-        self.output = DEFAULT_OUTPUT_VALUE
 
     def _create_scene(self):
         """Create manim scene to animate code rendering."""
-        config.output_file = self.video_name
-        terminal_width = shutil.get_terminal_size().columns
-
         class CameraFollowCursorCVScene(MovingCameraScene):
 
             def construct(scene):
@@ -107,7 +354,7 @@ class CameraFollowCursorCV:
                     corner_radius=DEFAULT_CURSOR_WIDTH / 2,
                     fill_opacity=1,
                     fill_color=WHITE,
-                    color=WHITE,
+                    color=WHITE
                 )
 
                 # 创建代码块
@@ -149,26 +396,15 @@ class CameraFollowCursorCV:
                     fill_opacity=1,
                     stroke_width=0
                 ).set_y(occupy[0].get_y())
-
-                # 处理使用  RendererType.CAIRO 时的问题，调整了 scene.add 添加顺序， 应该不用启用下方代码
-                # if config.renderer == RendererType.CAIRO:
-                #     cursor = cursor.set_z_index(2)
-                #     line_number_mobject = line_number_mobject.set_z_index(2)
-                #     code_mobject = code_mobject.set_z_index(2)
-                #     code_line_rectangle = code_line_rectangle.set_z_index(1)
                 
                 # 初始化光标位置
                 cursor.align_to(occupy[0][0], LEFT).set_y(occupy[0][0].get_y())
-
-                # 兼容opengl语法
-                if config.renderer == RendererType.OPENGL:
-                    scene.camera.frame = scene.camera
 
                 # 入场动画
                 target_center = cursor.get_center()
                 start_center = target_center + UP * 3
                 scene.camera.frame.scale(self.camera_scale).move_to(start_center)
-                scene.add(line_number_mobject[0].set_color(WHITE), code_line_rectangle, cursor)
+                scene.add(code_line_rectangle, line_number_mobject[0].set_color(WHITE), cursor)
 
                 scene.play(
                     scene.camera.frame.animate.move_to(target_center),
@@ -204,8 +440,6 @@ class CameraFollowCursorCV:
                 # 输出渲染信息
                 if self.output:
                     DEFAULT_OUTPUT_CONSOLE.print(
-                        f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}\n"
-                        f"{MARKUP_GREY}Start Rendering '{self.video_name}.mp4'{MARKUP_RESET}\n",
                         Panel(
                             f"{MARKUP_GREEN}Total:{MARKUP_RESET}\n"
                             f" - line: {MARKUP_YELLOW}{total_line_numbers}{MARKUP_RESET}\n"
@@ -218,15 +452,7 @@ class CameraFollowCursorCV:
                         )
                     )
 
-                with Progress(
-                    TextColumn("[progress.description]{task.description}"),
-                    BarColumn(),
-                    TextColumn("[yellow]{task.completed}/{task.total}"),
-                    TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-                    TimeRemainingColumn(),
-                    TransferSpeedColumn(),
-                    console=DEFAULT_OUTPUT_CONSOLE if self.output else None
-                ) as progress:
+                with copy(PROGRESS_BAR(self.output)) as progress:
                     total_progress = progress.add_task(description="[yellow]Total[/yellow]", total=total_char_numbers)
 
                     # 遍历代码行
@@ -270,22 +496,13 @@ class CameraFollowCursorCV:
                         for column in range(first_non_space_index, char_num + first_non_space_index):
 
                             occupy_char = occupy[line][column]
-                            # 处理manim==0.19.1更新出现的空格Dot消失问题
-                            if self.code_str_lines[line][column].isspace():
-                                space = Dot(radius=0, fill_opacity=0, stroke_opacity=0)
-                                if column == 0:
-                                    space.move_to(code_mobject[line][submobjects_char_index].get_center())
-                                else:
-                                    space.move_to(code_mobject[line][submobjects_char_index - 1].get_center())
-                                scene.add(space)
-                            else:
+                            # 处理manim==0.19.1更新出现的空格消失问题
+                            if not self.code_str_lines[line][column].isspace():
                                 scene.add(code_mobject[line][submobjects_char_index])
                                 submobjects_char_index += 1
-                            cursor.next_to(occupy_char, RIGHT, buff=DEFAULT_CURSOR_TO_CHAR_BUFFER).set_y(
-                                code_line_rectangle.get_y())
+                            cursor.next_to(occupy_char, RIGHT, buff=DEFAULT_CURSOR_TO_CHAR_BUFFER).set_y(code_line_rectangle.get_y())
                             
                             # 相机持续摆动逻辑
-                            
                             line_break = False
                             if column == first_non_space_index and first_non_space_index != 0:
                                 # 如果是缩进后的第一个字符，先执行换行归位
@@ -328,28 +545,51 @@ class CameraFollowCursorCV:
                             progress.advance(total_progress, advance=1)
                             progress.advance(current_line_progress, advance=1)
                         
+                        progress.remove_task(total_progress)
                         progress.remove_task(current_line_progress)
 
-                if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.print("Please wait...\n", markup=False)
                 scene.wait()
 
             def render(scene):
                 """Override render to add timing log."""
+                origin_disable_caching = config.disable_caching
+                config.disable_caching = True
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering '{self.video_name}.mp4'")
+                    DEFAULT_OUTPUT_CONSOLE.log("Start rendering 'CameraFollowCursorCVScene' (by manim)")
+                    DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been modified.\n")
+                
+                # 渲染并计算时间
                 start_time = time.time()
                 with no_manim_output():
                     super().render()
                 end_time = time.time()
                 total_render_time = end_time - start_time
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.print(
-                        f"File ready at {MARKUP_GREEN}'{scene.renderer.file_writer.movie_file_path}'{MARKUP_RESET}\n"
-                        f"{MARKUP_GREY}Rendering finished in {total_render_time:.2f}s{MARKUP_RESET}\n"
-                        f"{MARKUP_GREY}{'-'*terminal_width}{MARKUP_RESET}",
-                    )
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully rendered CameraFollowCursorCVScene in {total_render_time:.2f} seconds (by manim)")
+
+                # 恢复配置
+                config.disable_caching = origin_disable_caching
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been restored.")
+                del origin_disable_caching
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start adding glow effect to 'CameraFollowCursorCVScene.mp4' (by moviepy)\n")
+
+                # 添加发光效果
+                input_path = str(scene.renderer.file_writer.movie_file_path)
+                output_path = '\\'.join(input_path.split('\\')[:-1]) + rf'\{self.video_name}.mp4'
+                start_time = time.time()
+                add_glow_effect(input_path=input_path, output_path=output_path, output=self.output)
+                end_time = time.time()
+                total_effect_time = end_time - start_time
+                if self.output:
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully added glow effect in {total_effect_time:.2f} seconds (by moviepy)")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"File ready at '{output_path}'\n")
+                del input_path, output_path
 
         return CameraFollowCursorCVScene()
-
+    
     @type_checker
     def render(self, output: bool = DEFAULT_OUTPUT_VALUE):
         """Render the scene, optionally with console output."""
