@@ -66,6 +66,7 @@ class CameraFollowCursorCV(
     code_string: str = None,
     code_file: str = None,
     language: str = None,
+    renderer: str | RendererType = RendererType.CAIRO,
     line_spacing: float | int = DEFAULT_LINE_SPACING,
     interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
     camera_scale: float | int = 0.5
@@ -86,7 +87,7 @@ class CameraFollowCursorCV(
 | `code_string` | `str` | `None` | 要演示的代码字符串，与`code_file`二选一 |
 | `code_file` | `str` | `None` | 要读取的代码文件路径，与`code_string`二选一 |
 | `language` | `str` | `None` | 代码语言，用于语法高亮显示 |
-| `render` | `str` | `cairo` | cairo为cpu计算，opengl为gpu计算 |
+| `renderer` | `str` | `cairo` | cairo为cpu计算，opengl为gpu计算 |
 
 > [!WARNING]
 > 

@@ -286,10 +286,22 @@ class CameraFollowCursorCV:
         code_string: str = None,
         code_file: str = None,
         language: str = None,
+        renderer: str | RendererType = RendererType.CAIRO,
         line_spacing: float | int = DEFAULT_LINE_SPACING,
         interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
         camera_scale: float | int = 0.5
     ):
+        if isinstance(renderer, str):
+            if renderer == 'cpu':
+                renderer = 'cairo'
+            elif renderer == 'gpu':
+                renderer = 'opengl'
+        config.renderer = renderer
+        if config.renderer == RendererType.CAIRO:
+            print('当前模式：CPU')
+        else:
+            print('当前模式：GPU')
+
         # video_name
         if not video_name:
             raise ValueError("video_name must be provided")
@@ -399,6 +411,10 @@ class CameraFollowCursorCV:
                 
                 # 初始化光标位置
                 cursor.align_to(occupy[0][0], LEFT).set_y(occupy[0][0].get_y())
+
+                # 适配opengl
+                if config.renderer == RendererType.OPENGL:
+                    scene.camera.frame = scene.camera
 
                 # 入场动画
                 target_center = cursor.get_center()
@@ -544,9 +560,9 @@ class CameraFollowCursorCV:
                             # 输出进度
                             progress.advance(total_progress, advance=1)
                             progress.advance(current_line_progress, advance=1)
-                        
-                        progress.remove_task(total_progress)
+
                         progress.remove_task(current_line_progress)
+                    progress.remove_task(total_progress)
 
                 scene.wait()
 
