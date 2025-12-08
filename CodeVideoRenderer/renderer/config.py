@@ -22,14 +22,6 @@ DEFAULT_TAB_WIDTH = 4
 DEFAULT_OUTPUT_CONSOLE = Console(file=ORIGINAL_STDOUT)
 DEFAULT_CURSOR_BLINK_RUN_TIME = 0.5
 
-# 颜色标记
-output_yellow = [229, 229, 16]
-output_green = [13, 188, 121]
-MARKUP_YELLOW = f"[rgb({','.join(str(rgb) for rgb in output_yellow)})]"
-MARKUP_GREEN = f"[rgb({','.join(str(rgb) for rgb in output_green)})]"
-MARKUP_ITALIC = f"[italic]"
-MARKUP_RESET = f"[/]"
-
 # 其他设置
 CODE_OFFSET = 0.04
 EMPTY_CHARACTER = ' \t\n'

@@ -1,6 +1,5 @@
 from manim import *
 from pathlib import Path
-from rich.panel import Panel
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 from copy import copy
 from contextlib import contextmanager
@@ -13,6 +12,7 @@ from moviepy import VideoFileClip
 from PIL import Image, ImageFilter, ImageEnhance
 from proglog import ProgressBarLogger
 from collections import OrderedDict
+from timeit import timeit
 import numpy as np
 import random, time, string, sys, inspect, time
 
@@ -141,7 +141,7 @@ def add_glow_effect(input_path: PathLike, output_path: PathLike, output: bool):
     glow_video: VideoFileClip = VideoFileClip(input_path).image_transform(_frame_glow)
     glow_video.write_videofile(output_path, codec='libx264', audio=True, logger=RichProgressBarLogger(output=output, title="Glow Effect", leave_bars=False))
 
-def PROGRESS_BAR(output: bool):
+def default_progress_bar(output: bool):
     """
     Create a Rich progress bar.
     """
@@ -190,7 +190,7 @@ class RichProgressBarLogger(ProgressBarLogger):
         self.start_time = time.time()
         
         # 初始化 Rich 进度条
-        self.progress_bar = copy(PROGRESS_BAR(self.output))
+        self.progress_bar = copy(default_progress_bar(self.output))
         self.rich_bars = OrderedDict()  # 存储 {bar_name: task_id}
         
         # 启动 Rich 进度条
@@ -211,7 +211,7 @@ class RichProgressBarLogger(ProgressBarLogger):
         # 获取父类维护的进度条信息
         infos = self.bars[bar]
         # 创建 Rich 进度条任务
-        task_id = self.progress_bar.add_task(description=f"{MARKUP_YELLOW}{self.title}{MARKUP_RESET}", total=infos["total"])
+        task_id = self.progress_bar.add_task(description=f"[yellow]{self.title}[/yellow]", total=infos["total"])
         self.rich_bars[bar] = task_id
 
     def close_tqdm_bar(self, bar):
@@ -286,22 +286,11 @@ class CameraFollowCursorCV:
         code_string: str = None,
         code_file: str = None,
         language: str = None,
-        renderer: str | RendererType = RendererType.CAIRO,
+        renderer: Literal['cairo', 'opengl'] = 'cairo',
         line_spacing: float | int = DEFAULT_LINE_SPACING,
         interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
         camera_scale: float | int = 0.5
     ):
-        if isinstance(renderer, str):
-            if renderer == 'cpu':
-                renderer = 'cairo'
-            elif renderer == 'gpu':
-                renderer = 'opengl'
-        config.renderer = renderer
-        if config.renderer == RendererType.CAIRO:
-            print('当前模式：CPU')
-        else:
-            print('当前模式：GPU')
-
         # video_name
         if not video_name:
             raise ValueError("video_name must be provided")
@@ -350,6 +339,12 @@ class CameraFollowCursorCV:
         # 其他
         self.code_str = strip_empty_lines(code_str)
         self.code_str_lines = self.code_str.split("\n")
+        self.origin_config = {
+            'disable_caching': config.disable_caching,
+            'renderer': config.renderer
+        }
+        config.disable_caching = True
+        config.renderer = renderer
         self.scene = self._create_scene()
 
     def _create_scene(self):
@@ -453,22 +448,7 @@ class CameraFollowCursorCV:
                         scene.Animation_list.clear()
                         del cameraAnimation
 
-                # 输出渲染信息
-                if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.print(
-                        Panel(
-                            f"{MARKUP_GREEN}Total:{MARKUP_RESET}\n"
-                            f" - line: {MARKUP_YELLOW}{total_line_numbers}{MARKUP_RESET}\n"
-                            f" - character: {MARKUP_YELLOW}{total_char_numbers}{MARKUP_RESET}\n"
-                            f"{MARKUP_GREEN}Settings:{MARKUP_RESET}\n"
-                            f" - language: {MARKUP_ITALIC}{MARKUP_YELLOW}{self.language if self.language else '-'}{MARKUP_RESET}",
-                            border_style="blue",
-                            title="Summary",
-                            expand=False,
-                        )
-                    )
-
-                with copy(PROGRESS_BAR(self.output)) as progress:
+                with copy(default_progress_bar(self.output)) as progress:
                     total_progress = progress.add_task(description="[yellow]Total[/yellow]", total=total_char_numbers)
 
                     # 遍历代码行
@@ -556,7 +536,6 @@ class CameraFollowCursorCV:
                                 rate_func=rate_functions.smooth if line_break else rate_functions.linear
                             )
 
-
                             # 输出进度
                             progress.advance(total_progress, advance=1)
                             progress.advance(current_line_progress, advance=1)
@@ -568,41 +547,39 @@ class CameraFollowCursorCV:
 
             def render(scene):
                 """Override render to add timing log."""
-                origin_disable_caching = config.disable_caching
-                config.disable_caching = True
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering '{self.video_name}.mp4'")
-                    DEFAULT_OUTPUT_CONSOLE.log("Start rendering 'CameraFollowCursorCVScene' (by manim)")
-                    DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been modified.\n")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering '{self.video_name}.mp4'.")
+                    DEFAULT_OUTPUT_CONSOLE.log("Start rendering CameraFollowCursorCVScene. [dim](by manim)[/]")
+                    if config.renderer == RendererType.CAIRO:
+                        DEFAULT_OUTPUT_CONSOLE.log('[blue]Currently using CPU (Cairo Renderer) for rendering.[/]')
+                    else:
+                        DEFAULT_OUTPUT_CONSOLE.log('[blue]Currently using GPU (OpenGL Renderer) for rendering.[/]')
+                    DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been modified.")
                 
                 # 渲染并计算时间
-                start_time = time.time()
                 with no_manim_output():
-                    super().render()
-                end_time = time.time()
-                total_render_time = end_time - start_time
+                    total_render_time = timeit(super().render, number=1)
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully rendered CameraFollowCursorCVScene in {total_render_time:.2f} seconds (by manim)")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully rendered CameraFollowCursorCVScene in {total_render_time:,.2f} seconds. [dim](by manim)[/]")
+                del total_render_time
 
                 # 恢复配置
-                config.disable_caching = origin_disable_caching
+                config.disable_caching = self.origin_config['disable_caching']
+                config.renderer = self.origin_config['renderer']
                 if self.output:
                     DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been restored.")
-                del origin_disable_caching
+                del self.origin_config
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Start adding glow effect to 'CameraFollowCursorCVScene.mp4' (by moviepy)\n")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start adding glow effect to 'CameraFollowCursorCVScene.mp4'. [dim](by moviepy)[/]\n")
 
                 # 添加发光效果
                 input_path = str(scene.renderer.file_writer.movie_file_path)
                 output_path = '\\'.join(input_path.split('\\')[:-1]) + rf'\{self.video_name}.mp4'
-                start_time = time.time()
-                add_glow_effect(input_path=input_path, output_path=output_path, output=self.output)
-                end_time = time.time()
-                total_effect_time = end_time - start_time
+                total_effect_time = timeit(lambda: add_glow_effect(input_path=input_path, output_path=output_path, output=self.output), number=1)
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully added glow effect in {total_effect_time:.2f} seconds (by moviepy)")
-                    DEFAULT_OUTPUT_CONSOLE.log(f"File ready at '{output_path}'\n")
-                del input_path, output_path
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Successfully added glow effect in {total_effect_time:,.2f} seconds. [dim](by moviepy)[/]")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"File ready at '{output_path}'.")
+                del input_path, output_path, total_effect_time
 
         return CameraFollowCursorCVScene()
     
