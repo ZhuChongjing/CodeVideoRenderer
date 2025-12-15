@@ -86,7 +86,7 @@ code {
     font-family: var(--font-code);
 }
 
-a.link-with-bg,
+link-with-bg,
 footer a {
     color: #60a5fa;
     text-decoration: underline;
@@ -98,7 +98,7 @@ footer a {
     font-weight: 500;
 }
 
-a.link-with-bg:hover,
+link-with-bg:hover,
 footer a:hover {
     color: #ffffff;
     background-color: rgba(59, 130, 246, 0.2);
@@ -1222,3 +1222,4 @@ footer {
     }
 
     }
+
