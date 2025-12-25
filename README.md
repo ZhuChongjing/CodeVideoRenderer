@@ -28,7 +28,7 @@ pip install CodeVideoRenderer
 ```
 
 ## 文档
-[文档 - CodeVideoRenderer](https://zhuchongjing.github.io/CodeVideoRenderer/docs.html)
+[文档 - CodeVideoRenderer](https://zhuchongjing.github.io/CodeVideoRenderer/index.html#docs)
 
 ## 联系我们
 
