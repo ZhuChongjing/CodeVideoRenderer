@@ -53,7 +53,7 @@ def strip_empty_lines(text: str):
     while end > start and lines[end - 1].strip() == '':
         end -= 1
     
-    return '\n'.join(lines[start:end])
+    return '\n'.join(lines[start:end] + ['.'])  # 用于处理manim会统一去掉每行前面都有的空格的问题
 
 def typeName(item_type):
     """
@@ -470,6 +470,9 @@ class CameraFollowCursorCV:
                         del cameraAnimation
 
                 with copy(default_progress_bar(self.output)) as progress:
+                    # 用于处理manim会统一去掉每行前面都有的空格的问题
+                    total_line_numbers -= 1
+                    total_char_numbers -= 1
                     total_progress = progress.add_task(description="[yellow]Total[/yellow]", total=total_char_numbers)
 
                     # 遍历代码行
