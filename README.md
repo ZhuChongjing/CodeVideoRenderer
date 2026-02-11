@@ -1,6 +1,7 @@
 <p align=center>
-  <img src="https://github.com/ZhuChongjing/CodeVideoRenderer/blob/main/files/logo.png" width="300" alt="CodeVideoRenderer"/>
+	<img alt="logo" src="https://github.com/user-attachments/assets/e28c0ce7-2962-4487-a347-029f3a7ed2ff" width="400" alt="CodeVideoRenderer" />
 </p>
+
 
 <p align=center>
   <strong>
