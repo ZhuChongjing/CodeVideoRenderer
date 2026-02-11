@@ -276,14 +276,6 @@ class RichProgressBarLogger(ProgressBarLogger):
                 # 帧数回退：重置进度条
                 self.new_tqdm_bar(bar)
                 self.progress_bar.update(self.rich_bars[bar], completed=value)
-        
-        # elif attr == "message":
-        #     # 处理消息更新（复刻原 postfix 逻辑）
-        #     self.progress_bar.update(
-        #         task_id,
-        #         message=value[:20],  # 截断长消息
-        #         description=f"{self.bars[bar]['title']}: {value[:20]}"
-        #     )
 
     def stop(self):
         """
