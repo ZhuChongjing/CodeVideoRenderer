@@ -13,14 +13,13 @@ from PIL import Image, ImageFilter, ImageEnhance
 from proglog import ProgressBarLogger
 from collections import OrderedDict
 from timeit import timeit
-from pygments.lexers import get_all_lexers
 import numpy as np
 import random, time, string, sys, inspect, time
 
 from .config import *
 
 @contextmanager
-def no_manim_output():
+def noManimOutput():
     """
     Context manager used to execute code without outputting Manim logs.
     """
@@ -39,7 +38,7 @@ def no_manim_output():
         if stderr_content:
             print(stderr_content, file=ORIGINAL_STDERR)
 
-def strip_empty_lines(text: str):
+def stripEmptyLines(text: str):
     """
     Remove empty lines from the beginning and end of a string.
     """
@@ -63,7 +62,7 @@ def typeName(item_type):
         return str(item_type).replace(" | ", "' or '")
     return item_type.__name__
 
-def type_checker(func):
+def typeChecker(func):
     """
     Decorator to check types of function arguments and return value.
     """
@@ -102,12 +101,6 @@ def type_checker(func):
                     raise ValueError(
                         f"Parameter '{param_name}': Expected value in {get_args(param_type)}, got '{param_value}'"
                     )
-                
-            elif param_type is PygmentsLanguage:
-                if param_value not in get_all_languages():
-                    raise ValueError(
-                        f"Parameter '{param_name}': Expected a valid Pygments language, got '{param_value}'"
-                    )
             
             # 普通类型
             else:
@@ -117,7 +110,7 @@ def type_checker(func):
         return func(*args, **kwargs)
     return wrapper
 
-def add_glow_effect(input_path: PathLike, output_path: PathLike, output: bool):
+def addGlowEffect(input_path: PathLike, output_path: PathLike, output: bool):
     """
     Add a glow effect to a video.
     """
@@ -148,30 +141,20 @@ def add_glow_effect(input_path: PathLike, output_path: PathLike, output: bool):
     glow_video: VideoFileClip = VideoFileClip(input_path).image_transform(_frame_glow)
     glow_video.write_videofile(output_path, codec='libx264', audio=True, logger=RichProgressBarLogger(output=output, title="Glow Effect", leave_bars=False))
 
-def default_progress_bar(output: bool):
+class DefaultProgressBar(Progress):
     """
-    Create a Rich progress bar.
+    Default progress bar.
     """
-    return Progress(
-        TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
-        TextColumn("[yellow]{task.completed}/{task.total}"),
-        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
-        TimeRemainingColumn(),
-        TransferSpeedColumn(),
-        console=DEFAULT_OUTPUT_CONSOLE if output else None
-    )
-
-def get_all_languages():
-    """
-    Get all available Pygments languages.
-    """
-    languages = []
-    for language in list(get_all_lexers()):
-        if type(language[1]) == tuple:
-            for subitem in language[1]:
-                languages.append(subitem)
-    return languages
+    def __init__(self, output: bool):
+        super().__init__(
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TextColumn("[yellow]{task.completed}/{task.total}"),
+            TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
+            TimeRemainingColumn(),
+            TransferSpeedColumn(),
+            console=DEFAULT_OUTPUT_CONSOLE if output else None
+        )
 
 class RichProgressBarLogger(ProgressBarLogger):
     """
@@ -208,7 +191,7 @@ class RichProgressBarLogger(ProgressBarLogger):
         self.start_time = time.time()
         
         # 初始化 Rich 进度条
-        self.progress_bar = copy(default_progress_bar(self.output))
+        self.progress_bar = copy(DefaultProgressBar(self.output))
         self.rich_bars = OrderedDict()  # 存储 {bar_name: task_id}
         
         # 启动 Rich 进度条
@@ -284,8 +267,7 @@ class RichProgressBarLogger(ProgressBarLogger):
         if self.progress_bar and self.progress_bar.live.is_started:
             self.progress_bar.stop()
 
-class PygmentsLanguage:
-    pass
+PygmentsLanguage = Literal['abap', 'amdgpu', 'apl', 'abnf', 'actionscript3', 'as3', 'actionscript', 'as', 'ada', 'ada95', 'ada2005', 'adl', 'agda', 'aheui', 'alloy', 'ambienttalk', 'ambienttalk/2', 'at', 'ampl', 'html+ng2', 'ng2', 'antlr-actionscript', 'antlr-as', 'antlr-csharp', 'antlr-c#', 'antlr-cpp', 'antlr-java', 'antlr', 'antlr-objc', 'antlr-perl', 'antlr-python', 'antlr-ruby', 'antlr-rb', 'apacheconf', 'aconf', 'apache', 'applescript', 'arduino', 'arrow', 'arturo', 'art', 'asc', 'pem', 'asn1', 'aspectj', 'asymptote', 'asy', 'augeas', 'autoit', 'autohotkey', 'ahk', 'awk', 'gawk', 'mawk', 'nawk', 'bbcbasic', 'bbcode', 'bc', 'bqn', 'bst', 'bst-pybtex', 'bare', 'basemake', 'bash', 'sh', 'ksh', 'zsh', 'shell', 'openrc', 'console', 'shell-session', 'batch', 'bat', 'dosbatch', 'winbatch', 'bdd', 'befunge', 'berry', 'be', 'bibtex', 'bib', 'blitzbasic', 'b3d', 'bplus', 'blitzmax', 'bmax', 'blueprint', 'bnf', 'boa', 'boo', 'boogie', 'brainfuck', 'bf', 'bugs', 'winbugs', 'openbugs', 'camkes', 'idl4', 'c', 'cmake', 'c-objdump', 'cpsa', 'css+ul4', 'aspx-cs', 'csharp', 'c#', 'cs', 'ca65', 'cadl', 'capdl', 'capnp', 'carbon', 'cbmbas', 'cddl', 'ceylon', 'cfengine3', 'cf3', 'chaiscript', 'chai', 'chapel', 'chpl', 'charmci', 'html+cheetah', 'html+spitfire', 'htmlcheetah', 'javascript+cheetah', 'js+cheetah', 'javascript+spitfire', 'js+spitfire', 'cheetah', 'spitfire', 'xml+cheetah', 'xml+spitfire', 'cirru', 'clay', 'clean', 'clojure', 'clj', 'clojurescript', 'cljs', 'cobolfree', 'cobol', 'codeql', 'ql', 'coffeescript', 'coffee-script', 'coffee', 'cfc', 'cfm', 'cfs', 'comal', 'comal80', 'common-lisp', 'cl', 'lisp', 'componentpascal', 'cp', 'coq', 'cplint', 'cpp', 'c++', 'cpp-objdump', 'c++-objdumb', 'cxx-objdump', 'crmsh', 'pcmk', 'croc', 'cryptol', 'cry', 'cr', 'crystal', 'csound-document', 'csound-csd', 'csound', 'csound-orc', 'csound-score', 'csound-sco', 'css+django', 'css+jinja', 'css+ruby', 'css+erb', 'css+genshitext', 'css+genshi', 'css', 'css+php', 'css+smarty', 'cuda', 'cu', 'cypher', 'cython', 'pyx', 'pyrex', 'd', 'd-objdump', 'dpatch', 'dart', 'dasm16', 'dax', 'debcontrol', 'control', 'debian.sources', 'delphi', 'pas', 'pascal', 'objectpascal', 'desktop', 'devicetree', 'dts', 'dg', 'diff', 'udiff', 'django', 'jinja', 'zone', 'docker', 'dockerfile', 'dtd', 'duel', 'jbst', 'jsonml+bst', 'dylan-console', 'dylan-repl', 'dylan', 'dylan-lid', 'lid', 'ecl', 'ec', 'earl-grey', 'earlgrey', 'eg', 'easytrieve', 'ebnf', 'eiffel', 'iex', 'elixir', 'ex', 'exs', 'elm', 'elpi', 'emacs-lisp', 'elisp', 'emacs', 'email', 'eml', 'erb', 'erlang', 'erl', 'html+evoque', 'evoque', 'xml+evoque', 'execline', 'ezhil', 'fsharp', 'f#', 'fstar', 'factor', 'fancy', 'fy', 'fan', 'felix', 'flx', 'fennel', 'fnl', 'fift', 'fif', 'fish', 'fishshell', 'flatline', 'floscript', 'flo', 'forth', 'fortranfixed', 'fortran', 'f90', 'foxpro', 'vfp', 'clipper', 'xbase', 'freefem', 'func', 'fc', 'futhark', 'gap-console', 'gap-repl', 'gap', 'gdscript', 'gd', 'glsl', 'gsql', 'gas', 'asm', 'gcode', 'genshi', 'kid', 'xml+genshi', 'xml+kid', 'genshitext', 'pot', 'po', 'gherkin', 'cucumber', 'gleam', 'gnuplot', 'go', 'golang', 'golo', 'gooddata-cl', 'googlesql', 'zetasql', 'gosu', 'gst', 'graphql', 'graphviz', 'dot', 'groff', 'nroff', 'man', 'groovy', 'hlsl', 'html+ul4', 'haml', 'html+handlebars', 'handlebars', 'hare', 'haskell', 'hs', 'haxe', 'hxsl', 'hx', 'hexdump', 'hsail', 'hsa', 'hspec', 'html+django', 'html+jinja', 'htmldjango', 'html+genshi', 'html+kid', 'html', 'html+php', 'html+smarty', 'http', 'haxeml', 'hxml', 'hylang', 'hy', 'hybris', 'idl', 'icon', 'idris', 'idr', 'igor', 'igorpro', 'inform6', 'i6', 'i6t', 'inform7', 'i7', 'ini', 'cfg', 'dosini', 'io', 'ioke', 'ik', 'irc', 'isabelle', 'j', 'jmespath', 'jp', 'jslt', 'jags', 'janet', 'jasmin', 'jasminxt', 'java', 'javascript+django', 'js+django', 'javascript+jinja', 'js+jinja', 'javascript+ruby', 'js+ruby', 'javascript+erb', 'js+erb', 'js+genshitext', 'js+genshi', 'javascript+genshitext', 'javascript+genshi', 'javascript', 'js', 'javascript+php', 'js+php', 'javascript+smarty', 'js+smarty', 'js+ul4', 'jcl', 'jsgf', 'json5', 'jsonld', 'json-ld', 'json', 'json-object', 'jsonnet', 'jsp', 'jsx', 'react', 'jlcon', 'julia-repl', 'julia', 'jl', 'juttle', 'k', 'kal', 'kconfig', 'menuconfig', 'linux-config', 'kernel-config', 'kmsg', 'dmesg', 'koka', 'kotlin', 'kuin', 'kql', 'kusto', 'lsl', 'css+lasso', 'html+lasso', 'javascript+lasso', 'js+lasso', 'lasso', 'lassoscript', 'xml+lasso', 'ldapconf', 'ldaprc', 'ldif', 'lean', 'lean3', 'lean4', 'less', 'lighttpd', 'lighty', 'lilypond', 'limbo', 'liquid', 'literate-agda', 'lagda', 'literate-cryptol', 'lcryptol', 'lcry', 'literate-haskell', 'lhaskell', 'lhs', 'literate-idris', 'lidris', 'lidr', 'livescript', 'live-script', 'llvm', 'llvm-mir-body', 'llvm-mir', 'logos', 'logtalk', 'lua', 'luau', 'mcfunction', 'mcf', 'mcschema', 'mime', 'mips', 'moocode', 'moo', 'doscon', 'macaulay2', 'make', 'makefile', 'mf', 'bsdmake', 'css+mako', 'html+mako', 'javascript+mako', 'js+mako', 'mako', 'xml+mako', 'maple', 'maql', 'markdown', 'md', 'mask', 'mason', 'mathematica', 'mma', 'nb', 'matlab', 'matlabsession', 'maxima', 'macsyma', 'meson', 'meson.build', 'minid', 'miniscript', 'ms', 'modelica', 'modula2', 'm2', 'trac-wiki', 'moin', 'mojo', '🔥', 'monkey', 'monte', 'moonscript', 'moon', 'mosel', 'css+mozpreproc', 'mozhashpreproc', 'javascript+mozpreproc', 'mozpercentpreproc', 'xul+mozpreproc', 'mql', 'mq4', 'mq5', 'mql4', 'mql5', 'mscgen', 'msc', 'mupad', 'mxml', 'mysql', 'css+myghty', 'html+myghty', 'javascript+myghty', 'js+myghty', 'myghty', 'xml+myghty', 'ncl', 'nsis', 'nsi', 'nsh', 'nasm', 'objdump-nasm', 'nemerle', 'nesc', 'nestedtext', 'nt', 'newlisp', 'newspeak', 'nginx', 'nimrod', 'nim', 'nit', 'nixos', 'nix', 'nodejsrepl', 'notmuch', 'nusmv', 'numpy', 'numba_ir', 'numbair', 'objdump', 'objective-c', 'objectivec', 'obj-c', 'objc', 'objective-c++', 'objectivec++', 'obj-c++', 'objc++', 'objective-j', 'objectivej', 'obj-j', 'objj', 'ocaml', 'octave', 'odin', 'omg-idl', 'ooc', 'opa', 'openedge', 'abl', 'progress', 'openscad', 'org', 'orgmode', 'org-mode', 'output', 'pacmanconf', 'pan', 'parasail', 'pawn', 'pddl', 'peg', 'perl6', 'pl6', 'raku', 'perl', 'pl', 'phix', 'php', 'php3', 'php4', 'php5', 'pig', 'pike', 'pkgconfig', 'plpgsql', 'pointless', 'pony', 'portugol', 'postscript', 'postscr', 'psql', 'postgresql-console', 'postgres-console', 'postgres-explain', 'postgresql', 'postgres', 'pov', 'powershell', 'pwsh', 'posh', 'ps1', 'psm1', 'pwsh-session', 'ps1con', 'praat', 'procfile', 'prolog', 'promql', 'promela', 'properties', 'jproperties', 'protobuf', 'proto', 'prql', 'psysh', 'ptx', 'pug', 'jade', 'puppet', 'pypylog', 'pypy', 'python2', 'py2', 'py2tb', 'pycon', 'python-console', 'python', 'py', 'sage', 'python3', 'py3', 'bazel', 'starlark', 'pyi', 'pytb', 'py3tb', 'py+ul4', 'qbasic', 'basic', 'q', 'qvto', 'qvt', 'qlik', 'qlikview', 'qliksense', 'qlikscript', 'qml', 'qbs', 'rconsole', 'rout', 'rng-compact', 'rnc', 'spec', 'racket', 'rkt', 'ragel-c', 'ragel-cpp', 'ragel-d', 'ragel-em', 'ragel-java', 'ragel', 'ragel-objc', 'ragel-ruby', 'ragel-rb', 'rd', 'reasonml', 'reason', 'rebol', 'red', 'red/system', 'redcode', 'registry', 'rego', 'resourcebundle', 'resource', 'rexx', 'arexx', 'rhtml', 'html+erb', 'html+ruby', 'ride', 'rita', 'roboconf-graph', 'roboconf-instances', 'robotframework', 'rql', 'rsl', 'restructuredtext', 'rst', 'rest', 'trafficscript', 'rts', 'rbcon', 'irb', 'ruby', 'rb', 'duby', 'rust', 'rs', 'sas', 'splus', 's', 'r', 'sml', 'snbt', 'sarl', 'sass', 'savi', 'scala', 'scaml', 'scdoc', 'scd', 'scheme', 'scm', 'scilab', 'scss', 'sed', 'gsed', 'ssed', 'shexc', 'shex', 'shen', 'sieve', 'silver', 'singularity', 'slash', 'slim', 'slurm', 'sbatch', 'smali', 'smalltalk', 'squeak', 'st', 'sgf', 'smarty', 'smithy', 'snobol', 'snowball', 'solidity', 'androidbp', 'bp', 'soong', 'sophia', 'sp', 'debsources', 'sourceslist', 'sources.list', 'sparql', 'spice', 'spicelang', 'sql+jinja', 'sql', 'sqlite3', 'squidconf', 'squid.conf', 'squid', 'srcinfo', 'ssp', 'stan', 'stata', 'do', 'supercollider', 'sc', 'swift', 'swig', 'systemverilog', 'sv', 'systemd', 'tap', 'tnt', 'toml', 'tablegen', 'td', 'tact', 'tads3', 'tal', 'uxntal', 'tasm', 'tcl', 'tcsh', 'csh', 'tcshcon', 'tea', 'teal', 'teratermmacro', 'teraterm', 'ttl', 'termcap', 'terminfo', 'terraform', 'tf', 'hcl', 'tex', 'latex', 'text', 'ti', 'thingsdb', 'thrift', 'tid', 'tlb', 'tls', 'todotxt', 'tsql', 't-sql', 'treetop', 'tsx', 'turtle', 'html+twig', 'twig', 'typescript', 'ts', 'typoscriptcssdata', 'typoscripthtmldata', 'typoscript', 'typst', 'ul4', 'ucode', 'unicon', 'unixconfig', 'linuxconfig', 'urbiscript', 'urlencoded', 'usd', 'usda', 'vbscript', 'vcl', 'vclsnippets', 'vclsnippet', 'vctreestatus', 'vgl', 'vala', 'vapi', 'aspx-vb', 'vb.net', 'vbnet', 'lobas', 'oobas', 'sobas', 'visual-basic', 'visualbasic', 'html+velocity', 'velocity', 'xml+velocity', 'verifpal', 'verilog', 'v', 'vhdl', 'vim', 'visualprologgrammar', 'visualprolog', 'vue', 'vyper', 'wdiff', 'wast', 'wat', 'webidl', 'wgsl', 'whiley', 'wikitext', 'mediawiki', 'wowtoc', 'wren', 'x10', 'xten', 'xml+ul4', 'xquery', 'xqy', 'xq', 'xql', 'xqm', 'xml+django', 'xml+jinja', 'xml+ruby', 'xml+erb', 'xml', 'xml+php', 'xml+smarty', 'xorg.conf', 'xpp', 'x++', 'xslt', 'xtend', 'extempore', 'yaml+jinja', 'salt', 'sls', 'yaml', 'yang', 'yara', 'yar', 'zeek', 'bro', 'zephir', 'zig', 'ansys', 'apdl']
 
 class CameraFollowCursorCV:
     """
@@ -293,7 +275,7 @@ class CameraFollowCursorCV:
     character while smoothly moving the camera to follow the cursor, creating a professional-looking coding demonstration.
     """
 
-    @type_checker
+    @typeChecker
     def __init__(self,
         video_name: str = "CameraFollowCursorCV",
         code_string: str = None,
@@ -350,7 +332,7 @@ class CameraFollowCursorCV:
         self.camera_scale = camera_scale
 
         # 其他
-        self.code_str = strip_empty_lines(code_str)
+        self.code_str = stripEmptyLines(code_str)
         self.code_str_lines = self.code_str.split("\n")
         self.origin_config = {
             'disable_caching': config.disable_caching,
@@ -461,7 +443,7 @@ class CameraFollowCursorCV:
                         scene.Animation_list.clear()
                         del cameraAnimation
 
-                with copy(default_progress_bar(self.output)) as progress:
+                with copy(DefaultProgressBar(self.output)) as progress:
                     # 用于处理manim会统一去掉每行前面都有的空格的问题
                     total_line_numbers -= 1
                     total_char_numbers -= 1
@@ -573,7 +555,7 @@ class CameraFollowCursorCV:
                     DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been modified.")
                 
                 # 渲染并计算时间
-                with no_manim_output():
+                with noManimOutput():
                     total_render_time = timeit(super().render, number=1)
                 if self.output:
                     DEFAULT_OUTPUT_CONSOLE.log(f"Successfully rendered CameraFollowCursorCVScene in {total_render_time:,.2f} seconds. [dim](by manim)[/]")
@@ -591,7 +573,7 @@ class CameraFollowCursorCV:
                 # 添加发光效果
                 input_path = str(scene.renderer.file_writer.movie_file_path)
                 output_path = '\\'.join(input_path.split('\\')[:-1]) + rf'\{self.video_name}.mp4'
-                total_effect_time = timeit(lambda: add_glow_effect(input_path=input_path, output_path=output_path, output=self.output), number=1)
+                total_effect_time = timeit(lambda: addGlowEffect(input_path=input_path, output_path=output_path, output=self.output), number=1)
                 if self.output:
                     DEFAULT_OUTPUT_CONSOLE.log(f"Successfully added glow effect in {total_effect_time:,.2f} seconds. [dim](by moviepy)[/]")
                     DEFAULT_OUTPUT_CONSOLE.log(f"File ready at '{output_path}'.")
@@ -599,7 +581,7 @@ class CameraFollowCursorCV:
 
         return CameraFollowCursorCVScene()
     
-    @type_checker
+    @typeChecker
     def render(self, output: bool = DEFAULT_OUTPUT_VALUE):
         """Render the scene, optionally with console output."""
         self.output = output
