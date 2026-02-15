@@ -22,14 +22,10 @@
 
 ---
 
-## 安装
+## Wiki
 
-```bash
-pip install CodeVideoRenderer
-```
+[Wiki - CodeVideoRenderer](https://github.com/ZhuChongjing/CodeVideoRenderer/wiki)
 
-## 文档
-[文档 - CodeVideoRenderer](https://zhuchongjing.github.io/CodeVideoRenderer)
 
 ## 联系我们
 
