@@ -52,7 +52,7 @@ def stripEmptyLines(text: str):
     while end > start and lines[end - 1].strip() == '':
         end -= 1
     
-    return '\n'.join(lines[start:end] + ['.'])  # 用于处理manim会统一去掉每行前面都有的空格的问题
+    return '\n'.join(lines[start:end] + [OCCUPY_CHARACTER])  # 用于处理manim会统一去掉每行前面都有的空格的问题
 
 def typeName(item_type):
     """
