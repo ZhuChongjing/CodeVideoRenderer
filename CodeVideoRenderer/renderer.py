@@ -16,13 +16,13 @@ class CameraFollowCursorCV:
     character while smoothly moving the camera to follow the cursor, creating a professional-looking coding demonstration.
 
     Args:
-        video_name (str): The name of the output video file. Defaults to "CameraFollowCursorCV".
+        video_name (str): The name of the output video file. Defaults to `"CameraFollowCursorCV"`.
         code_string (str): The code string to be animated. Defaults to None.
         code_file (str): The path to the code file to be animated. Defaults to None.
         language (PygmentsLanguage): The programming language of the code. Defaults to None.
-        renderer (Literal['cairo', 'opengl']): The renderer to use for video rendering. Defaults to 'cairo'.
-        line_spacing (float | int): The line spacing for the code. Defaults to DEFAULT_LINE_SPACING.
-        interval_range (tuple[float | int, float | int]): The range of typing intervals between characters. Defaults to (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL).
+        renderer (Literal['cairo', 'opengl']): The renderer to use for video rendering. Defaults to `"cairo"`.
+        line_spacing (float | int): The line spacing for the code. Defaults to `DEFAULT_LINE_SPACING`.
+        interval_range (tuple[float | int, float | int]): The range of typing intervals between characters. Defaults to `(DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL)`.
         camera_scale (float | int): The scale factor for the camera. Defaults to 0.5.
     """
 
@@ -83,9 +83,10 @@ class CameraFollowCursorCV:
         self.camera_scale = camera_scale
 
         # 其他
-        self.code_str = stripEmptyLines(code_str) + f"\n{OCCUPY_CHARACTER}"
-        self.space_positions = findSpacePositions(self.code_str)
-        self.code_str = replaceMiddleSpacesWithOccupyCharacter(self.code_str)
+        striped_code_str = stripEmptyLines(code_str)
+        self.space_positions = findSpacePositions(striped_code_str)
+        self.empty_line_positions = findEmptyLinePositions(striped_code_str)
+        self.code_str = replaceMiddleSpacesWithOccupyCharacter("\n".join([" " if line == "" else line for line in striped_code_str.splitlines()]))
         self.code_str_lines = self.code_str.splitlines()
         self.origin_config = {
             'disable_caching': config.disable_caching,
@@ -185,9 +186,6 @@ class CameraFollowCursorCV:
                         del cameraAnimation
 
                 with copy(DefaultProgressBar(self.output)) as progress:
-                    # 用于处理manim会统一去掉每行前面都有的空格的问题
-                    total_line_numbers -= 1
-                    total_char_numbers -= 1
                     total_progress = progress.add_task(description="[yellow]Total[/yellow]", total=total_char_numbers)
 
                     # 遍历代码行
@@ -211,7 +209,7 @@ class CameraFollowCursorCV:
                             playAnimation(run_time=DEFAULT_LINE_BREAK_RUN_TIME)
                         
                         try:
-                            if self.code_str_lines[line][0] not in string.whitespace:
+                            # if self.code_str_lines[line][0] not in string.whitespace:
                                 move_cursor_to_line_head()
                         except IndexError:
                             move_cursor_to_line_head()
@@ -219,7 +217,7 @@ class CameraFollowCursorCV:
                         del move_cursor_to_line_head
 
                         # 如果当前行为空行，跳过
-                        if self.code_str_lines[line] == '' or char_num == 0:
+                        if line in self.empty_line_positions:
                             progress.remove_task(current_line_progress)
                             continue
                         
@@ -290,7 +288,7 @@ class CameraFollowCursorCV:
             def render(scene):
                 """Override render to add timing log."""
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering '{self.video_name}.mp4'.")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering {self.video_name}.mp4.")
                     DEFAULT_OUTPUT_CONSOLE.log("Start rendering CameraFollowCursorCVScene. [dim](by manim)[/]")
                     if config.renderer == RendererType.CAIRO:
                         DEFAULT_OUTPUT_CONSOLE.log('[blue]Currently using CPU (Cairo Renderer) for rendering.[/]')
@@ -312,7 +310,7 @@ class CameraFollowCursorCV:
                     DEFAULT_OUTPUT_CONSOLE.log("Manim's config has been restored.")
                 del self.origin_config
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Start adding glow effect to 'CameraFollowCursorCVScene.mp4'. [dim](by moviepy)[/]\n")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start adding glow effect to CameraFollowCursorCVScene.mp4. [dim](by moviepy)[/]\n")
 
                 # 添加发光效果
                 input_path = str(scene.renderer.file_writer.movie_file_path)

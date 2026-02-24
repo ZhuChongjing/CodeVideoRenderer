@@ -191,6 +191,7 @@ def findSpacePositions(string: str) -> list[list[int]]:
         
         # 全空格/空字符串，跳过
         if first_non_space > last_non_space:
+            result.extend([[row_idx, col_idx] for col_idx in range(len(s))])  # 记录整行空格位置
             continue
         
         # 遍历中间部分，收集[行, 列]格式的位置
@@ -199,6 +200,18 @@ def findSpacePositions(string: str) -> list[list[int]]:
                 result.append([row_idx, col_idx])
     
     return result
+
+def findEmptyLinePositions(string: str) -> list[int]:
+    """
+    Find the line indices of all empty lines in a string.
+    
+    Args:
+        string (str): A string.
+        
+    Returns:
+        list[int]: A list of line indices of all empty lines.
+    """
+    return [idx for idx, line in enumerate(string.splitlines()) if line.strip() == '']
 
 def replaceMiddleSpacesWithOccupyCharacter(string: str) -> str:
     """
@@ -238,7 +251,7 @@ def replaceMiddleSpacesWithOccupyCharacter(string: str) -> str:
         
         # 全是空格的情况，直接保留原字符串
         if first_non_space > last_non_space:
-            result.append(s)
+            result.append(s.replace(' ', OCCUPY_CHARACTER))
             continue
         
         # 遍历中间区域，替换空格为1
@@ -384,6 +397,7 @@ __all__ = [
     "typeChecker",
     "addGlowEffect",
     "findSpacePositions",
+    "findEmptyLinePositions",
     "replaceMiddleSpacesWithOccupyCharacter",
     "DefaultProgressBar",
     "RichProgressBarLogger"
