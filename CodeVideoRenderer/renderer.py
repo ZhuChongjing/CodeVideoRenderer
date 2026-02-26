@@ -1,14 +1,17 @@
-from manim import *
+from manim import VGroup, Code, SurroundingRectangle, RoundedRectangle, MovingCameraScene, rate_functions, RendererType, config, WHITE, GREY, UP, DOWN, LEFT, RIGHT
 from pathlib import Path
 from copy import copy
-from typing import Literal
+from typing import Literal, Union
 from timeit import timeit
+from rich import traceback
 import numpy as np
-import random, string
+import random, inspect
 
 from .config import *
 from .typing import *
 from .utils import *
+
+traceback.install()
 
 class CameraFollowCursorCV:
     """
@@ -16,56 +19,50 @@ class CameraFollowCursorCV:
     character while smoothly moving the camera to follow the cursor, creating a professional-looking coding demonstration.
 
     Args:
-        video_name (str): The name of the output video file. Defaults to `"CameraFollowCursorCV"`.
-        code_string (str): The code string to be animated. Defaults to None.
-        code_file (str): The path to the code file to be animated. Defaults to None.
-        language (PygmentsLanguage): The programming language of the code. Defaults to None.
-        renderer (Literal['cairo', 'opengl']): The renderer to use for video rendering. Defaults to `"cairo"`.
+        code (Union[tuple[Literal['string'], str], tuple[Literal['file'], StrPath]]): The code to be animated. When using a string, provide a tuple with the first element as'string' and the second element as the code string. When using a file, provide a tuple with the first element as 'file' and the second element as the file path.
+        language (PygmentsLanguage): The programming language of the code.
+        formatter_style (PygmentsFormatterStyle): The style for syntax highlighting. Defaults to `"github-dark"`.
         line_spacing (float | int): The line spacing for the code. Defaults to `DEFAULT_LINE_SPACING`.
         interval_range (tuple[float | int, float | int]): The range of typing intervals between characters. Defaults to `(DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL)`.
         camera_scale (float | int): The scale factor for the camera. Defaults to 0.5.
+        video_name (str): The name of the output video file. Defaults to `"CameraFollowCursorCV"`.
+        renderer (Literal['cairo', 'opengl']): The renderer to use for video rendering. Defaults to `'cairo'`.
     """
+    __all__ = ["render"]
 
     @typeChecker
     def __init__(self,
-        video_name: str = "CameraFollowCursorCV",
-        code_string: str = None,
-        code_file: str = None,
-        language: PygmentsLanguage = None,
-        renderer: Literal['cairo', 'opengl'] = 'cairo',
+        code: Union[tuple[Literal['string'], str], tuple[Literal['file'], StrPath]],
+        language: PygmentsLanguage,
+        formatter_style: PygmentsFormatterStyle = "github-dark",
         line_spacing: float | int = DEFAULT_LINE_SPACING,
         interval_range: tuple[float | int, float | int] = (DEFAULT_TYPE_INTERVAL, DEFAULT_TYPE_INTERVAL),
-        camera_scale: float | int = 0.5
+        camera_scale: float | int = 0.5,
+        video_name: str = "CameraFollowCursorCV",
+        renderer: Literal['cairo', 'opengl'] = 'cairo',
     ):
-        # video_name
+        # ----- 视频名称 -----
         if not video_name:
             raise ValueError("video_name must be provided")
         
-        # code_string and code_file
-        if code_string and code_file:
-            raise ValueError("Only one of code_string and code_file can be provided")
-        elif code_string is not None:
-            code_str = code_string.expandtabs(tabsize=DEFAULT_TAB_WIDTH)
+        # ----- 代码输入 -----
+        if code[0] == 'string':
+            code_str = code[1].expandtabs(tabsize=DEFAULT_TAB_WIDTH)
             if not all(char in AVAILABLE_CHARACTERS for char in code_str):
                 raise ValueError("'code_string' contains invalid characters")
-        elif code_file is not None:
+        elif code[0] == 'file':
             try:
-                code_str = Path(code_file).read_text(encoding="gbk").expandtabs(tabsize=DEFAULT_TAB_WIDTH)
+                code_str = Path(code[1]).read_text(encoding="gbk").expandtabs(tabsize=DEFAULT_TAB_WIDTH)
                 if not all(char in AVAILABLE_CHARACTERS for char in code_str):
-                    raise ValueError("'code_file' contains invalid characters")
+                    raise ValueError("'code_string' contains invalid characters")
             except UnicodeDecodeError:
-                raise ValueError("'code_file' contains non-ASCII characters, please remove them") from None
-        else:
-            raise ValueError("Either code_string or code_file must be provided")
+                raise ValueError(f"Failed to decode {code[1]} with GBK encoding") from None
         
-        if code_str.translate(str.maketrans('', '', EMPTY_CHARACTER)) == '':
-            raise ValueError("Code is empty")
-        
-        # line_spacing
+        # ----- 行间距 -----
         if line_spacing <= 0:
             raise ValueError("line_spacing must be greater than 0")
 
-        # interval_range
+        # ----- 打字间隔 -----
         shortest_possible_duration = round(1/config.frame_rate, 7)
         if not all(interval >= shortest_possible_duration for interval in interval_range):
             raise ValueError(f"interval_range must be greater than or equal to {shortest_possible_duration}")
@@ -74,13 +71,13 @@ class CameraFollowCursorCV:
             raise ValueError("The first term of interval_range must be less than or equal to the second term")
 
         # 变量
-        self.video_name = video_name
-        self.code_string = code_string
-        self.code_file = code_file
+        self.code = code
         self.language = language
+        self.formatter_style = formatter_style
         self.line_spacing = line_spacing
         self.interval_range = interval_range
         self.camera_scale = camera_scale
+        self.video_name = video_name
 
         # 其他
         striped_code_str = stripEmptyLines(code_str)
@@ -118,7 +115,7 @@ class CameraFollowCursorCV:
                 line_number_mobject, code_mobject = Code(
                     code_string=self.code_str + f"\n{OCCUPY_CHARACTER*max_char_num_per_line}",
                     language=self.language, 
-                    formatter_style=DEFAULT_CODE_FORMATTER_STYLE, 
+                    formatter_style=self.formatter_style, 
                     paragraph_config={
                         'font': DEFAULT_CODE_FONT,
                         'line_spacing': self.line_spacing
@@ -135,7 +132,7 @@ class CameraFollowCursorCV:
                     
                 # 创建代码行矩形框
                 code_line_rectangle = SurroundingRectangle(
-                    VGroup(code_mobject[-1], line_number_mobject[-1]),
+                    VGroup(code_mobject[-1], line_number_mobject[-1]), # type: ignore[reportArgumentType]
                     color="#333333",
                     fill_opacity=1,
                     stroke_width=0
@@ -155,7 +152,7 @@ class CameraFollowCursorCV:
                 scene.add(code_line_rectangle, line_number_mobject[0].set_color(WHITE), cursor)
 
                 scene.play(
-                    scene.camera.frame.animate.move_to(target_center),
+                    scene.camera.frame.animate.move_to(target_center), # type: ignore[reportArgumentType]
                     run_time=1,
                     rate_func=rate_functions.ease_out_cubic
                 )
@@ -200,21 +197,11 @@ class CameraFollowCursorCV:
                         code_line_rectangle.set_y(code_mobject[line].get_y())
                         scene.add(line_number_mobject[line])
 
-                        def move_cursor_to_line_head():
-                            """Move cursor to the first character in the line."""
-                            cursor.align_to(code_mobject[line], LEFT).set_y(code_line_rectangle.get_y())
-                            if line != 0:
-                                linebreakAnimation()
-                            JUDGE_cameraScaleAnimation()
-                            playAnimation(run_time=DEFAULT_LINE_BREAK_RUN_TIME)
-                        
-                        try:
-                            # if self.code_str_lines[line][0] not in string.whitespace:
-                                move_cursor_to_line_head()
-                        except IndexError:
-                            move_cursor_to_line_head()
-
-                        del move_cursor_to_line_head
+                        cursor.align_to(code_mobject[line], LEFT).set_y(code_line_rectangle.get_y())
+                        if line != 0:
+                            linebreakAnimation()
+                        JUDGE_cameraScaleAnimation()
+                        playAnimation(run_time=DEFAULT_LINE_BREAK_RUN_TIME)
 
                         # 如果当前行为空行，跳过
                         if line in self.empty_line_positions:
@@ -325,8 +312,30 @@ class CameraFollowCursorCV:
     
     @typeChecker
     def render(self, output: bool = DEFAULT_OUTPUT_VALUE):
-        """Render the scene, optionally with console output."""
+        """
+        Render the scene, optionally with console output.
+
+        Args:
+            output (bool): Whether to print console output during rendering. Defaults to `DEFAULT_OUTPUT_VALUE`
+        """
         self.output = output
         self.scene.render()
+    
+    def __getattribute__(self, name):
+        frames = inspect.stack()
+        is_internal_call = False
+        
+        for frame in frames[1:]:
+            frame_self = frame.frame.f_locals.get('self')
+            if isinstance(frame_self, CameraFollowCursorCV):
+                is_internal_call = True
+                break
+        
+        if not is_internal_call:
+            allowed_attrs = super().__getattribute__("__all__")
+            if name not in allowed_attrs:
+                raise AttributeError(f"'CameraFollowCursorCV' object has no attribute '{name}'")
+        
+        return super().__getattribute__(name)
 
 __all__ = ["CameraFollowCursorCV"]

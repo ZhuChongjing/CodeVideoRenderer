@@ -1,20 +1,20 @@
-from manim import *
+from manim import config
 from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TransferSpeedColumn
 from copy import copy
 from contextlib import contextmanager
 from io import StringIO
-from functools import wraps
-from typing import get_args, get_origin, Literal, Generator, Any, Callable
-from os import PathLike
+from typing import get_args, get_origin, Literal, Generator, Any, Callable, ParamSpec, TypeVar, Union
 from types import UnionType
 from moviepy import VideoFileClip
 from PIL import Image, ImageFilter, ImageEnhance
 from proglog import ProgressBarLogger
 from collections import OrderedDict
+from os import PathLike
 import numpy as np
-import time, sys, inspect
+import time, sys, inspect, re
 
 from .config import *
+from .typing import StrPath
 
 @contextmanager
 def noManimOutput() -> Generator[None, Any, None]:
@@ -58,21 +58,301 @@ def stripEmptyLines(text: str) -> str:
     
     return '\n'.join(lines[start:end])
 
-def typeName(item_type: type) -> str:
+def typeName(item_type: Any) -> str:
     """
-    Get the name of a type, handling union types and generic tuples.
+    Get the name of a type, handling union types and generic types.
 
     Args:
-        item_type (type): The type to get the name of.
+        item_type: The type or value to get the name of.
         
     Returns:
         str: The name of the type.
     """
+    # Handle UnionType
     if isinstance(item_type, UnionType):
         return str(item_type).replace(" | ", "' or '")
+    
+    # Handle non-type objects (like Literal values)
+    if not isinstance(item_type, type):
+        if isinstance(item_type, str):
+            return f"'{item_type}'"
+        return str(item_type)
+    
+    # Handle generic types
+    origin = get_origin(item_type)
+    if origin:
+        args = get_args(item_type)
+        if args:
+            arg_names = ', '.join([typeName(arg) for arg in args])
+            return f"{origin.__name__}[{arg_names}]"
+        return origin.__name__
+    
+    # Handle basic types
     return item_type.__name__
 
-def typeChecker(func: Callable) -> Callable:
+def checkType(value: Any, expected_type: Any | type[Any], param_name: str, path: str = "") -> None:
+    """
+    Recursively check if a value matches the expected type.
+
+    Args:
+        value (Any): The value to check.
+        expected_type (Any | type[Any]): The expected type.
+        param_name (str): The name of the parameter being checked.
+        path (str, optional): The path to the current value (for nested types). Defaults to "".
+        
+    Raises:
+        TypeError: If the value doesn't match the expected type.
+        ValueError: If the value doesn't match a Literal type.
+    """
+    # Handle None type
+    if expected_type is None:
+        if value is not None:
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'None', got '{type(value).__name__}'")
+        return
+    
+    # Handle PathLike types
+    if expected_type is PathLike or (hasattr(expected_type, '__name__') and expected_type.__name__ == 'PathLike'):
+        if not isinstance(value, (str, PathLike)):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'str' or 'PathLike', got '{type(value).__name__}'")
+        return
+    
+    # Handle PathLike types
+    if expected_type is PathLike or (hasattr(expected_type, '__name__') and expected_type.__name__ == 'PathLike'):
+        if not isinstance(value, (str, PathLike)):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'str' or 'PathLike', got '{type(value).__name__}'")
+        return
+    
+    # Handle Literal types
+    if get_origin(expected_type) is Literal:
+        literal_values = get_args(expected_type)
+        if value not in literal_values:
+            raise ValueError(f"Parameter '{param_name}'{path}: Expected one of {literal_values}, got '{value}'")
+        return
+    
+    # Handle Union types (both Union and UnionType)
+    origin = get_origin(expected_type)
+    if origin is Union or isinstance(expected_type, UnionType):
+        union_types = get_args(expected_type)
+        if not union_types:
+            # Empty Union is equivalent to Never type
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'Never', got '{type(value).__name__}'")
+        
+        # Track all errors to find the most specific one
+        errors = []
+        
+        # Check if any union type matches
+        for union_type in union_types:
+            try:
+                checkType(value, union_type, param_name, path)
+                return  # If any type matches, return successfully
+            except (TypeError, ValueError) as e:
+                errors.append(e)
+                continue
+        
+        # If no types match, find the most specific error
+        if errors:
+            # For tuple types, prefer errors that get deeper into the tuple
+            # This helps with cases like ('string', 1) where we want the error about the second element
+            best_error = errors[0]
+            
+            # Check if all errors are about the same index
+            same_index = True
+            index = None
+            
+            for error in errors:
+                error_str = str(error)
+                match = re.search(r"\(index (\d+)\)", error_str)
+                if match:
+                    current_index = int(match.group(1))
+                    if index is None:
+                        index = current_index
+                    elif current_index != index:
+                        same_index = False
+                else:
+                    same_index = False
+            
+            # If all errors are about the same index, combine the error messages
+            if same_index and len(errors) == len(union_types):
+                # Extract the specific value being checked (from the tuple)
+                specific_value = value
+                if isinstance(value, (list, tuple)) and index < len(value): # type: ignore[reportOptionalOperand]
+                    specific_value = value[index] # type: ignore[reportCallIssue, reportArgumentType]
+                
+                # Check if it's a tuple type with different element types at the same index
+                all_item_types = []
+                seen_types = set()
+                
+                # Extract all item types from the tuple union types
+                for union_type in union_types:
+                    if get_origin(union_type) is tuple:
+                        item_types = get_args(union_type)
+                        if index < len(item_types): # type: ignore[reportOptionalOperand]
+                            item_type = item_types[index] # type: ignore[reportCallIssue, reportArgumentType]
+                            # Check if this item type is itself a union
+                            item_origin = get_origin(item_type)
+                            if item_origin is Union or isinstance(item_type, UnionType):
+                                # If it's a union, extract all its types
+                                for nested_type in get_args(item_type):
+                                    type_name = typeName(nested_type)
+                                    if type_name not in seen_types:
+                                        all_item_types.append(type_name)
+                                        seen_types.add(type_name)
+                            else:
+                                # Otherwise, add the type directly
+                                type_name = typeName(item_type)
+                                if type_name not in seen_types:
+                                    all_item_types.append(type_name)
+                                    seen_types.add(type_name)
+                
+                # Create a combined error message
+                if all_item_types:
+                    # Check if any of the item types is a Literal type
+                    has_literal = False
+                    all_literal_values = []
+                    seen_values = set()
+                    
+                    for union_type in union_types:
+                        if get_origin(union_type) is tuple:
+                            item_types = get_args(union_type)
+                            if index < len(item_types): # type: ignore[reportOptionalOperand]
+                                item_type = item_types[index] # type: ignore[reportCallIssue, reportArgumentType]
+                                if get_origin(item_type) is Literal:
+                                    has_literal = True
+                                    literal_vals = get_args(item_type)
+                                    for val in literal_vals:
+                                        if val not in seen_values:
+                                            all_literal_values.append(val)
+                                            seen_values.add(val)
+                    
+                    if has_literal and all_literal_values:
+                        # Literal error message
+                        values_str = ", ".join([f"'{v}'" for v in all_literal_values])
+                        raise ValueError(f"Parameter '{param_name}' (index {index}): Expected one of ({values_str}), got '{specific_value}'")
+                    else:
+                        # Regular type error message
+                        expected_types_str = "' or '".join(all_item_types)
+                        raise TypeError(f"Parameter '{param_name}' (index {index}): Expected {expected_types_str}, got '{type(specific_value).__name__}'")
+            
+            # Otherwise, use the existing logic to find the best error
+            for error in errors[1:]:
+                error_str = str(error)
+                best_error_str = str(best_error)
+                
+                # Prefer errors that mention PathLike (for StrPath type)
+                if "PathLike" in error_str and "PathLike" not in best_error_str:
+                    best_error = error
+                # Prefer errors that mention a specific index in a tuple
+                elif "[index" in error_str and "[index" not in best_error_str:
+                    best_error = error
+                # If both mention indexes, prefer the one with the higher index (more specific)
+                elif "[index" in error_str and "[index" in best_error_str:
+                    error_idx = int(re.search(r"\(index (\d+)\)", error_str).group(1)) # type: ignore[reportOptionalMemberAccess]
+                    best_error_idx = int(re.search(r"\(index (\d+)\)", best_error_str).group(1)) # type: ignore[reportOptionalMemberAccess]
+                    if error_idx > best_error_idx:
+                        best_error = error
+            raise best_error
+        
+        # If no error was captured, raise a generic error
+        # Special handling for StrPath type to show more informative error message
+        if len(union_types) == 2:
+            # Check if this is Union[str, PathLike[str]] (StrPath)
+            has_str = False
+            has_pathlike = False
+            
+            for t in union_types:
+                if t is str:
+                    has_str = True
+                elif t is PathLike or (hasattr(t, '__origin__') and t.__origin__ is PathLike):
+                    has_pathlike = True
+                elif hasattr(t, '__name__') and t.__name__ == 'PathLike':
+                    has_pathlike = True
+                # Also check for PathLike[str] specifically
+                elif hasattr(t, '__origin__') and t.__origin__ is PathLike and hasattr(t, '__args__') and t.__args__:
+                    has_pathlike = True
+            
+            if has_str and has_pathlike:
+                raise TypeError(f"Parameter '{param_name}'{path}: Expected 'str' or 'PathLike', got '{type(value).__name__}'")
+        
+        expected_types_str = "' or '".join([typeName(t) for t in union_types])
+        raise TypeError(f"Parameter '{param_name}'{path}: Expected {expected_types_str}, got '{type(value).__name__}'")
+
+    # Handle Tuple types
+    if get_origin(expected_type) is tuple:
+        if not isinstance(value, tuple):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'tuple', got '{type(value).__name__}'")
+        item_types = get_args(expected_type)
+        if len(value) != len(item_types):
+            raise ValueError(f"Parameter '{param_name}'{path}: Expected tuple of length {len(item_types)}, got {len(value)}")
+        for idx, (item, item_type) in enumerate(zip(value, item_types)):
+            checkType(item, item_type, param_name, f" (index {idx})")
+        return
+    
+    # Handle List types
+    if get_origin(expected_type) is list:
+        if not isinstance(value, list):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'list', got '{type(value).__name__}'")
+        item_type = get_args(expected_type)[0] if get_args(expected_type) else Any
+        for idx, item in enumerate(value):
+            checkType(item, item_type, param_name, f" (index {idx})")
+        return
+    
+    # Handle Dict types
+    if get_origin(expected_type) is dict:
+        if not isinstance(value, dict):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'dict', got '{type(value).__name__}'")
+        args = get_args(expected_type)
+        key_type = args[0] if len(args) > 0 else Any
+        value_type = args[1] if len(args) > 1 else Any
+        for key, val in value.items():
+            checkType(key, key_type, param_name, f" (key '{key}')")
+            checkType(val, value_type, param_name, f" (value for key '{key}')")
+        return
+    
+    # Handle Set types
+    if get_origin(expected_type) is set:
+        if not isinstance(value, set):
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected 'set', got '{type(value).__name__}'")
+        item_type = get_args(expected_type)[0] if get_args(expected_type) else Any
+        for item in value:
+            checkType(item, item_type, param_name, f" (item '{item}')")
+        return
+    
+    # Handle other generic types (like Optional, etc.)
+    origin = get_origin(expected_type)
+    if origin:
+        # For other generic types, at least check if the value is an instance of the origin
+        try:
+            is_instance = isinstance(value, origin)
+        except TypeError:
+            # Handle cases where isinstance can't be used (e.g., for some typing types)
+            is_instance = False
+        
+        if not is_instance:
+            raise TypeError(f"Parameter '{param_name}'{path}: Expected '{typeName(expected_type)}', got '{type(value).__name__}'")
+        return
+    
+    # Handle basic types
+    try:
+        is_instance = isinstance(value, expected_type)
+    except TypeError:
+        # Handle cases where isinstance can't be used (e.g., for some typing types)
+        is_instance = False
+
+    if not is_instance:
+        # Special case for PathLike[str]
+        if expected_type is PathLike[str] or (hasattr(expected_type, '__args__') and 
+                                             len(expected_type.__args__) == 1 and 
+                                             expected_type.__args__[0] is str and
+                                             getattr(expected_type, '__origin__', None) is PathLike):
+            if not isinstance(value, (str, PathLike)):
+                raise TypeError(f"Parameter '{param_name}'{path}: Expected 'str' or 'PathLike[str]', got '{type(value).__name__}'")
+            return
+        
+        raise TypeError(f"Parameter '{param_name}'{path}: Expected '{typeName(expected_type)}', got '{type(value).__name__}'")
+
+P = ParamSpec('P')
+R = TypeVar('R')
+def typeChecker(func: Callable[P, R]) -> Callable[P, R]:
     """
     Decorator to check types of function arguments and return value.
 
@@ -82,7 +362,6 @@ def typeChecker(func: Callable) -> Callable:
     Returns:
         Callable: The wrapped function with type checking.
     """
-    @wraps(func)
     def wrapper(*args, **kwargs):
         sig = inspect.signature(func)
         bound_args = sig.bind(*args, **kwargs)
@@ -92,47 +371,19 @@ def typeChecker(func: Callable) -> Callable:
             if param_type is inspect.Parameter.empty:
                 continue  # 无注解则跳过
             
-            # 处理带参数的泛型 tuple（如 tuple[float, float]）
-            if get_origin(param_type) is tuple:
-                # 校验是否为 tuple 实例
-                if not isinstance(param_value, tuple):
-                    raise TypeError(
-                        f"Parameter '{param_name}': Expected 'tuple', got '{type(param_value).__name__}'"
-                    )
-                # 校验长度和元素类型
-                item_types = get_args(param_type)
-                if len(param_value) != len(item_types):
-                    raise ValueError(
-                        f"Parameter '{param_name}' length mismatch: Expected {len(item_types)}, got {len(param_value)}"
-                    )
-                for idx, (item, item_type) in enumerate(zip(param_value, item_types)):
-                    if not isinstance(item, item_type):
-                        raise TypeError(
-                            f"Parameter '{param_name}' item (index: {idx}): Expected '{typeName(item_type)}', got '{type(item).__name__}'"
-                        )
-                    
-            elif get_origin(param_type) is Literal:
-                # 校验是否为 Literal 中的值
-                if param_value not in get_args(param_type):
-                    raise ValueError(
-                        f"Parameter '{param_name}': Expected value in {get_args(param_type)}, got '{param_value}'"
-                    )
-            
-            # 普通类型
-            else:
-                if not isinstance(param_value, param_type):
-                    raise TypeError(f"Parameter '{param_name}': Expected '{typeName(param_type)}', got '{type(param_value).__name__}'")
+            # Use recursive type checking
+            checkType(param_value, param_type, param_name)
                         
         return func(*args, **kwargs)
     return wrapper
 
-def addGlowEffect(input_path: PathLike, output_path: PathLike, output: bool) -> None:
+def addGlowEffect(input_path: StrPath, output_path: StrPath, output: bool) -> None:
     """
     Add a glow effect to a video.
 
     Args:
-        input_path (PathLike): Path to the input video file.
-        output_path (PathLike): Path to save the output video file.
+        input_path (StrPath): Path to the input video file.
+        output_path (StrPath): Path to save the output video file.
         output (bool): Whether to display progress bars.
         
     Returns:
@@ -303,7 +554,7 @@ class RichProgressBarLogger(ProgressBarLogger):
             ignored_bars=ignored_bars,
             logged_bars=logged_bars,
             ignore_bars_under=ignore_bars_under,
-            min_time_interval=min_time_interval,
+            min_time_interval=min_time_interval, # type: ignore[reportArgumentType]
         )
         
         # 初始化自定义属性
@@ -370,7 +621,7 @@ class RichProgressBarLogger(ProgressBarLogger):
                 
                 # 更新 Rich 进度条
                 self.progress_bar.update(
-                    task_id,
+                    task_id, # type: ignore[reportArgumentType]
                     completed=value,
                     speed=speed
                 )
@@ -394,6 +645,7 @@ __all__ = [
     "noManimOutput",
     "stripEmptyLines",
     "typeName",
+    "checkType",
     "typeChecker",
     "addGlowEffect",
     "findSpacePositions",

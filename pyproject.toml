@@ -8,6 +8,14 @@ include = ["CodeVideoRenderer*"]
 [tool.setuptools]
 license-files = []
 
+[tool.pyright]
+strict = true
+reportWildcardImportFromLibrary = false
+reportAttributeAccessIssue = false
+reportSelfClsParameterName = false
+reportIncompatibleMethodOverride = false
+reportPossiblyUnboundVariable = false
+
 [project]
 name = "codevideorenderer"
 version = "1.2.0-alpha"
