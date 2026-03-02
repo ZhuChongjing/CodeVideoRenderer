@@ -1,11 +1,13 @@
-from manim import VGroup, Code, SurroundingRectangle, RoundedRectangle, MovingCameraScene, rate_functions, RendererType, config, WHITE, GREY, UP, DOWN, LEFT, RIGHT
+from manim import VGroup, Code, SurroundingRectangle, RoundedRectangle, MovingCameraScene, rate_functions, RendererType, config, WHITE, GREY, UP, DOWN, LEFT, RIGHT, register_font
+from manim.typing import Point3D
 from pathlib import Path
 from copy import copy
 from typing import Literal, Union
 from timeit import timeit
 from rich import traceback
+from dataclasses import dataclass
 import numpy as np
-import random, inspect
+import random, inspect, os
 
 from .config import *
 from .typing import *
@@ -19,7 +21,7 @@ class CameraFollowCursorCV:
     character while smoothly moving the camera to follow the cursor, creating a professional-looking coding demonstration.
 
     Args:
-        code (Union[tuple[Literal['string'], str], tuple[Literal['file'], StrPath]]): The code to be animated. When using a string, provide a tuple with the first element as'string' and the second element as the code string. When using a file, provide a tuple with the first element as 'file' and the second element as the file path.
+        code (Union[tuple[Literal['string'], str], tuple[Literal['file'], StrPath]]): The code to be animated. **When using a string**, provide a tuple with the first element as `'string'` and the second element as the code string. **When using a file**, provide a tuple with the first element as `'file'` and the second element as the file path.
         language (PygmentsLanguage): The programming language of the code.
         formatter_style (PygmentsFormatterStyle): The style for syntax highlighting. Defaults to `"github-dark"`.
         line_spacing (float | int): The line spacing for the code. Defaults to `DEFAULT_LINE_SPACING`.
@@ -47,16 +49,16 @@ class CameraFollowCursorCV:
         
         # ----- 代码输入 -----
         if code[0] == 'string':
-            code_str = code[1].expandtabs(tabsize=DEFAULT_TAB_WIDTH)
-            if not all(char in AVAILABLE_CHARACTERS for char in code_str):
+            self.code_str = code[1].expandtabs(tabsize=DEFAULT_TAB_WIDTH)
+            if not all(char not in NOT_AVAILABLE_CHARACTERS for char in self.code_str):
                 raise ValueError("'code_string' contains invalid characters")
         elif code[0] == 'file':
             try:
-                code_str = Path(code[1]).read_text(encoding="gbk").expandtabs(tabsize=DEFAULT_TAB_WIDTH)
-                if not all(char in AVAILABLE_CHARACTERS for char in code_str):
-                    raise ValueError("'code_string' contains invalid characters")
+                self.code_str = Path(code[1]).read_text(encoding="utf-8").expandtabs(tabsize=DEFAULT_TAB_WIDTH)
+                if not all(char not in NOT_AVAILABLE_CHARACTERS for char in self.code_str):
+                    raise ValueError(f"'{code[1]}' contains invalid characters")
             except UnicodeDecodeError:
-                raise ValueError(f"Failed to decode {code[1]} with GBK encoding") from None
+                raise ValueError(f"Failed to decode '{code[1]}' with UTF-8 encoding") from None
         
         # ----- 行间距 -----
         if line_spacing <= 0:
@@ -70,20 +72,32 @@ class CameraFollowCursorCV:
         if interval_range[0] > interval_range[1]:
             raise ValueError("The first term of interval_range must be less than or equal to the second term")
 
-        # 变量
-        self.code = code
-        self.language = language
-        self.formatter_style = formatter_style
-        self.line_spacing = line_spacing
-        self.interval_range = interval_range
-        self.camera_scale = camera_scale
-        self.video_name = video_name
+        # 参数
+        global Parameters
+        @dataclass
+        class Parameters:
+            code: Union[tuple[Literal['string'], str], tuple[Literal['file'], StrPath]]
+            language: PygmentsLanguage
+            formatter_style: PygmentsFormatterStyle
+            line_spacing: float | int
+            interval_range: tuple[float | int, float | int]
+            camera_scale: float | int
+            video_name: str
+            renderer: Literal['cairo', 'opengl']
+        Parameters.code = code
+        Parameters.language = language
+        Parameters.formatter_style = formatter_style
+        Parameters.line_spacing = line_spacing
+        Parameters.interval_range = interval_range
+        Parameters.camera_scale = camera_scale
+        Parameters.video_name = video_name
+        Parameters.renderer = renderer
 
         # 其他
-        striped_code_str = stripEmptyLines(code_str)
-        self.space_positions = findSpacePositions(striped_code_str)
-        self.empty_line_positions = findEmptyLinePositions(striped_code_str)
-        self.code_str = replaceMiddleSpacesWithOccupyCharacter("\n".join([" " if line == "" else line for line in striped_code_str.splitlines()]))
+        self.code_str = stripEmptyLines(self.code_str)
+        self.space_positions = findSpacePositions(self.code_str)
+        self.empty_line_positions = findEmptyLinePositions(self.code_str)
+        self.code_str = replaceMiddleSpacesWithOccupyCharacter("\n".join([" " if line == "" else line for line in self.code_str.splitlines()]))
         self.code_str_lines = self.code_str.splitlines()
         self.origin_config = {
             'disable_caching': config.disable_caching,
@@ -111,24 +125,29 @@ class CameraFollowCursorCV:
                 )
 
                 # 创建代码块
-                max_char_num_per_line = max([len(line.rstrip()) for line in self.code_str_lines])
-                line_number_mobject, code_mobject = Code(
-                    code_string=self.code_str + f"\n{OCCUPY_CHARACTER*max_char_num_per_line}",
-                    language=self.language, 
-                    formatter_style=self.formatter_style, 
-                    paragraph_config={
-                        'font': DEFAULT_CODE_FONT,
-                        'line_spacing': self.line_spacing
-                    }
-                ).submobjects[1:3]
+                with register_font(os.path.join(os.path.dirname(__file__), 'fonts/CodeVideoRendererFont.ttf')):
+                    line_number_mobject, code_mobject = Code(
+                        code_string=self.code_str + f"\n{(max([len(line.rstrip()) for line in self.code_str_lines])*2)*' ' + OCCUPY_CHARACTER}",
+                        language=Parameters.language, 
+                        formatter_style=Parameters.formatter_style, 
+                        paragraph_config={
+                            'font': 'CodeVideoRendererFont',
+                            'line_spacing': Parameters.line_spacing
+                        }
+                    ).submobjects[1:3]
                 line_number_mobject.set_color(GREY)
 
                 total_line_numbers = len(self.code_str_lines)
                 total_char_numbers = len(''.join(line.strip() for line in self.code_str_lines))
 
                 # 调整代码对齐（manim内置bug）
-                if all(check in "acegmnopqrsuvwxyz+,-.:;<=>_~" + EMPTY_CHARACTER for check in self.code_str_lines[0]):
-                    code_mobject.shift(DOWN*CODE_OFFSET)
+                offset_lines = []
+                for line_index, line in enumerate(self.code_str_lines):
+                    if all(check in "acegmnopqrsuvwxyz+,-.:;<=>_~ " for check in line):
+                        if line_index == 0:
+                            code_mobject.shift(DOWN*CODE_OFFSET)
+                        offset_lines.append(line_index)
+                del line_index, line
                     
                 # 创建代码行矩形框
                 code_line_rectangle = SurroundingRectangle(
@@ -137,40 +156,45 @@ class CameraFollowCursorCV:
                     fill_opacity=1,
                     stroke_width=0
                 ).set_y(code_mobject[0].get_y())
+                # 处理第一行出现代码偏移时的code_line_rectangle偏移问题
+                if 0 in offset_lines:
+                    code_line_rectangle.shift(UP*CODE_OFFSET/2)
                 
                 # 初始化光标位置
                 cursor.align_to(code_mobject[0], LEFT).set_y(code_line_rectangle.get_y())
 
                 # 适配opengl
                 if config.renderer == RendererType.OPENGL:
-                    scene.camera.frame = scene.camera
+                    scene.camera.frame = scene.camera # type: ignore[reportAttributeAccessIssue]
 
                 # 入场动画
                 target_center = cursor.get_center()
                 start_center = target_center + UP * 3
-                scene.camera.frame.scale(self.camera_scale).move_to(start_center)
+                scene.camera.frame.scale(Parameters.camera_scale).move_to(start_center) # type: ignore[reportAttributeAccessIssue]
                 scene.add(code_line_rectangle, line_number_mobject[0].set_color(WHITE), cursor)
 
                 scene.play(
-                    scene.camera.frame.animate.move_to(target_center), # type: ignore[reportArgumentType]
+                    scene.camera.frame.animate.move_to(target_center), # type: ignore[reportArgumentType, reportAttributeAccessIssue]
                     run_time=1,
                     rate_func=rate_functions.ease_out_cubic
                 )
                 
                 # 定义固定动画
-                scene.Animation_list = []
+                scene.Animation_list: list[dict[str, Point3D | float]] = []
                 def linebreakAnimation():
                     scene.Animation_list.append({"move_to": cursor.get_center()})
 
+                camera_scale = Parameters.camera_scale
                 def JUDGE_cameraScaleAnimation():
-                    distance = (scene.camera.frame.get_x() - line_number_mobject.get_x()) / 14.22
-                    if distance > self.camera_scale:
-                        scene.Animation_list.append({"scale": distance/self.camera_scale})
-                        self.camera_scale = distance
+                    nonlocal camera_scale
+                    distance = (scene.camera.frame.get_x() - line_number_mobject.get_x()) / 14.22 # type: ignore[reportAttributeAccessIssue]
+                    if distance > camera_scale:
+                        scene.Animation_list.append({"scale": distance/camera_scale})
+                        camera_scale = distance
 
                 def playAnimation(**kwargs):
                     if scene.Animation_list:
-                        cameraAnimation = scene.camera.frame.animate
+                        cameraAnimation = scene.camera.frame.animate # type: ignore[reportAttributeAccessIssue]
 
                         for anim in scene.Animation_list:
                             if "move_to" in anim:
@@ -195,6 +219,9 @@ class CameraFollowCursorCV:
                         current_line_progress = progress.add_task(description=f"[green]Line {line+1}[/green]", total=char_num)
 
                         code_line_rectangle.set_y(code_mobject[line].get_y())
+                        # 处理出现代码偏移时的code_line_rectangle偏移问题
+                        if line in offset_lines:
+                            code_line_rectangle.shift(UP*CODE_OFFSET/2)
                         scene.add(line_number_mobject[line])
 
                         cursor.align_to(code_mobject[line], LEFT).set_y(code_line_rectangle.get_y())
@@ -250,7 +277,7 @@ class CameraFollowCursorCV:
                                 oscillation = np.sin(alpha * omega)
                                 
                                 # 振幅为相机框高度的 2.5%
-                                amplitude = scene.camera.frame.height * 0.025
+                                amplitude = scene.camera.frame.height * 0.025 # type: ignore[reportAttributeAccessIssue]
                                 offset_y = amplitude * envelope * oscillation
                                 
                                 target_pos = cursor.get_center() + UP * offset_y
@@ -259,7 +286,7 @@ class CameraFollowCursorCV:
                             # 缩放检测 & 播放
                             JUDGE_cameraScaleAnimation()
                             playAnimation(
-                                run_time=DEFAULT_LINE_BREAK_RUN_TIME if line_break else random.uniform(*self.interval_range),
+                                run_time=DEFAULT_LINE_BREAK_RUN_TIME if line_break else random.uniform(*Parameters.interval_range),
                                 rate_func=rate_functions.smooth if line_break else rate_functions.linear
                             )
 
@@ -275,7 +302,7 @@ class CameraFollowCursorCV:
             def render(scene):
                 """Override render to add timing log."""
                 if self.output:
-                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering {self.video_name}.mp4.")
+                    DEFAULT_OUTPUT_CONSOLE.log(f"Start rendering {Parameters.video_name}.mp4.")
                     DEFAULT_OUTPUT_CONSOLE.log("Start rendering CameraFollowCursorCVScene. [dim](by manim)[/]")
                     if config.renderer == RendererType.CAIRO:
                         DEFAULT_OUTPUT_CONSOLE.log('[blue]Currently using CPU (Cairo Renderer) for rendering.[/]')
@@ -301,7 +328,7 @@ class CameraFollowCursorCV:
 
                 # 添加发光效果
                 input_path = str(scene.renderer.file_writer.movie_file_path)
-                output_path = '\\'.join(input_path.split('\\')[:-1]) + rf'\{self.video_name}.mp4'
+                output_path = '\\'.join(input_path.split('\\')[:-1]) + rf'\{Parameters.video_name}.mp4'
                 total_effect_time = timeit(lambda: addGlowEffect(input_path=input_path, output_path=output_path, output=self.output), number=1)
                 if self.output:
                     DEFAULT_OUTPUT_CONSOLE.log(f"Successfully added glow effect in {total_effect_time:,.2f} seconds. [dim](by moviepy)[/]")
