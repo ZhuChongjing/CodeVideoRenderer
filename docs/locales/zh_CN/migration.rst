@@ -1,40 +1,40 @@
-迁移指南
+Migration Guide
 ===============
 
-本指南帮助您从旧版本的 CodeVideoRendererer升级。
+This guide helps you upgrade from older versions of CodeVideoRenderer.
 
-迁移到 1.2.x
+Migrating to 1.2.x
 ------------------
 
-1.2.x版本引入了断开 API 更改。 从 1.1.x 或更早升级时遵循下面的章节。
+Version 1.2.x introduced breaking API changes. Follow the sections below when upgrading from 1.1.x or earlier.
 
-函数命名公约
+Function Naming Convention
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-所有公共功能和类已从 **snake_case** 切换到 1.2.1 的 **camelCase** 。
+All public functions and classes switched from **snake_case** to **camelCase** in 1.2.1.
 
-.. 列表表：
+.. list-table::
    :header-rows: 1
    :widths: 50 50
 
-   * - 老(1.1.x及更早)
-     - 新(1.2.x)
+   * - Old (1.1.x and earlier)
+     - New (1.2.x)
    * - ``type_checker``
      - ``typeChecker``
 
-如果你直接从 ``CodeVideoRender.utils`` 调用实用功能，请相应地更新你的代码。
+If you were calling utility functions directly from ``CodeVideoRenderer.utils``, update your code accordingly.
 
-移除工具
+Removed Utilities
 ^^^^^^^^^^^^^^^^^
 
-以下函数已从 ``utils.py`` 中被移除：
+The following functions were removed from ``utils.py`` in 1.2.3:
 
 * ``checkType``
 * ``typeChecker``
 
-如果你自己的代码依赖于这些函数，则替换为 ``typecececked`` (CodeVideoRender现在内部使用) 或实现你自己的类型检查。
+If your own code depends on these functions, replace them with ``typeguard.typechecked`` (which CodeVideoRenderer now uses internally) or implement your own type checking.
 
-基本用法无需操作
+No Action Needed for Basic Usage
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you only use the high-level :class:`~.CameraFollowCursorCV` API (as shown in :doc:`tutorials`), no code changes are required—the breaking changes affect internal utilities and direct imports from ``utils.py``.
