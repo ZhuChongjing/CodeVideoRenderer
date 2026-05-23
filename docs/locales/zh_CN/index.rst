@@ -1,78 +1,78 @@
-.. CodeVideoRenderer documentation master file, created by
-   sphinx-quickstart on Mon Apr 20 19:33:36 2026.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. CodeVideoRenderer 文档主文件创建于
+   Sphinx-quickstart on Mon Apr 20 19:33:36 2026。
+   您可以完全根据您的喜好修改这个文件，但它至少应该是
+   包含根目录`toctree`指令。
 
 CodeVideoRenderer
 =================
 
-**CodeVideoRenderer** is a Python animation library based on Manim, specifically designed for creating dynamic code demonstration videos. It transforms static code into lively animations that simulate real programming processes.
+**CodeVideoRender** 是基于 Manim 的 Python 动画库，专门用于创建动态代码演示视频。 它将静态代码变成生动的动画，模拟真正的编程过程。
 
-Core Concepts
+核心概念
 -------------
 
-Code Animation
+代码动画
 ^^^^^^^^^^^^^^
 
-CodeVideoRenderer's core functionality is to animate code character by character and line by line. Unlike traditional static code displays, it can:
+CodeVideoRenderer的核心功能是根据字符和行来动画代码。 与传统的静态代码显示不同，它可以：
 
-* **Simulate typing process**: Display code character by character, simulating real programming experience
-* **Intelligent cursor tracking**: Camera automatically follows the cursor movement, ensuring the currently edited code stays in the center of view
-* **Syntax highlighting support**: Integrates Pygments syntax highlighting engine, supporting multiple programming languages
+* **模拟输入过程**：按角色显示代码字符，模拟实际编程体验
+* **智能光标跟踪**：相机自动跟随光标移动，确保当前编辑的代码保持在视图中心
+* **语法高亮支持**：Integrates Pygments 语法高亮引擎，支持多个编程语言
 
-Camera System
+相机系统
 ^^^^^^^^^^^^^
 
-The library includes an intelligent camera system that can:
+图书馆包括一个智能相机系统，能够：
 
-* **Auto-scaling**: Automatically adjust camera zoom based on code content
-* **Smooth movement**: Camera smoothly follows cursor movement, avoiding abrupt jumps
-* **Focus management**: Intelligently recognizes code structure to ensure important parts remain visible
+* **自动缩放**：根据代码内容自动调整相机缩放
+* **平滑移动**：相机顺畅地跟随光标移动，避免突然跳转
+* **焦点管理**：智能识别代码结构以确保重要部件保持可见
 
-Key Features
+关键功能
 ------------
 
-* **🎬 Professional animation effects**: Based on Manim engine, providing high-quality animation rendering
-* **📝 Multi-language support**: Syntax highlighting for various programming languages including Python, JavaScript, Java, and more
-* **⚙️ Highly customizable**: Adjustable typing speed, line spacing, camera behavior, and other parameters
-* **🎨 Rich styling**: Multiple code highlighting styles (such as github-dark, monokai, etc.)
-* **🔧 Dual renderers**: Support for both Cairo and OpenGL rendering backends
+* **🎬 专业动画效果**: 基于 Manim 引擎, 提供高质量动画渲染。
+* **📝 Multi-language support **: 语法高亮显示包括Python、JavaScript、Java 和更多
+* **⚙️ 高度自定义**: 可调整的输入速度, 行间距, 相机行为, 及其他参数
+* **🎨 Rich styling**: 多重代码高亮风格(例如github-dark, monokai等)
+* **🔧 双渲染器**: 支持开罗和OpenGL 渲染后端
 
-Use Cases
+使用案例
 ---------
 
-CodeVideoRenderer is particularly suitable for the following application scenarios:
+CodeVideoRenderer 特别适合以下应用场景：
 
-* **Educational demonstrations**: Create code explanation videos for programming courses
-* **Technical presentations**: Make code demonstration segments for conference talks
-* **Algorithm visualization**: Dynamically showcase algorithm implementation processes and logic
-* **Code review**: Visualize code modifications and refactoring processes
+* **教育示威**：为编程课程创建代码解释视频
+* **技术介绍**：为会议会谈制作代码演示部分
+* **算法可视化**：动态展示算法实现过程和逻辑。
+* **代码审查**：可视化代码修改和重新排列过程
 
-Design Philosophy
+设计哲学
 -----------------
 
-CodeVideoRenderer's design philosophy is "making code come alive," aiming to better convey programming ideas and code logic through animation. It's not just a code rendering tool, but a code storytelling tool.
+CodeVideoRender的设计哲学是“让代码活着”，旨在通过动画更好地传达编程理念和代码逻辑。 它不仅仅是一个代码呈现工具，而且是一个代码讲故事工具。
 
-Index
+索引
 -----
 
-.. toctree::
+.. testree::
    :maxdepth: 2
    :caption: Documentation
 
-   examples
-   installation
-   tutorials
-   reference
-   faq
-   migration
-   changelog
-   contributing
-   code_of_conduct
+   示例：
+   安装
+   教程
+   参考
+   常见问题
+   迁移
+   更新日志
+   贡献
+   行为代码
 
-.. toctree::
+.. testree::
    :maxdepth: 1
    :caption: External Links
    
    GitHub Repository <https://github.com/ExploreMaths/CodeVideoRenderer>
-   PyPI Package <https://pypi.org/project/codevideorenderer/>
+   PyPI 包 <https://pypi.org/project/codevideorenderer/>
