@@ -1,7 +1,7 @@
-Example Gallery
+示例相册
 ===============
 
-This gallery showcases various examples of CodeVideoRenderer in action, demonstrating different use cases and configurations.
+这个画廊展示了各种在 CodeVideoRenderer 操作中的例子，这显示了不同的使用案例和配置。
 
 .. seealso::
 
@@ -9,239 +9,239 @@ This gallery showcases various examples of CodeVideoRenderer in action, demonstr
     * :doc:`reference` for detailed API documentation
     * :doc:`installation` for setup instructions
 
-Basic Examples
+基本实例
 --------------
 
-Simple Python Function
+简单的 Python 函数
 ^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-    from CodeVideoRenderer import CameraFollowCursorCV
+    从 CodeVideoRenderer 导入摄像机跟随CursorCV
 
-    code = '''
+    代码 = ''
     def fibonacci(n):
-        """Calculate the nth Fibonacci number"""
-        if n <= 1:
-            return n
+        """计算nth Fibonacci number"""
+        如果n <= 1：
+            返回 n
         return fibonacci(n-1) + fibonacci(n-2)
 
-    # Example usage
+    # 示例用法
     result = fibonacci(10)
     print(f"Fibonacci(10) = {result}")
     '''
 
-    video = CameraFollowCursorCV(
-        code=('string', code),
+    视频 = 摄像机跟随CursorCV(
+        代码=('string', 代码),
         language='python',
         formatter_style='github-dark',
-        video_name='FibonacciExample'
+        video_name='Fibonacci示例'
     )
     video.render()
 
-JavaScript Example
+JavaScript 示例
 ^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
    js_code = '''
-   function debounce(func, wait) {
-       let timeout;
-       return function executedFunction(...args) {
-           const later = () => {
-               clearTimeout(timeout);
+   funct debounce(func, wait)
+       允许超时；
+       return function executedFunction(...gs)
+           const later = () =>
+               清除超时(超时)；
                func(...args);
            };
-           clearTimeout(timeout);
-           timeout = setTimeout(later, wait);
+           清除超时(超时)；
+           超时= setTimeout(稍后等待)；
        };
    }
 
-   // Usage example
-   const debouncedSearch = debounce(searchFunction, 300);
+   // 使用示例
+   const debuncedSearch = debounce(searchfunction, 300)；
    '''
 
-   video = CameraFollowCursorCV(
+   视频 = 摄像机跟随CursorCV(
        code=('string', js_code),
        language='javascript',
-       formatter_style='monokai'
+       格式化样式='monokai'
    )
    video.render()
 
-Intermediate Examples
+中间示例
 ---------------------
 
-File-based Animation
+基于文件的动画
 ^^^^^^^^^^^^^^^^^^^^
 
-Animate code from an existing file:
+从现有文件生成动画代码：
 
 .. code-block:: python
 
-   video = CameraFollowCursorCV(
+   视频 = 摄像机跟随CursorCV(
        code=('file', 'src/algorithm.py'),
        language='python',
-       video_name='AlgorithmImplementation'
+       video_name='算法实现'
    )
    video.render()
 
-Custom Typing Speed
+自定义输入速度
 ^^^^^^^^^^^^^^^^^^^
 
-Simulate different coding styles:
+模拟不同的编码风格：
 
 .. code-block:: python
 
-    # Fast typing (expert coder)
-    video_fast = CameraFollowCursorCV(
-        code=('string', 'code'),
+    # 快速输入(专家代码)
+    video_fast = 摄像机跟随CursorCV(
+        代码=('string', 'code'),
         language='python',
-        interval_range=(0.03, 0.06)
+        间隔范围=(0.03, 0.06)
     )
 
-    # Slow typing (learning/teaching)
-    video_slow = CameraFollowCursorCV(
-        code=('string', 'code'),
+    # 慢打字(学习/教学)
+    video_llow = 摄像机跟随CursorCV(
+        代码=('string', 'code'),
         language='python',
-        interval_range=(0.2, 0.4)
+        间隔范围=(0.2, 0.4)
     )
 
-Advanced Examples
+高级示例
 -----------------
 
-Multi-language Demonstration
+多语言演示
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Showcase code in different programming languages:
+显示不同编程语言的代码：
 
 .. code-block:: python
 
-    languages_examples = [
+    语言示例= [
         ('python', 'print("Hello, World!")'),
         ('javascript', 'console.log("Hello, World!");'),
         ('java', 'System.out.println("Hello, World!");'),
         ('cpp', 'printf("Hello, World!");')
     ]
 
-    for lang, code in languages_examples:
-        video = CameraFollowCursorCV(
-            code=('string', code),
-            language=lang,
+    对于lang, 语言代码示例：
+        视频 = 摄像机跟随CursorCV(
+            代码=('string', 代码),
+            语言=lang,
             video_name=f'{lang}_example'
         )
         video.render()
 
-Custom Styling
+自定义样式
 ^^^^^^^^^^^^^^
 
-Experiment with different syntax highlighting themes:
+实验不同语法高亮主题：
 
 .. code-block:: python
 
     styles = ['github-dark', 'monokai', 'solarized-dark', 'dracula']
 
-    for style in styles:
-        video = CameraFollowCursorCV(
-            code=('string', 'example_code'),
+    风格风格的风格：
+        视频 = 摄像机跟随CursorCV(
+            代码=('string', 'example_code'),
             language='python',
-            formatter_style=style,
+            格式化样式=样式
             video_name=f'style_{style}'
         )
         video.render()
 
-Real-world Use Cases
+世界实物使用案件
 --------------------
 
-Algorithm Explanation
+算法解释
 ^^^^^^^^^^^^^^^^^^^^^
 
-Demonstrate sorting algorithms:
+演示排序算法：
 
 .. code-block:: python
 
     sorting_code = '''
     def quicksort(arr):
         if len(arr) <= 1:
-            return arr
+            返回 arr
         pivot = arr[len(arr) // 2]
-        left = [x for x in arr if x < pivot]
-        middle = [x for x in arr if x == pivot]
-        right = [x for x in arr if x > pivot]
-        return quicksort(left) + middle + quicksort(right)
+        左键 = [x大于x键值时的x为x为arr]
+        中间=[x为x，如果x===键值则为arr中的x]
+        right = [x for x in arr if x > keot]
+        返回快捷排序(左) + 中 + 快捷排序(右)
 
-    # Example usage
-    numbers = [3, 6, 8, 10, 1, 2, 1]
-    sorted_numbers = quicksort(numbers)
+    # 示例用法
+    数字 = [3、6、8、10、1、2、1]
+    sorted_number = quicksort(数字)
     '''
 
-    video = CameraFollowCursorCV(
-        code=('string', sorting_code),
+    视频 = 摄像机跟随CursorCV(
+        代码=('string', sorting_code),
         language='python',
         video_name='QuicksortDemo'
     )
     video.render()
 
-Code Review Demonstration
+代码审查演示
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Show before/after code improvements:
+显示之前/之后的代码改进：
 
 .. code-block:: python
 
-    # Original code
-    original = '''
-    def calculate_total(items):
-        total = 0
-        for item in items:
-            total += item.price
-        return total
+    # 原代码
+    original = ''
+    def 计算总计 (items):
+        总计 = 0
+        项目中的项目：
+            总计 += item.价格
+        返回总计
     '''
 
-    video_before = CameraFollowCursorCV(
-        code=('string', original),
+    video_before = 摄像机跟随CursorCV(
+        代码=('string', 原始),
         language='python',
         video_name='CodeReviewBefore'
     )
     video_before.render()
 
-    # Improved code
-    improved = '''
-    from typing import List
-    from dataclasses import dataclass
+    # 改进代码
+    改进 = ''
+    从输入导入列表
+    从 dataclasses 导入基准图
 
     @dataclass
     class Item:
-        price: float
+        价格：浮点数
 
     def calculate_total(items: List[Item]) -> float:
-        """Calculate total price of items."""
-        return sum(item.price for item in items)
+        """计算项目的总价格。"""
+        返回 sum(item.price for items)
     '''
 
-    video_after = CameraFollowCursorCV(
-        code=('string', improved),
+    video_after = 摄像机跟随CursorCV(
+        代码=('string', 改进),
         language='python',
         video_name='CodeReviewAfter'
     )
-    video_after.render()
+    video_after .render()
 
-Video Output
+视频输出
 ------------
 
-All examples above produce an MP4 file after calling ``render()``. The default output location follows Manim's convention:
+上述所有示例在调用 ``render()`` 之后生成一个 MP4 文件。 默认输出位置遵循Manim的协议：
 
-.. code-block:: text
+.. 代码块：文本
 
    ./media/videos/1080p60/{video_name}.mp4
 
-The exact sub-directory depends on Manim's quality settings. You control the file name via the ``video_name`` parameter passed to :class:`~.CameraFollowCursorCV`.
+确切的子目录取决于Manim的质量设置。 You control the file name via the ``video_name`` parameter passed to :class:`~.CameraFollowCursorCV`.
 
-Video Output Examples
+视频输出示例
 ---------------------
 
-Generated videos will feature:
+生成的视频将具有以下功能：
 
-* **Smooth typing animation** with realistic timing
-* **Syntax highlighting** appropriate for each language
-* **Camera movement** that follows the cursor naturally
-* **Professional appearance** suitable for presentations
+* **平滑打字动画** 具有现实的时间
+* **语法高亮** 适合于每种语言
+* **相机移动** 自然跟随光标
+* **专业外观** 适合于演示。
