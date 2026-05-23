@@ -1,9 +1,9 @@
-Type Aliases
+输入别名
 ============
 
-This module defines the type aliases used throughout CodeVideoRenderer for type checking and autocompletion.
+此模块用于定义CodeVideoRenderer检查和自动完成的类型别名。
 
-Quick reference
+快速参考
 ---------------
 
 * :data:`~.PygmentsLanguage` — Valid language identifiers for syntax highlighting (e.g. ``'python'``, ``'javascript'``).
@@ -12,8 +12,8 @@ Quick reference
 
 .. tip::
 
-   The lists above are not exhaustive. If you want to see every supported language or style, run the sample code shown in the docstrings below.
+   上述清单并非详尽无遗。 如果你想看到每种支持的语言或风格，请运行下面的文档字符串中显示的样本代码。
 
-.. automodule:: CodeVideoRenderer.typing
+.. 自动解码器：CodeVideoRender.键入
     :members:
     :undoc-members:
