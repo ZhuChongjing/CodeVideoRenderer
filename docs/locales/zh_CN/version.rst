@@ -1,7 +1,7 @@
-版本
+Version
 =======
 
-.. 自动解码器：CodeVideoRender.version
+.. automodule:: CodeVideoRenderer.version
     :members:
     :undoc-members:
     :special-members: __version__
