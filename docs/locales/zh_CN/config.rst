@@ -1,9 +1,9 @@
-Configuration and constants
+配置和常量
 =====================================
 
-This module contains all default constants and configuration values used by CodeVideoRenderer. You can import these constants to customize the rendering behavior, or pass your own values directly to :class:`~.CameraFollowCursorCV`.
+此模块包含CodeVideoRenderer使用的所有默认常量和配置值。 You can import these constants to customize the rendering behavior, or pass your own values directly to :class:`~.CameraFollowCursorCV`.
 
-Commonly customized constants
+常用自定义常量
 ------------------------------
 
 * :data:`~.DEFAULT_TAB_WIDTH` — Number of spaces used to expand tab characters (default: ``4``).
@@ -13,6 +13,6 @@ Commonly customized constants
 * :data:`~.CODE_OFFSET` — Vertical offset applied to code positioning (default: ``0.08``).
 * :data:`~.NOT_AVAILABLE_CHARACTERS` — Characters that are rejected during rendering (``'\r\v\f'``).
 
-.. automodule:: CodeVideoRenderer.config
+.. 自动解码器：CodeVideoRender.config
     :members:
     :undoc-members:
