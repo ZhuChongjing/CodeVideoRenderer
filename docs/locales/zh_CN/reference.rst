@@ -1,7 +1,7 @@
-Reference Manual
+参考手册
 ================
 
-This reference manual details modules, functions, and variables included in CodeVideoRenderer, describing what they are and what they do. For learning how to use CodeVideoRenderer, see :doc:`tutorials`. For a list of changes since the last release, see the :doc:`changelog`.
+这本参考手册详细介绍了CodeVideoRenderer中包含的模块、功能和变量，说明了它们是什么和它们做什么。 For learning how to use CodeVideoRenderer, see :doc:`tutorials`. For a list of changes since the last release, see the :doc:`changelog`.
 
 .. seealso::
     
@@ -9,34 +9,34 @@ This reference manual details modules, functions, and variables included in Code
     * :doc:`examples` for code examples
     * :doc:`installation` for setup instructions
 
-Module Overview
+模块概述
 ---------------
 
-.. list-table::
+.. 列表表：
    :header-rows: 1
    :widths: 25 75
 
-   * - Module
-     - Description
+   * - 模块
+     - 描述
    * - :doc:`mainclass`
-     - ``CameraFollowCursorCV`` – the main class for creating code animation videos.
+     - ``CameraFindCursorCV`` - 创建代码动画视频的主类。
    * - :doc:`config`
-     - Default constants and configuration values (spacing, timing, fonts, offsets, etc.).
+     - 默认常量和配置值(间距、时间轴、字体、偏移等)。
    * - :doc:`typing`
-     - Type aliases and custom types used across the library (``PygmentsLanguage``, ``StrPath``, etc.).
+     - 输入库中使用的别名和自定义类型 (``PygsingsLanguage`` 、 ``StrPath`` 等)。
    * - :doc:`utils`
-     - Internal utility functions and helper classes for text processing, progress bars, and video post-processing.
+     - 用于文本处理、进度条和视频后处理的内部公用事业功能和辅助教程。
    * - :doc:`version`
      - Package version string (``__version__``).
 
-Index
+索引
 -----
 
-.. toctree::
+.. testree::
    :maxdepth: 1
 
-   mainclass
-   config
-   typing
+   主类
+   配置
+   输入中
    utils
-   version
+   版本
