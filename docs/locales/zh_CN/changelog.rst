@@ -1,56 +1,56 @@
-Changelog
+更新日志
 =========
 
-This document records all notable changes to CodeVideoRenderer.
+此文档记录了 CodeVideoRenderer 的所有显著变化。
 
 .. seealso::
 
    * :doc:`installation` for upgrade instructions
-   * `GitHub releases <https://github.com/ExploreMaths/CodeVideoRenderer/releases>`_ for detailed change information
+   * `GitHub 发布了 <https://github.com/ExploreMaths/CodeVideoRenderer/releases>`_ 以获取详细的更改信息
    * :doc:`contributing` for information on reporting issues
 
 CodeVideoRenderer 1.2.3 :bdg-success-line:`Latest`
 ------------------------------------------------------------------------
 
-**Date**: May 4, 2026
+**日期**: 5月4日，2026
 
-See details at https://pypi.org/project/codevideorenderer/1.2.3/.
+详情请访问https://pypi.org/project/codevideoender/1.2.3/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added ``moviepy`` version requirement ``<2.0.0`` for Python 3.8
+   * 添加 ``moviepy`` 版本需要 ``<2.0.0.0`` 的 Python 3.8
 
-   * Added ``typing-extensions`` dependency with a minimum required version of ``4.0.0``
+   * 添加了 ``ping-extensions`` 依赖，并且至少需要一个 ``4.0.0`` 的版本
 
-   * Added ``imageio-ffmpeg`` dependency with a minimum required version of ``0.4.0``
+   * 添加了 ``imageio-ffmpeg`` 依赖，并且至少需要一个 ``0.4.0`` 的版本
 
-   * Added ``typeguard`` dependency with a minimum required version of ``3.0``
+   * 添加了 ``typeguard`` 依赖，并且至少需要一个 ``3.0`` 的版本
 
    * Added import of ``annotations`` (from ``__future__``) in ``typing.py`` and ``utils.py`` for compatibility with Python 3.8, 3.9
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Downgraded the minimum required version of the ``manim`` dependency from ``0.20.1`` to ``0.18.0``
+   * 从 ``0.20.1`` 降级到了 ``manim`` 依赖所需的最小版本 ``0.18.0``
 
-   * Downgraded the minimum required version of the ``numpy`` dependency from ``2.4.2`` to ``1.24.4``
+   * 从 ``2.4.2`` 的 ``numpy`` 依赖关系降级到了 ``1.24.4`` 的最小版本
 
-   * Downgraded the minimum required version of the ``pillow`` dependency from ``11.2.1`` to ``9.1``
+   * 从 ``11.2.1`` 降级到了 ``pillow`` 依赖的最小版本为 ``9.1``
 
-   * Downgraded the minimum required Python version from ``3.9`` to ``3.8``
+   * 从 ``3.9`` 降级到了 ``3.8`` 的 Python 版本的最小值
 
-   * Modified the import methods of ``TypeAlias``, ``UnionType`` and ``VideoFileClip`` for compatibility with Python 3.8, 3.9
+   * 修改了 ``TypeAlias`` 、 ``UnionType`` 和 ``VideoFileClip`` 的导入方法，以实现与 Python 3.8、3.9 的兼容性。
 
-   * Replaced all type annotations in the format of ``type | type`` with ``Union[type, type]`` for compatibility with Python 3.8, 3.9
+   * 将所有类型的注释替换为 ``type | type`` 的格式为 ``Union[typtype]`` ，以实现与 Python 3.8, 3.9 的兼容性。
 
-   * Changed all ``PathLike[str]`` to ``PathLike`` (as ``PathLike`` in Python 3.8 does not support generics)
+   * 将所有 ``PathOpinion[str]`` 更改为 ``PathLie`` (因为Python 3.8 的 ``PathLie`` 不支持一般)
 
-   * Replaced all type annotations in the formats of ``tuple[...]``, ``list[...]`` and ``dict[...]`` with ``Tuple[...]``, ``List[...]`` and ``Dict[...]`` respectively for compatibility with Python 3.8
+   * 将所有类型的注释替换为 ``tuple[...]``、``list[...]`` 和 ``dict[...]`` 格式为 ``Tuple[...]``， ``List[...]`` 和 ``Dict[...]`` 分别用于与 Python 3.8 兼容性
 
    * Switched the type checker from :func:`typeChecker` to :func:`typeguard.typechecked`
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
    * Removed :func:`checkType` and :func:`typeChecker` from ``utils.py``
@@ -58,25 +58,25 @@ See details at https://pypi.org/project/codevideorenderer/1.2.3/.
 CodeVideoRenderer 1.2.2
 ------------------------------------------------------------------------
 
-**Date**: Apr 27, 2026
+**日期**: Apr 27, 2026
 
-See details at https://pypi.org/project/codevideorenderer/1.2.2/.
+详情请访问https://pypi.org/project/codevideoender/1.2.2/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Convert all documents (functions, classes, constants) to the reStructuredText format for better compatibility with Sphinx documentation.
+   * 将所有文档(函数、类、常量)转换为restructuredText格式，以便更好地与 Sphinx 文档兼容。
 
    * Change the default value of the ``formatter_style`` parameter in the :class:`~.CameraFollowCursorCV` class to ``"material"``.
 
 CodeVideoRenderer 1.2.1
 ----------------------------
 
-**Date**: Mar 22, 2026
+**日期**: 马22, 2026
 
-See details at https://pypi.org/project/codevideorenderer/1.2.1/.
+详情请访问https://pypi.org/project/codevideoender/1.2.1/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
    * Add the :data:`~.__version__` variable to ``__init__.py``
@@ -85,47 +85,47 @@ See details at https://pypi.org/project/codevideorenderer/1.2.1/.
 
    * Add the :attr:`~.formatter_style` parameter to the :class:`~.CameraFollowCursorCV` class
 
-   * Add beautification for terminal error messages
+   * 为终端错误消息添加美化
 
-   * Add parameter descriptions and type annotations for all functions and classes
+   * 为所有函数和类别添加参数说明和类型注释
 
    * Add the :meth:`~.__getattribute__` function to the :class:`~.CameraFollowCursorCV` class to prevent data modification by changing attributes
 
-   * Add the CodeVideoRendererFont font to support Chinese characters
+   * 添加CodeVideoRendererFont字体以支持中文字符
 
    * Add the :data:`~.NOT_AVAILABLE_CHARACTERS` variable to ``config.py``
 
    * Add the :class:`~.Parameters` class to the :class:`~.CameraFollowCursorCV` class for managing and retrieving parameters
 
-   * Add ``version.py`` to manage package version
+   * 添加 ``version.py`` 以管理软件包版本
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Change the function name format from ``aaa_bbb`` (snake_case) to ``aaaBbb`` (camelCase)
+   * 将函数名称格式从 ``aaa_bbb`` (snake_case) 更改为 ``aaaBbbb`` (camelCase)
 
    * Change the :data:`~.PygmentsLanguage` class to a ``Literal`` type
 
    * Refactor the ``default_progress_bar`` function into the :class:`~.DefaultProgressBar` class
 
-   * Split ``CameraFollowCursorCVR.py`` into ``renderer.py``, ``typing.py``, and ``utils.py``
+   * 将 ``CameraFostCursorCVR.py`` 拆分为 ``render.py`` 、 ``py`` 和 ``utils.py``
 
-   * Modify the whitespace handling logic to improve rendering speed
+   * 修改空格处理逻辑以提高渲染速度
 
    * Make partial modifications to the parameters and descriptions of the :class:`~.CameraFollowCursorCV` class
 
-   * Modify some terminal output content
+   * 修改一些终端输出内容
 
    * Update the value of :data:`~.CODE_OFFSET` in ``config.py``
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fix the code offset issue caused by `@gaojj2000 <https://github.com/gaojj2000>`_ in `#5 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/5>`_
+   * 修复`@gaojj2000 <https://github.com/gaojj2000>`_ 在 `#5 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/5>`_ 造成的代码偏移问题
 
-   * Fix the ``code_line_rectangle`` offset issue that occurs when code offset happens
+   * 修复当代码偏移发生时发生的 ``code_line_rectangle`` 偏移问题。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
    * Remove the :data:`~.DEFAULT_CODE_FORMATTER_STYLE`, :data:`~.AVAILABLE_CHARACTERS`, and :data:`~.EMPTY_CHARACTER` variables from ``config.py``
@@ -133,73 +133,73 @@ See details at https://pypi.org/project/codevideorenderer/1.2.1/.
 CodeVideoRenderer 1.1.2
 ----------------------------
 
-**Date**: Feb 11, 2026
+**日期**: Feb 11, 2026
 
-See details at https://pypi.org/project/codevideorenderer/1.1.2/.
+详情请访问https://pypi.org/project/codevideoender/1.1.2/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed the cursor position error caused by manim uniformly removing leading spaces on each line (see `#5 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/5>`_ for details).
+   * 修复了手指在每一行上清除前面空格造成的光标位置错误(详情见`#5 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/5>`_ )。
 
 CodeVideoRenderer 1.1.1
 ----------------------------
 
-**Date**: Feb 11, 2026
+**日期**: Feb 11, 2026
 
-See details at https://pypi.org/project/codevideorenderer/1.1.1/.
+详情请访问https://pypi.org/project/codevideoender/1.1.1/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added compatibility updates for ``manim==0.19.1`` (see `#3 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/3>`_ for details).
+   * 添加 ``manim==0.19.1`` 的兼容性更新(详情请参阅`#3 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/3>`_ )。
 
-   * Added glow effects.
+   * 增加了发光效果。
 
-   * Adapted to OpenGL rendering and resolved related issues when switching to OpenGL rendering (see `#4 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/4>`_ for details).
+   * 在切换到 OpenGL 渲染时适应OpenGL 渲染和解决相关问题(见`#4 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/4>`_ )。
 
    * Added the ``renderer`` parameter to :class:`~.CameraFollowCursorCV` to configure the renderer.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
    * Modified :func:`~.type_checker` to adapt to ``Literal`` and :data:`~.PygmentsLanguage`.
 
-   * Optimized terminal display.
+   * 优化终端显示。
 
-   * Integrated ``functions.py`` into ``CameraFollowCursorCVR.py``.
+   * 将 ``functions.py`` 集成到 ``CameraFollasCursorCVR.py`` 中。
 
-   * Adopted the ``timeit`` module to calculate rendering time and eliminate redundant variables.
+   * 通过 ``timeit`` 模块来计算渲染时间并消除多余变量。
 
    * Changed the type of the ``language`` parameter in :class:`~.CameraFollowCursorCV` from ``str`` to :data:`~.PygmentsLanguage`.
 
-   * Refactored the file structure.
+   * 恢复了文件结构。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed summary output before rendering the ``Scene``.
+   * 在渲染``Scene`` 之前删除了摘要输出。
 
-   * Deleted unused constants in ``config.py``.
+   * 删除了 ``config.py`` 中未使用的常数。
 
 CodeVideoRenderer 1.1.0
 ----------------------------
 
-**Date**: Dec 25, 2025
+**日期**：2025年12月25日。
 
-See details at https://pypi.org/project/codevideorenderer/1.1.0/.
+详情请访问https://pypi.org/project/codevideoender/1.1.0/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added opening animation.
+   * 添加了打开动画。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Revised camera movement logic.
+   * 经修订的相机移动逻辑。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
    * Fixed the issue where output could not be terminated when ``output=False`` was used in :meth:`~.render`.
@@ -207,28 +207,28 @@ See details at https://pypi.org/project/codevideorenderer/1.1.0/.
 CodeVideoRenderer 1.0.9.post2
 ------------------------------
 
-**Date**: Nov 24, 2025
+**日期**: 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.9.post2/.
+详细信息见 https://pypi.org/project/codevideoender/1.0.9.post2/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Adjusted the spacing between the cursor and characters.
+   * 调整了光标和字符之间的间距。
 
 CodeVideoRenderer 1.0.9.post1
 ------------------------------
 
-**Date**: Nov 17, 2025
+**日期**: 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.9.post1/.
+详情请访问https://pypi.org/project/codevideoender/1.0.9.post1/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
    * Redesigned progress bar style and added a ``{task.completed}/{task.total}`` field.
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
    * Fixed partial issues with the :func:`~.type_checker` decorator.
@@ -236,29 +236,29 @@ See details at https://pypi.org/project/codevideorenderer/1.0.9.post1/.
 CodeVideoRenderer 1.0.9
 ----------------------------
 
-**Date**: Nov 16, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.9/.
+详情请访问https://pypi.org/project/codevideoender/1.0.9/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Overhauled and rewrote camera movement logic, and added automatic camera scaling.
+   * 校正和重写相机移动逻辑，并添加自动相机缩放。
 
-   * Used ``rich`` to print initial data at the start of rendering.
+   * 使用 ``rich`` 来在渲染开始时打印初始数据。
 
-   * Rewrote the rendering progress bar with ``rich.progress``.
+   * 使用 ``rich.progress`` 重写渲染进度栏。
 
-   * Refactored type checking and adopted ``rich.traceback`` for cleaner error output.
+   * 恢复的类型检查和使用 ``rich.traceback`` 进行更清洁的错误输出。
 
 CodeVideoRenderer 1.0.8.post1
 --------------------------------
 
-**Date**: Nov 8, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.8.post1/.
+详情请访问https://pypi.org/project/codevideoender/1.0.8.post1/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
    * Fixed issues in ``__init__.py``.
@@ -266,245 +266,245 @@ See details at https://pypi.org/project/codevideorenderer/1.0.8.post1/.
 CodeVideoRenderer 1.0.8
 ----------------------------
 
-**Date**: Nov 8, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.8/.
+详情请访问https://pypi.org/project/codevideoender/1.0.8/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Reverted the default font to Consolas, as Cascadia Code converts ``>=`` to ``≥`` and triggers internal Manim errors.
+   * 将默认字体还原到 Consolas，因为Cascadia 代码将 ``>=`` 转换为 ``0`` ，并触发了内部Manim错误。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed code offset errors.
+   * 固定代码偏移错误。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed unused constants in ``/renderer/config.py``.
+   * 移除了 ``/render/config.py`` 中未使用的常数。
 
 CodeVideoRenderer 1.0.7.post3
 --------------------------------
 
-**Date**: Nov 6, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.7.post3/.
+详情请访问https://pypi.org/project/codevideoender/1.0.7.post3/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Re-uploaded complete source code due to incomplete package upload on pip.
+   * 由于在管道上上传软件包不完整，重新上传完整的源代码。
 
 CodeVideoRenderer 1.0.7.post2
 ---------------------------------
 
-**Date**: Nov 6, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.7.post2/.
+详细信息见 https://pypi.org/project/codevideoender/1.0.7.post2/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Disabled Manim caching to improve rendering speed.
+   * 禁用Manim 缓存以提高渲染速度。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed rendering errors triggered by blank lines at the start of code content.
+   * 修复了代码内容开头的空白行触发的渲染错误。
 
 CodeVideoRenderer 1.0.7.post1
 --------------------------------
 
-**Date**: Oct 3, 2025
+**日期**: 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.7.post1/.
+详情请访问https://pypi.org/project/codevideoender/1.0.7.post1/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Resolved bugs occurring when using the ``code_file`` parameter.
+   * 使用 ``code_file`` 参数解决了 bug。
 
 CodeVideoRenderer 1.0.7
 ----------------------------
 
-**Date**: Oct 3, 2025
+**日期**: 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.7/.
+详情请访问https://pypi.org/project/codevideoender/1.0.7/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Updated pip dependency configuration.
+   * 更新了 Pip 依赖者配置。
 
-   * Changed parameter ``camera_floating_maximum_value`` to ``camera_floating_max_value``, ``screen_scale`` to ``camera_scale``.
+   * 参数``camera_floating_max_value`` 更改为 ``camera_floating_max_value`` ，``screen_scale`` 更改为 ``camera_scale`` 。
 
-   * Improved error message presentation.
+   * 改进了错误消息的演示。
 
 CodeVideoRenderer 1.0.6
 ----------------------------
 
-**Date**: Sep 27, 2025
+**日期**：27，2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.6/.
+详情请访问https://pypi.org/project/codevideoender/1.0.6/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Refactored the renderer module: optimized the structure and error handling of CodeVideoRenderer (see `#1 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/1>`_ for details).
+   * 恢复了渲染器模块：优化了CodeVideoRenderer的结构和错误处理(详情见`#1 <https://github.com/ExploreMaths/CodeVideoRenderer/pull/1>`_ )。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed progress bar formatting errors caused by overly long code lines.
+   * 修复了由于代码行过长造成的进度条格式化错误。
 
 CodeVideoRenderer 1.0.5.post2
 ---------------------------------
 
-**Date**: Sep 25, 2025
+**日期**：25，2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.5.post2/.
+详细信息见 https://pypi.org/project/codevideoender/1.0.5.post2/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed version compatibility issues of pip dependencies to ensure full compliance with project requirements.
+   * Pip 依赖关系的固定版本兼容性问题，以确保完全符合项目要求。
 
-   * Resolved inconsistent color display of ANSI escape sequences in rendering outputs across different terminals/compilers.
+   * 解决了在不同终端/编译器渲染输出时ANSI的颜色显示不一致的顺序。
 
 CodeVideoRenderer 1.0.5.post1
 -------------------------------
 
-**Date**: Sep 23, 2025
+**日期**：23，2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.5.post1/.
+详情请访问https://pypi.org/project/codevideoender/1.0.5.post1/。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed pip installation failures.
+   * 修复pip安装失败。
 
 CodeVideoRenderer 1.0.5
 ----------------------------
 
-**Date**: Sep 20, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.5/.
+详情请访问https://pypi.org/project/codevideoender/1.0.5/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
    * Added the new ``output`` parameter to the :meth:`~.render` method to control rendering output behavior.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Refactored ``CodeVideo`` from a function to a class for better code maintainability and scalability.
+   * 从一个函数恢复到一个类的 ``CodeVideo`` 以更好的代码维护和可扩展性。
 
 CodeVideoRenderer 1.0.4
 ----------------------------
 
-**Date**: Sep 6, 2025
+**日期**：第6相，2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.4/.
+详情请访问https://pypi.org/project/codevideoender/1.0.4/。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Optimized terminal rendering logs.
+   * 优化终端渲染日志。
 
-   * Improved overall code execution efficiency.
+   * 提高了执行代码的整体效率。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed calculation errors of rendering duration.
+   * 修复渲染持续时间的计算错误。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed the deprecated ``font`` parameter.
+   * 删除了已废弃的 ``font`` 参数。
 
 CodeVideoRenderer 1.0.3
 ----------------------------
 
-**Date**: Aug 29, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.3/.
+详情请访问https://pypi.org/project/codevideoender/1.0.3/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added the new ``line_spacing`` parameter to customize line spacing.
+   * 添加了新的 ``line_spating`` 参数来自定义行间距。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Excluded leading and trailing whitespace of each code line from animation playback to reduce redundant animation duration.
+   * 从动画回放中排除每条代码行的前导和尾随空白，以减少多余动画持续时间。
 
-   * Adjusted the background width of the currently highlighted code line.
+   * 调整了当前突出显示的代码行的背景宽度。
 
-   * Optimized terminal rendering information output.
+   * 优化终端渲染信息输出。
 
-   * Fine-tuned camera movement logic.
+   * 微调相机移动逻辑。
 
-.. admonition:: Fixes
+.. 警告:: 修复
    :class: fixes
 
-   * Fixed the issue where the cursor failed to pause at the start of new lines.
+   * 修复了光标未能在新线开始时暂停的问题。
 
 CodeVideoRenderer 1.0.2
 ----------------------------
 
-**Date**: Aug 26, 2025
+**日期**: 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.2/.
+详情请访问https://pypi.org/project/codevideoender/1.0.2/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Introduced Pydantic ``@validate_call`` for parameter validation.
-   * Added explicit parameters: ``code_string``, ``code_file``, ``font``, ``language``, ``interval_range``, ``camera_floating_maximum_value``, ``camera_move_interval``, ``camera_move_duration``, and ``screen_scale``.
+   * 引入了 Pydtatic ``@validate_call`` 用于参数验证。
+   * 添加了显式参数： ``code_string`` 、 ``code_file`` 、 ``font`` 、 ``language`` 、 ``interval_range`` 、 ``camera_floating_maximum_value`` 、 ``camera_move_interval`` 、 ``camera_move_duration`` 和 ``screen_scale`` 。
    * Added rendering time tracking using :func:`time.time`.
-   * Added syntax-highlighted live code preview in terminal output with box borders and completion marks.
+   * 在终端输出中添加了语法高亮的实时代码预览，带有框边框和完成标记。
    * Added :meth:`~.replace_empty_chars` to validate non-empty code input.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Replaced ``**kwargs`` with explicit typed parameters.
+   * 使用 ``**kwargs`` 替换为明确的输入参数。
    * Replaced :meth:`~.has_chinese` check with :meth:`str.isascii` for non-ASCII character detection.
-   * Set default ``formatter_style`` to ``"material"``.
-   * Improved occupy-block width calculation.
-   * Overhauled terminal rendering logs with ANSI colors and progress borders.
+   * 将默认的 ``formter_style`` 设置为 ``"material"`` 。
+   * 改进占用区宽度计算。
+   * 带有ANSI颜色和进度边界的超导终端渲染日志。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed the ``speed`` parameter (already removed in 1.0.1.0).
-   * Removed ``has_chinese`` method.
+   * 移除了 ``speed`` 参数(已在 1.0.1.0中移除)。
+   * 移除 ``has_e`` 方法。
 
 CodeVideoRenderer 1.0.1.2
 ----------------------------
 
-**Date**: Aug 23, 2025
+**日期**: 23, 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.1.2/.
+详情请访问https://pypi.org/project/codevideoender/1.0.1.2/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
    * Added the :class:`~.LoopMovingCamera` class for continuous smooth camera tracking without infinite loops.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Changed default ``interval`` from ``0.05`` to ``0.3``.
-   * Succeeded output path retrieval using ``self.renderer.file_writer.movie_file_path``.
-   * Empty lines and character intervals now use ``random.uniform(interval-0.05, interval+0.05)``.
+   * 默认的 ``interval`` 从 ``0.05`` 更改为 ``0.3`` 。
+   * 使用 ``self.render.file_writer.movie_file_path`` 检索成功的输出路径。
+   * 空行和字符间隔现在使用 ``random.unique(interval-0.05, interval+0.05)`` 。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
    * Removed :meth:`~.move_camera_to_cursor` method (replaced by :class:`~.LoopMovingCamera`).
@@ -513,119 +513,119 @@ See details at https://pypi.org/project/codevideorenderer/1.0.1.2/.
 CodeVideoRenderer 1.0.1.1
 ----------------------------
 
-**Date**: Aug 22, 2025
+**日期**: 22, 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.1.1/.
+详情请访问https://pypi.org/project/codevideoender/1.0.1.1/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added the new ``scale`` parameter to control camera frame scale.
+   * 添加了新的 ``scale`` 参数来控制相机帧缩放。
    * Added :meth:`set_z_index` to cursor and code mobjects for proper layering.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Reduced cursor width from ``0.005`` to ``0.0005``.
-   * Changed default line number color to ``GREY``; the current line number is highlighted in ``WHITE``.
-   * Changed ``code_line_rectangle`` style to filled background color ``#333333``.
-   * Improved terminal success message with green ANSI color.
+   * 光标宽度从 ``0.005`` 降低到 ``0.0005`` 。
+   * 默认行号颜色改为 ``GREY`` ；当前行号在 ``WHITE`` 中高亮。
+   * 将 ``code_line_rectangle`` 样式更改为填充背景颜色 ``#333333`` 。
+   * 使用绿色ANSI颜色改进的终端成功消息。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed the code window (``window``) from the scene.
+   * 已从场景中移除代码窗口 (``window`` )。
 
 CodeVideoRenderer 1.0.1.0
 ----------------------------
 
-**Date**: Aug 19, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.1.0/.
+详情请访问https://pypi.org/project/codevideoender/1.0.1.0/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added minimum interval validation to prevent overly short intervals.
-   * Added ``code_line_rectangle`` to highlight the current code line.
-   * Added left-right floating to camera movement.
+   * 增加最低验证间隔，以防止间隔过短。
+   * 添加 ``code_line_rectangle`` 以突出当前代码行。
+   * 添加了左右浮动到相机移动。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Removed the ``speed`` parameter; camera movement now uses a fixed ``0.2`` second run time.
-   * Improved terminal output with ANSI colors, total line count display, and refined progress bar format.
-   * Translated comments and docstrings from Chinese to English.
+   * 移除了 ``speed`` 参数；相机移动现在使用了固定的 ``0.2`` 第二次运行时间。
+   * 使用 ANSI 颜色改进终端输出、总行数显示和改进进度条格式。
+   * 中文译成英文的评论和文件。
    * Merged :meth:`~.successfully_rendered_info` logic into the :meth:`~.render` method.
 
 CodeVideoRenderer 1.0.0.5
 ----------------------------
 
-**Date**: Aug 18, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.5/.
+详细信息见 https://pypi.org/project/codevideoender/1.0.0.5/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
    * Added :meth:`~.has_chinese` method to detect Chinese characters and punctuation.
-   * Added the ``code_file`` parameter to read code from a file.
-   * Added automatic Tab-to-spaces conversion (4 spaces).
-   * Added handling for empty code lines.
-   * Added skipping of leading spaces during animation playback.
+   * 将 ``code_file`` 参数添加到从文件中读取代码。
+   * 添加了自动标签到空格转换(4个空格)。
+   * 添加了对空代码行的处理。
+   * 在动画播放过程中添加了跳过前面空格。
    * Added extensive inline comments and an ASCII table docstring in :meth:`~.construct`.
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
-   * Renamed parameter ``floating_pos`` to ``floating_camera``.
-   * Adjusted cursor dimensions (narrower and shorter).
-   * Changed initial camera scale from ``0.25`` to ``0.3``.
+   * 将参数``floating_pos`` 重命名为 ``floating_camera`` 。
+   * 调整后的光标尺寸（缩短和缩短）。
+   * 初始相机缩放从 ``0.25`` 更改为 ``0.3`` 。
    * Moved :meth:`~.move_camera_to_cursor` definition earlier in the class.
 
 CodeVideoRenderer 1.0.0.4
 ----------------------------
 
-**Date**: Aug 17, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.4/.
+详情请访问https://pypi.org/project/codevideoender/1.0.0.4/。
 
-.. admonition:: Deletions
+.. 警告:: 删除
    :class: deletions
 
-   * Removed ``main.py``, keeping only ``renderer.py`` as the single entry point.
+   * 已删除 ``main.py`` ，只保留一个 ``render.py`` 作为单个切入点。
 
 CodeVideoRenderer 1.0.0.3
 ----------------------------
 
-**Date**: Aug 16, 2025
+**日期**: 16, 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.3/.
+详情请访问https://pypi.org/project/codevideoender/1.0.0.3/。
 
-   Re-uploaded package with no code changes.
+   重新上传软件包，但没有代码更改。
 
 CodeVideoRenderer 1.0.0.2
 ----------------------------
 
-**Date**: Aug 16, 2025
+**日期**: 16, 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.2/.
+详情请访问https://pypi.org/project/codevideoender/1.0.0.2/。
 
-   Re-uploaded package with no code changes.
+   重新上传软件包，但没有代码更改。
 
 CodeVideoRenderer 1.0.0.1
 ----------------------------
 
-**Date**: Aug 16, 2025
+**日期**: 16, 2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.1/.
+详细信息见 https://pypi.org/project/codevideoender/1.0.0.1/。
 
-.. admonition:: Additions
+.. 警告:添加:
    :class: additions
 
-   * Added ``renderer.py`` (a copy of ``main.py``) as the primary renderer module.
+   * 添加 ``render.py`` (一个 ``main.py`` 的副本) 作为主渲染模块。
 
-.. admonition:: Changes
+.. 警告:: 更改
    :class: changes
 
    * Changed ``__init__.py`` to import from ``renderer`` instead of ``main``.
@@ -633,8 +633,8 @@ See details at https://pypi.org/project/codevideorenderer/1.0.0.1/.
 CodeVideoRenderer 1.0.0.0
 ----------------------------
 
-**Date**: Aug 15, 2025
+**日期**：2025
 
-See details at https://pypi.org/project/codevideorenderer/1.0.0.0/.
+详情请访问https://pypi.org/project/codevideoender/1.0.0.0/。
 
-   Initial release of CodeVideoRenderer.
+   最初发布的 CodeVideoRendererer
