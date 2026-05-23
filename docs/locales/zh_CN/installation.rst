@@ -1,99 +1,99 @@
-Installation
+安装
 ============
 
-CodeVideoRenderer can be installed using pip, the Python package manager.
+CodeVideoRenderer可以使用Python软件包管理器安装。
 
-Prerequisites
+必备条件
 -------------
 
-Before installing CodeVideoRenderer, ensure you have the following:
+在安装 CodeVideoRenderer之前，请确保您：
 
-* **Python 3.8 or higher**
-* **pip** (Python package installer)
-* **FFmpeg** (for video rendering)
+* **Python 3.8 或更高**
+* **管道** (Python软件包安装程序)
+* **FFmpeg** (用于视频渲染)
 
-We strongly recommend installing inside a virtual environment because Manim (a heavy dependency) may conflict with other packages in your global Python environment.
+我们强烈建议在虚拟环境中安装，因为Manim(严重依赖)可能与您的全局Python环境中的其他软件包发生冲突。
 
-.. code-block:: bash
+.. 代码块:: bash
 
    python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   源.venv/bin/activity # 在Windows上：.venv\Scripts\激活
 
 Installing FFmpeg
 ^^^^^^^^^^^^^^^^^
 
-.. tab-set::
+.. tab-set:
 
-   .. tab-item:: Windows
+   .. 标签项目：窗口
 
-      .. code-block:: bash
+      .. 代码块:: bash
 
-         winget install ffmpeg
+         winget 安装 ffmpeg
 
    .. tab-item:: macOS
 
-      .. code-block:: bash
+      .. 代码块:: bash
 
-         brew install ffmpeg
+         酿造安装 ffmpeg
 
    .. tab-item:: Linux
 
-      .. code-block:: bash
+      .. 代码块:: bash
 
-         sudo apt update
+         sudo apt 更新
          sudo apt install ffmpeg
 
-Verifying FFmpeg
+正在验证 FFmpeg
 ^^^^^^^^^^^^^^^^
 
-After installation, confirm FFmpeg is available in your ``PATH``:
+安装后，确认你的 ``PATH`` 中的FFmpeg 可用：
 
-.. code-block:: bash
+.. 代码块:: bash
 
-   ffmpeg -version
+   ffmpeg 版本
 
-You should see version information printed. If you get a "command not found" error, restart your terminal or add FFmpeg to your system ``PATH`` before continuing.
+您应该看到版本信息已打印。 如果你得到了“未找到的命令”错误，请在继续之前重新启动你的终端或添加FFmpeg 到你的系统 ``PATH`` 。
 
-Basic Installation
+基本安装
 ------------------
 
-Install CodeVideoRenderer using pip:
+使用管道安装CodeVideoRenderer：
 
-.. code-block:: bash
+.. 代码块:: bash
 
-   pip install codevideorenderer
+   pip 安装编解码视频渲染器
 
-Development Installation
+开发安装
 ------------------------
 
-To install from source for development:
+从开发源安装：
 
-.. code-block:: bash
+.. 代码块:: bash
 
    git clone https://github.com/ExploreMaths/CodeVideoRenderer.git
    cd CodeVideoRenderer
-   pip install -e .
+   pip 安装 -e
 
-Verifying Installation
+正在验证安装
 ----------------------
 
-Test your installation:
+测试您的安装：
 
 .. code-block:: python
 
-   import CodeVideoRenderer
+   导入 CodeVideoRenderer
    print(CodeVideoRenderer.__version__)
 
-Troubleshooting
+故障排除
 ---------------
 
-Common installation issues:
+共同安装问题：
 
-* **ModuleNotFoundError**: Ensure you're using Python 3.8+
-* **FFmpeg not found**: Verify FFmpeg is installed and in PATH
-* **Permission errors**: Use ``pip install --user`` or virtual environment
+* **ModuleNotFoundError**：确保您使用 Python 3.8+
+* **FFmpeg 未找到**: 验证FFmpeg 已安装并在PATH
+* **权限错误**: 使用 ``pip install --user`` 或虚拟环境
 
-Next Steps
+以后的步骤
 ----------
 
 After installation, proceed to the :doc:`tutorials` section to start using CodeVideoRenderer.
