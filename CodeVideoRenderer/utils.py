@@ -127,9 +127,9 @@ def addGlowEffect(input_path: StrPath, output_path: StrPath, output: bool) -> No
 
         # 提升光晕的亮度和饱和度
         glow_bright_enhancer = ImageEnhance.Brightness(glow)
-        glow = glow_bright_enhancer.enhance(1.5)
+        glow = glow_bright_enhancer.enhance(1.6)
         glow_color_enhancer = ImageEnhance.Color(glow)
-        glow = glow_color_enhancer.enhance(1.2)
+        glow = glow_color_enhancer.enhance(2)
 
         # 混合原图像与光晕层
         soft_glow_img = Image.blend(glow, pil_img, 0.4)
